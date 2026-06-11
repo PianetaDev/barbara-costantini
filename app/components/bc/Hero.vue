@@ -1,17 +1,17 @@
-<!-- Figma: 590:1395 — hero section, titolo grande + foto full-width -->
+<!-- Figma: 590:1413 — Hero, y=107, 1376×1101 -->
+<!-- H1 56px SemiBold centrato + immagine 1142×642 + subtext 440px centrato -->
 <template>
-  <section class="bc-container bc-section">
-    <h1 class="font-garamond text-bc-4xl font-normal text-center mb-10 leading-none">
-      Titolo Lorem Ipsum
+  <section class="flex flex-col items-center gap-bc-2xl py-bc-4xl px-bc-page max-w-bc-wrap mx-auto">
+    <h1 class="font-garamond text-bc-h1 font-semibold text-center text-bc-black tracking-[0.02em] max-w-[908px]">
+      <slot name="title">Titolo Lorem Ipsum</slot>
     </h1>
-    <div class="w-full aspect-[16/9] bg-bc-black/10 overflow-hidden">
-      <!-- sostituire con NuxtImg quando si collegano le immagini reali -->
-      <img src="" alt="Hero" class="w-full h-full object-cover" />
+    <div class="w-full max-w-[1142px] aspect-[1142/642] bg-bc-black/10 overflow-hidden">
+      <slot name="image">
+        <img src="" alt="" class="w-full h-full object-cover" />
+      </slot>
     </div>
-    <div class="max-w-xl ml-auto mt-8">
-      <p class="font-sans text-bc-base leading-relaxed text-bc-black/80">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.
-      </p>
-    </div>
+    <p class="font-garamond text-bc-sub font-normal text-center text-bc-black max-w-[440px]">
+      <slot name="subtext">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis.</slot>
+    </p>
   </section>
 </template>

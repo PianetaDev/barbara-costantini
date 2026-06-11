@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-bc-cream font-sans text-bc-black">
+  <div class="min-h-screen bg-bc-canvas font-sans text-bc-black">
     <BcNav />
     <main>
       <slot />
