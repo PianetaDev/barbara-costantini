@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { font-family: 'Public Sans', system-ui, sans-serif; }
+  h1, h2, h3, .font-display { font-family: 'EB Garamond', Georgia, serif; }
+}
+
+@layer components {
+  .bc-container {
+    @apply mx-auto max-w-bc-content px-6 lg:px-bc-page;
+  }
+  .bc-btn {
+    @apply inline-flex items-center border border-bc-black px-6 py-2.5
+           text-bc-sm font-sans tracking-widest uppercase
+           hover:bg-bc-black hover:text-bc-cream transition-colors duration-200;
+  }
+  .bc-section {
+    @apply py-bc-lg;
+  }
+}

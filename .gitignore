@@ -1,0 +1,12 @@
+.nuxt/
+.output/
+dist/
+.cache/
+.env
+.env.*
+PRIVATE.md
+*.private.md
+node_modules/
+.DS_Store
+.vscode/
+.vercel/
