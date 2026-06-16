@@ -42,9 +42,9 @@ withDefaults(defineProps<{
         :to="`/gallery/${p.slug}`"
         class="flex flex-col gap-[16px] group"
       >
-        <!-- Immagine -->
+        <!-- Immagine: hover aggiunge bordo (ring) -->
         <div
-          class="w-full bg-bc-black/10 overflow-hidden"
+          class="w-full bg-bc-black/10 overflow-hidden ring-0 group-hover:ring-1 group-hover:ring-bc-black transition-shadow"
           :style="p.tipo === 'vertical' ? 'aspect-ratio: 326/406' : 'aspect-ratio: 326/217'"
         >
           <img
@@ -54,11 +54,11 @@ withDefaults(defineProps<{
             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         </div>
-        <!-- Testo -->
+        <!-- Testo: hover underline sul titolo -->
         <div class="flex flex-col gap-[4px]">
           <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.028em]">{{ p.codice }}</p>
           <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.028em]">{{ p.committente }}</p>
-          <p class="font-garamond text-bc-h4 font-semibold text-bc-black tracking-[0.02em]">{{ p.titolo }}</p>
+          <p class="font-garamond text-bc-h4 font-semibold text-bc-black tracking-[0.02em] group-hover:underline">{{ p.titolo }}</p>
         </div>
       </NuxtLink>
     </div>

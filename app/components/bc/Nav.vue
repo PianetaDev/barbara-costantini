@@ -1,4 +1,5 @@
 <!-- Figma: 590:1395 > Menu-desktop (590:1428) — 1440×107, border-bottom -->
+<!-- Style guide 457:8130: nav hover = font-semibold | mobile menu = fullscreen overlay -->
 <script setup lang="ts">
 const links = [
   { label: 'Studio', to: '/studio' },
@@ -11,7 +12,7 @@ const links = [
 const menuOpen = ref(false)
 </script>
 <template>
-  <header class="w-full border-b border-bc-black">
+  <header class="w-full border-b border-bc-black relative z-40">
     <div class="flex items-center justify-between px-bc-page py-bc-xl">
       <!-- Logo -->
       <NuxtLink to="/" class="flex items-center gap-3" @click="menuOpen = false">
@@ -21,13 +22,13 @@ const menuOpen = ref(false)
         </span>
       </NuxtLink>
 
-      <!-- Nav desktop -->
+      <!-- Nav desktop: hover = font-semibold (style guide 457:8130) -->
       <nav class="hidden lg:flex items-center justify-between w-[676px]">
         <NuxtLink
           v-for="l in links"
           :key="l.to"
           :to="l.to"
-          class="font-sans text-bc-nav font-normal tracking-[0.02em] px-bc-md py-bc-sm hover:opacity-60 transition-opacity"
+          class="font-sans text-bc-nav font-normal tracking-[0.02em] px-bc-md py-bc-sm hover:font-semibold"
         >
           {{ l.label }}
         </NuxtLink>
@@ -37,28 +38,46 @@ const menuOpen = ref(false)
       <button
         class="lg:hidden flex flex-col gap-[5px] p-2"
         aria-label="Menu"
-        @click="menuOpen = !menuOpen"
+        @click="menuOpen = true"
       >
-        <span class="block w-[22px] h-px bg-bc-black transition-all" :class="menuOpen ? 'rotate-45 translate-y-[6px]' : ''" />
-        <span class="block w-[22px] h-px bg-bc-black transition-all" :class="menuOpen ? 'opacity-0' : ''" />
-        <span class="block w-[22px] h-px bg-bc-black transition-all" :class="menuOpen ? '-rotate-45 -translate-y-[6px]' : ''" />
+        <span class="block w-[22px] h-px bg-bc-black" />
+        <span class="block w-[22px] h-px bg-bc-black" />
+        <span class="block w-[22px] h-px bg-bc-black" />
       </button>
     </div>
 
-    <!-- Menu mobile/tablet aperto -->
-    <nav
-      v-if="menuOpen"
-      class="lg:hidden flex flex-col border-t border-bc-black"
-    >
-      <NuxtLink
-        v-for="l in links"
-        :key="l.to"
-        :to="l.to"
-        class="font-sans text-bc-nav font-normal tracking-[0.02em] px-bc-page py-bc-xl border-b border-bc-black/20 hover:opacity-60 transition-opacity"
-        @click="menuOpen = false"
+    <!-- Menu mobile: fullscreen overlay (style guide 457:8130) -->
+    <Teleport to="body">
+      <div
+        v-if="menuOpen"
+        class="lg:hidden fixed inset-0 z-50 bg-bc-canvas flex flex-col"
       >
-        {{ l.label }}
-      </NuxtLink>
-    </nav>
+        <!-- Header overlay: logo + X -->
+        <div class="flex items-center justify-between px-bc-page py-bc-xl border-b border-bc-black shrink-0">
+          <NuxtLink to="/" class="flex items-center gap-3" @click="menuOpen = false">
+            <img src="/logo.svg" alt="Barbara Costantini Restauro" class="h-[30px] w-auto" />
+          </NuxtLink>
+          <button class="p-2" aria-label="Chiudi menu" @click="menuOpen = false">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <line x1="1" y1="1" x2="21" y2="21" stroke="#000000" stroke-width="1.5" stroke-linecap="round" />
+              <line x1="21" y1="1" x2="1" y2="21" stroke="#000000" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
+        <!-- Links centrati verticalmente -->
+        <nav class="flex-1 flex flex-col items-center justify-center gap-[32px]">
+          <NuxtLink
+            v-for="l in links"
+            :key="l.to"
+            :to="l.to"
+            class="font-sans text-bc-nav font-normal tracking-[0.02em] hover:font-semibold"
+            @click="menuOpen = false"
+          >
+            {{ l.label }}
+          </NuxtLink>
+        </nav>
+      </div>
+    </Teleport>
   </header>
 </template>
+

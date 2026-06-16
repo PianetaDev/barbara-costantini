@@ -79,7 +79,7 @@ function onTouchEnd(e: TouchEvent) {
           :class="p.tipo === 'horizontal' ? 'w-[210px]' : 'w-[209px]'"
         >
           <div
-            class="relative w-full overflow-hidden bg-bc-black/10"
+            class="relative w-full overflow-hidden bg-bc-black/10 ring-0 group-hover:ring-1 group-hover:ring-bc-black transition-shadow"
             :class="p.tipo === 'horizontal' ? 'aspect-[209/139]' : 'aspect-[209/260]'"
           >
             <img v-if="p.image" :src="p.image" :alt="p.titolo"
@@ -88,7 +88,7 @@ function onTouchEnd(e: TouchEvent) {
           <div class="flex flex-col gap-[4px]">
             <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">{{ p.codice }}</p>
             <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">{{ p.committente }}</p>
-            <p class="font-garamond text-bc-h4 font-semibold text-bc-black tracking-[0.02em]">{{ p.titolo }}</p>
+            <p class="font-garamond text-bc-h4 font-semibold text-bc-black tracking-[0.02em] group-hover:underline">{{ p.titolo }}</p>
           </div>
         </NuxtLink>
       </div>
@@ -126,14 +126,14 @@ function onTouchEnd(e: TouchEvent) {
               :to="`/lavori/${p.slug}`"
               class="flex-none flex flex-col gap-bc-md items-start group w-[calc(50%-8px)]"
             >
-              <div class="relative w-full overflow-hidden bg-bc-black/10 aspect-[3/4]">
+              <div class="relative w-full overflow-hidden bg-bc-black/10 aspect-[3/4] ring-0 group-hover:ring-1 group-hover:ring-bc-black transition-shadow">
                 <img v-if="p.image" :src="p.image" :alt="p.titolo"
                   class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               </div>
               <div class="flex flex-col gap-[4px]">
                 <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">{{ p.codice }}</p>
                 <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">{{ p.committente }}</p>
-                <p class="font-garamond text-bc-h4 font-semibold text-bc-black tracking-[0.02em]">{{ p.titolo }}</p>
+                <p class="font-garamond text-bc-h4 font-semibold text-bc-black tracking-[0.02em] group-hover:underline">{{ p.titolo }}</p>
               </div>
             </NuxtLink>
           </div>

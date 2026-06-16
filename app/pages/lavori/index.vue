@@ -132,7 +132,7 @@ function toggle(id: string) {
               <div class="flex items-center gap-bc-md justify-end w-[209px] shrink-0">
                 <NuxtLink
                   :to="`/lavori/${l.slug}`"
-                  class="font-garamond font-normal text-bc-black underline underline-offset-2 hover:opacity-60 transition-opacity whitespace-nowrap"
+                  class="font-garamond font-normal text-bc-black underline underline-offset-2 hover:font-semibold whitespace-nowrap"
                   style="font-size:18px;"
                   @click.stop
                 >
@@ -178,7 +178,7 @@ function toggle(id: string) {
 
           <!-- Scopri di più -->
           <div class="flex justify-center pt-bc-4xl pb-bc-4xl">
-            <button class="font-garamond font-normal text-bc-black border-b border-bc-black hover:opacity-60 transition-opacity" style="font-size:18px; line-height:1.2; padding-bottom:2px;">
+            <button class="font-garamond font-normal text-bc-black border-b border-bc-black hover:font-semibold" style="font-size:18px; line-height:1.2; padding-bottom:2px;">
               Scopri di più
             </button>
           </div>
