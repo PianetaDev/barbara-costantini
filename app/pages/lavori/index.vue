@@ -14,12 +14,12 @@ const lavori: Lavoro[] = [
   {
     id: '01',
     titolo: 'Restauro testamenti',
-    committente: 'Munda – Museo Nazionale d'Abruzzo',
+    committente: 'Munda – Museo Nazionale d’Abruzzo',
     slug: 'restauro-testamenti',
   },
   {
     id: '02',
-    titolo: 'Restauro conservativo dell'Antico Archivio Regio',
+    titolo: 'Restauro conservativo dell\'Antico Archivio Regio',
     committente: 'Archivio di stato di Cagliari',
     slug: 'archivio-regio',
     descrizione: 'Il Restauro conservativo dell\'<em>Antico Archivio Regio</em>, si compone, in riferimento ai documenti in oggetto, di <strong>262 unità archivistiche</strong> comprese in un arco temporale che va dal 1381 al 1805',
