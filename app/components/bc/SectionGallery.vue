@@ -35,7 +35,7 @@ withDefaults(defineProps<{
 </script>
 <template>
   <section class="w-full px-bc-page py-bc-4xl">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-[24px] gap-y-bc-2xl items-start">
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-x-[24px] gap-y-bc-2xl items-start">
       <NuxtLink
         v-for="p in progetti"
         :key="p.slug"
