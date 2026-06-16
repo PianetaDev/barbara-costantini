@@ -1,6 +1,7 @@
 node_modules
 .nuxt
 .output
+.vercel/output
 .data
 dist
 .env
