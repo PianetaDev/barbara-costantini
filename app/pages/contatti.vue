@@ -1,6 +1,6 @@
 <!-- Figma: 590:1479 desktop / 551:3422 mobile — Contatti -->
 <template>
-  <div class="relative min-h-full flex flex-col">
+  <div class="relative flex-1 flex flex-col">
 
     <!-- Linea verticale centrale: solo desktop, copre tutta l'altezza -->
     <div class="hidden lg:block absolute inset-y-0 left-1/2 w-px bg-bc-black" aria-hidden="true" />
@@ -9,7 +9,7 @@
     <div class="lg:hidden flex flex-col">
       <!-- Testo centrato -->
       <div class="flex flex-col gap-bc-2xl items-start px-[24px] py-bc-4xl">
-        <h1 class="font-garamond text-bc-h1 font-semibold text-bc-black tracking-[0.02em] w-full text-center">
+        <h1 class="font-garamond text-bc-h1 font-semibold text-bc-black tracking-[0.02em] w-full">
           Contatti
         </h1>
         <div class="flex flex-col gap-bc-md w-full">
