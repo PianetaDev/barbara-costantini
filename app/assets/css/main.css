@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Public Sans', system-ui, sans-serif;
+    background-color: #F7F6EF;
+    color: #000000;
+  }
+  h1, h2, h3 { font-family: 'EB Garamond', Georgia, serif; }
+}
+
+@layer components {
+  /* Bottone — Figma: border 1px black, padding 8px 16px, EB Garamond 18px */
+  .bc-btn {
+    @apply inline-flex items-center
+           border border-bc-black
+           px-bc-md py-bc-xs
+           font-garamond text-bc-btn font-normal text-bc-black
+           tracking-[0.02em]
+           hover:bg-bc-black hover:text-bc-canvas
+           transition-colors duration-200;
+  }
+}
