@@ -15,9 +15,9 @@ const props = withDefaults(defineProps<{
   progetti?: Progetto[]
 }>(), {
   progetti: () => [
-    { codice: 'PRJ01', committente: 'Committente', titolo: 'Nome progetto', slug: 'progetto-1', tipo: 'vertical' },
-    { codice: 'PRJ02', committente: 'Committente', titolo: 'Nome progetto', slug: 'progetto-2', tipo: 'horizontal' },
-    { codice: 'PRJ03', committente: 'Committente', titolo: 'Nome progetto', slug: 'progetto-3', tipo: 'vertical' },
+    { codice: '01', committente: 'Archivio di stato di Cagliari', titolo: "Restauro conservativo dell'Antico Archivio Regio", slug: 'archivio-regio', tipo: 'vertical' },
+    { codice: '02', committente: 'Munda – Museo Nazionale d’Abruzzo', titolo: 'Restauro testamenti', slug: 'restauro-testamenti', tipo: 'horizontal' },
+    { codice: '03', committente: 'EUR Spa', titolo: 'Intervento di restauro conservativo', slug: 'restauro-eur', tipo: 'vertical' },
   ]
 })
 
@@ -70,7 +70,7 @@ function onTouchEnd(e: TouchEvent) {
       </div>
 
       <!-- Card desktop: 3 card fisse, no carousel -->
-      <div class="hidden lg:flex gap-[24px] items-end">
+      <div class="hidden lg:flex gap-[24px] items-start">
         <NuxtLink
           v-for="p in progetti"
           :key="p.slug"
@@ -117,7 +117,7 @@ function onTouchEnd(e: TouchEvent) {
           @touchend="onTouchEnd"
         >
           <div
-            class="flex gap-[16px] items-end transition-transform duration-500 ease-out"
+            class="flex gap-[16px] items-start transition-transform duration-500 ease-out"
             :style="{ transform: `translateX(${offset}px)` }"
           >
             <NuxtLink
@@ -126,7 +126,10 @@ function onTouchEnd(e: TouchEvent) {
               :to="`/lavori/${p.slug}`"
               class="flex-none flex flex-col gap-bc-md items-start group w-[calc(50%-8px)]"
             >
-              <div class="relative w-full overflow-hidden bg-bc-black/10 aspect-[3/4] ring-0 group-hover:ring-1 group-hover:ring-bc-black transition-shadow">
+              <div
+                class="relative w-full overflow-hidden bg-bc-black/10 ring-0 group-hover:ring-1 group-hover:ring-bc-black transition-shadow"
+                :class="p.tipo === 'horizontal' ? 'aspect-[3/2]' : 'aspect-[2/3]'"
+              >
                 <img v-if="p.image" :src="p.image" :alt="p.titolo"
                   class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               </div>
