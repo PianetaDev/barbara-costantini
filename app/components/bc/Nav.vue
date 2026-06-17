@@ -10,9 +10,13 @@ const links = [
 ]
 
 const menuOpen = ref(false)
+
+watch(menuOpen, (val) => {
+  document.body.style.overflow = val ? 'hidden' : ''
+})
 </script>
 <template>
-  <header class="w-full border-b border-bc-black relative z-40">
+  <header class="w-full border-b border-bc-black sticky top-0 z-40 bg-bc-canvas">
     <div class="flex items-center justify-between px-bc-page py-bc-xl">
       <!-- Logo -->
       <NuxtLink to="/" class="flex items-center gap-3" @click="menuOpen = false">
