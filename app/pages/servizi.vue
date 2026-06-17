@@ -18,40 +18,40 @@ const gruppi: Gruppo[] = [
     titolo: 'Beni Archivistici e Librari',
     descrizione: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac.',
     servizi: [
-      { titolo: 'Servizio 1', corpo: '' },
+      { titolo: 'Servizio 1', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.' },
       { titolo: 'Servizio 2', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat. Mauris euismod orci in mauris vehicula vehicula. Pellentesque ornare ullamcorper lorem, sit amet hendrerit purus molestie sed.' },
-      { titolo: 'Servizio 3', corpo: '' },
-      { titolo: 'Servizio 4', corpo: '' },
+      { titolo: 'Servizio 3', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.' },
+      { titolo: 'Servizio 4', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.' },
     ],
   },
   {
     titolo: 'Opere d\u2019arte su carta',
     descrizione: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac.',
     servizi: [
-      { titolo: 'Servizio 1', corpo: '' },
-      { titolo: 'Servizio 2', corpo: '' },
-      { titolo: 'Servizio 3', corpo: '' },
-      { titolo: 'Servizio 4', corpo: '' },
+      { titolo: 'Servizio 1', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.' },
+      { titolo: 'Servizio 2', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.' },
+      { titolo: 'Servizio 3', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.' },
+      { titolo: 'Servizio 4', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.' },
     ],
   },
   {
     titolo: 'Materiali fotografici',
     descrizione: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac.',
     servizi: [
-      { titolo: 'Servizio 1', corpo: '' },
-      { titolo: 'Servizio 2', corpo: '' },
-      { titolo: 'Servizio 3', corpo: '' },
-      { titolo: 'Servizio 4', corpo: '' },
+      { titolo: 'Servizio 1', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.' },
+      { titolo: 'Servizio 2', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.' },
+      { titolo: 'Servizio 3', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.' },
+      { titolo: 'Servizio 4', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.' },
     ],
   },
   {
     titolo: 'Servizi trasversali',
     descrizione: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac.',
     servizi: [
-      { titolo: 'Progettazione', corpo: '' },
-      { titolo: 'Redazione di condition report', corpo: '' },
-      { titolo: 'Spolveratura ordinaria e straordinaria', corpo: '' },
-      { titolo: 'Ricognizione conservativa di fondi e collezioni', corpo: '' },
+      { titolo: 'Progettazione', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.' },
+      { titolo: 'Redazione di condition report', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.' },
+      { titolo: 'Spolveratura ordinaria e straordinaria', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.' },
+      { titolo: 'Ricognizione conservativa di fondi e collezioni', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.' },
     ],
   },
 ]
@@ -71,7 +71,7 @@ const partner = [
   },
 ]
 
-const aperto = ref<Record<number, number>>({ 0: 1 })
+const aperto = ref<Record<number, number>>({ 0: 0, 1: 0, 2: 0, 3: 0 })
 
 function toggle(g: number, i: number) {
   aperto.value = { ...aperto.value, [g]: aperto.value[g] === i ? -1 : i }
@@ -97,10 +97,10 @@ function toggle(g: number, i: number) {
     :key="g"
     class="border-b border-bc-black"
   >
-    <div class="px-bc-page py-bc-4xl flex flex-col md:flex-row md:gap-bc-2xl lg:gap-[140px] md:justify-center">
+    <div class="px-bc-page py-bc-4xl sv-row">
 
       <!-- Categoria sx -->
-      <div class="flex flex-col gap-bc-xl shrink-0 mb-bc-2xl md:mb-0 md:w-[240px] lg:w-[326px]">
+      <div class="flex flex-col gap-bc-xl sv-cat">
         <h2 class="font-garamond font-semibold text-bc-black tracking-[0.02em]"
             style="font-size:38px; line-height:1.2;">{{ gruppo.titolo }}</h2>
         <p class="font-garamond font-normal text-bc-black tracking-[0.02em]"
@@ -108,7 +108,7 @@ function toggle(g: number, i: number) {
       </div>
 
       <!-- Accordion dx -->
-      <div class="flex flex-col flex-1 lg:flex-none lg:w-[676px]">
+      <div class="flex flex-col sv-acc">
         <div
           v-for="(s, i) in gruppo.servizi"
           :key="i"
@@ -130,9 +130,11 @@ function toggle(g: number, i: number) {
               </svg>
             </span>
           </button>
-          <div v-if="aperto[g] === i && s.corpo" class="pb-bc-2xl">
-            <p class="font-garamond font-normal text-bc-black tracking-[0.02em]"
-               style="font-size:22px; line-height:1.2;">{{ s.corpo }}</p>
+          <div class="sv-acc-body" :class="aperto[g] === i ? 'sv-acc-open' : ''">
+            <div class="sv-acc-inner">
+              <p class="font-garamond font-normal text-bc-black tracking-[0.02em]"
+                 style="font-size:22px; line-height:1.2;">{{ s.corpo }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -142,17 +144,16 @@ function toggle(g: number, i: number) {
 
   <!-- Partner: 3 colonne con divisori -->
   <section class="border-b border-bc-black">
-    <div class="flex flex-col md:flex-row">
+    <div class="sv-partner-row">
       <div
         v-for="(p, i) in partner"
         :key="i"
-        class="flex-1 px-bc-page py-bc-4xl"
-        :class="i < partner.length - 1 ? 'border-b border-bc-black md:border-b-0 md:border-r' : ''"
+        class="sv-partner-col"
       >
-        <div class="flex flex-col gap-bc-xl max-w-[327px]">
+        <div class="sv-partner-inner">
           <h3 class="font-garamond font-semibold text-bc-black tracking-[0.02em]"
               style="font-size:32px; line-height:1.2;">{{ p.titolo }}</h3>
-          <p class="font-garamond font-normal text-bc-black tracking-[0.02em]"
+          <p class="font-garamond font-normal text-bc-black tracking-[0.02em] mt-bc-xl"
              style="font-size:22px; line-height:1.2;">{{ p.testo }}</p>
         </div>
       </div>
@@ -168,3 +169,90 @@ function toggle(g: number, i: number) {
     <NuxtLink to="/contatti" class="bc-btn">Contatta lo studio</NuxtLink>
   </section>
 </template>
+
+<style>
+/* ── Partner: 3 colonne con divisori verticali ───────────── */
+.sv-partner-row {
+  display: flex;
+  flex-direction: column;
+}
+.sv-partner-col {
+  padding: 48px 32px;
+  border-bottom: 1px solid black;
+}
+.sv-partner-col:last-child {
+  border-bottom: none;
+}
+.sv-partner-inner {
+  max-width: 327px;
+}
+@media (min-width: 768px) {
+  .sv-partner-row {
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .sv-partner-col {
+    flex: 1;
+    padding: 80px 48px;
+    border-bottom: none;
+    border-right: 1px solid black;
+  }
+  .sv-partner-col:last-child {
+    border-right: none;
+  }
+}
+
+/* ── Accordion: animazione apertura/chiusura ─────────────── */
+.sv-acc-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s ease;
+}
+.sv-acc-body.sv-acc-open {
+  grid-template-rows: 1fr;
+}
+.sv-acc-inner {
+  overflow: hidden;
+  min-height: 0;
+  padding-bottom: 0;
+  transition: padding-bottom 0.35s ease;
+}
+.sv-acc-body.sv-acc-open .sv-acc-inner {
+  padding-bottom: 48px;
+}
+
+/* ── Gruppi: due colonne da tablet in su ─────────────────── */
+.sv-row {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+@media (min-width: 768px) {
+  .sv-row {
+    flex-direction: row;
+    gap: 48px;
+    align-items: flex-start;
+  }
+  .sv-cat {
+    flex: 1;
+    min-width: 0;
+  }
+  .sv-acc {
+    flex: 1;
+    min-width: 0;
+  }
+}
+@media (min-width: 1280px) {
+  .sv-row {
+    justify-content: center;
+    gap: 140px;
+  }
+  .sv-cat {
+    width: 326px;
+  }
+  .sv-acc {
+    flex: none;
+    width: 676px;
+  }
+}
+</style>
