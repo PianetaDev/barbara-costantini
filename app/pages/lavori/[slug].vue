@@ -186,20 +186,20 @@ const heroImgStyle = computed(() => {
 
     <!-- Hero: responsive grid — centrato su desktop, progetto+immagine su tablet, stacked su mobile -->
     <div
-      class="px-bc-page py-bc-4xl grid [grid-template-rows:auto_auto] gap-x-6 gap-y-0 grid-cols-1 md:grid-cols-[120px_1fr] lg:grid-cols-[1fr_677px_1fr]"
+      class="px-bc-page py-bc-4xl bc-hero-grid"
     >
       <!-- Titolo: col 2, row 1 -->
       <h1
-        class="font-garamond font-semibold text-bc-black text-center tracking-[0.02em] md:[grid-column:2] md:[grid-row:1] lg:[grid-column:2] lg:[grid-row:1]"
+        class="font-garamond font-semibold text-bc-black text-center tracking-[0.02em] bc-col2-r1"
         style="font-size:38px; line-height:1.2; margin-bottom:48px;"
       >{{ progetto.titolo }}</h1>
       <!-- Metadata: nascosto su mobile, visibile da md — col 1 row 2 -->
-      <div class="hidden md:flex md:flex-col gap-[8px] md:[grid-column:1] md:[grid-row:2] md:self-start lg:[grid-column:1] lg:[grid-row:2]">
+      <div class="hidden md:flex md:flex-col gap-[8px] bc-col1-r2">
         <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.2;">Progetto:</p>
         <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.2;">{{ progetto.id }}</p>
       </div>
       <!-- Immagine corrente del carosello: col 2, row 2 -->
-      <div class="flex justify-center md:[grid-column:2] md:[grid-row:2] lg:[grid-column:2] lg:[grid-row:2]">
+      <div class="flex justify-center bc-col2-r2">
         <div class="w-full overflow-hidden" :style="heroImgStyle">
           <img
             v-if="progetto.immagini[imgIndex]?.src"
@@ -257,8 +257,8 @@ const heroImgStyle = computed(() => {
     </div>
 
     <!-- Contenuto: metadata sinistra + intro destra -->
-    <div class="px-bc-page pt-bc-4xl pb-bc-2xl grid gap-6 grid-cols-1 md:grid-cols-[1fr_2fr] lg:grid-cols-[1fr_442px_1fr]">
-      <div class="flex flex-col gap-bc-md">
+    <div class="px-bc-page pt-bc-4xl pb-bc-4xl bc-grid bc-2col bc-442 bc-meta">
+      <div class="flex flex-col gap-bc-md bc-sidebar">
         <div
           v-for="(m, i) in progetto.meta"
           :key="i"
@@ -268,7 +268,7 @@ const heroImgStyle = computed(() => {
           <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.2;">{{ m.valore }}</p>
         </div>
       </div>
-      <div class="flex flex-col gap-bc-md">
+      <div class="flex flex-col gap-bc-md bc-intro">
         <p
           v-for="(t, i) in progetto.intro"
           :key="i"
@@ -276,23 +276,23 @@ const heroImgStyle = computed(() => {
           style="font-size:18px; line-height:1.2;"
         >{{ t }}</p>
       </div>
-      <div class="hidden lg:block" />
+      <div class="bc-spacer-r" />
     </div>
 
     <!-- Immagine grande contenuto -->
-    <div class="px-bc-page pb-bc-4xl grid gap-6 grid-cols-1 md:grid-cols-[1fr_2fr] lg:grid-cols-[1fr_676px_1fr]">
-      <div class="hidden md:block" />
+    <div class="px-bc-page pb-bc-4xl bc-grid bc-2col bc-676">
+      <div class="bc-spacer-l" />
       <div style="aspect-ratio:676/451; background:rgba(0,0,0,0.1);" />
-      <div class="hidden lg:block" />
+      <div class="bc-spacer-r" />
     </div>
 
     <!-- Sezioni testo -->
     <div
       v-for="(s, i) in progetto.sezioni"
       :key="i"
-      class="px-bc-page pb-bc-4xl grid gap-6 grid-cols-1 md:grid-cols-[1fr_2fr] lg:grid-cols-[1fr_442px_1fr]"
+      class="px-bc-page pb-bc-4xl bc-grid bc-2col bc-442"
     >
-      <div class="hidden md:block" />
+      <div class="bc-spacer-l" />
       <div>
         <h2
           class="font-garamond font-semibold text-bc-black text-center tracking-[0.02em]"
@@ -309,22 +309,22 @@ const heroImgStyle = computed(() => {
           style="font-size:18px; line-height:1.2; margin-bottom:16px;"
         >{{ t }}</p>
       </div>
-      <div class="hidden lg:block" />
+      <div class="bc-spacer-r" />
     </div>
 
     <!-- Due immagini affiancate -->
-    <div class="px-bc-page pb-bc-4xl grid gap-6 grid-cols-1 md:grid-cols-[1fr_2fr] lg:grid-cols-[1fr_676px_1fr]">
-      <div class="hidden md:block" />
+    <div class="px-bc-page pb-bc-4xl bc-grid bc-2col bc-676">
+      <div class="bc-spacer-l" />
       <div style="display:flex; gap:24px;">
         <div style="flex:1; min-width:0; aspect-ratio:326/406; background:rgba(0,0,0,0.1);" />
         <div style="flex:1; min-width:0; aspect-ratio:326/406; background:rgba(0,0,0,0.1);" />
       </div>
-      <div class="hidden lg:block" />
+      <div class="bc-spacer-r" />
     </div>
 
     <!-- Testo metodo -->
-    <div class="px-bc-page pb-bc-4xl grid gap-6 grid-cols-1 md:grid-cols-[1fr_2fr] lg:grid-cols-[1fr_442px_1fr]">
-      <div class="hidden md:block" />
+    <div class="px-bc-page pb-bc-4xl bc-grid bc-2col bc-442">
+      <div class="bc-spacer-l" />
       <div>
         <div style="display:flex; flex-direction:column; gap:32px;">
           <p
@@ -348,17 +348,17 @@ const heroImgStyle = computed(() => {
     <div v-if="successivo" class="relative overflow-hidden">
       <div class="border-t border-bc-black" />
       <div
-        class="px-bc-page py-bc-4xl grid [grid-template-rows:auto_auto] gap-x-6 gap-y-0 grid-cols-1 md:grid-cols-[120px_1fr] lg:grid-cols-[1fr_677px_1fr]"
+        class="px-bc-page py-bc-4xl bc-hero-grid"
       >
         <h2
-          class="font-garamond font-semibold text-bc-black text-center tracking-[0.02em] md:[grid-column:2] md:[grid-row:1] lg:[grid-column:2] lg:[grid-row:1]"
+          class="font-garamond font-semibold text-bc-black text-center tracking-[0.02em] bc-col2-r1"
           style="font-size:38px; line-height:1.2; margin-bottom:48px;"
         >{{ successivo.titolo }}</h2>
-        <div class="hidden md:flex md:flex-col gap-[8px] md:[grid-column:1] md:[grid-row:2] md:self-start lg:[grid-column:1] lg:[grid-row:2]">
+        <div class="hidden md:flex md:flex-col gap-[8px] bc-col1-r2">
           <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.2;">Progetto:</p>
           <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.2;">{{ successivo.id }}</p>
         </div>
-        <div class="md:[grid-column:2] md:[grid-row:2] lg:[grid-column:2] lg:[grid-row:2]" style="aspect-ratio:677/451; background:rgba(0,0,0,0.1);" />
+        <div class="bc-col2-r2" style="aspect-ratio:677/451; background:rgba(0,0,0,0.1);" />
       </div>
       <!-- Sfumatura che copre il fondo dell'immagine -->
       <div class="absolute bottom-0 left-0 right-0 h-[60%] bg-gradient-to-t from-bc-canvas to-transparent pointer-events-none" />
@@ -380,3 +380,59 @@ const heroImgStyle = computed(() => {
     <NuxtLink to="/lavori" class="bc-btn">Torna ai lavori</NuxtLink>
   </div>
 </template>
+
+<style>
+/* ── Hero / Preview: griglia responsiva ──────────────────── */
+.bc-hero-grid {
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 0 24px;
+}
+@media (min-width: 768px) {
+  .bc-hero-grid { grid-template-columns: 120px 1fr; }
+}
+@media (min-width: 1024px) {
+  .bc-hero-grid { grid-template-columns: 1fr 677px 1fr; }
+}
+
+/* ── Posizione celle hero/preview ────────────────────────── */
+@media (min-width: 768px) {
+  .bc-col2-r1 { grid-column: 2; grid-row: 1; }
+  .bc-col1-r2 { grid-column: 1; grid-row: 2; align-self: start; }
+  .bc-col2-r2 { grid-column: 2; grid-row: 2; }
+}
+
+/* ── Contenuto: 2 col tablet, 3 col centrate desktop ──────── */
+.bc-grid { display: grid; gap: 24px; }
+@media (min-width: 768px) {
+  .bc-2col { grid-template-columns: 1fr 2fr; }
+}
+@media (min-width: 1024px) {
+  .bc-442 { grid-template-columns: 1fr 442px 1fr; }
+  .bc-676 { grid-template-columns: 1fr 676px 1fr; }
+}
+
+/* ── Spacer colonne ──────────────────────────────────────── */
+.bc-spacer-l, .bc-spacer-r { display: none; }
+@media (min-width: 768px) { .bc-spacer-l { display: block; } }
+@media (min-width: 1024px) { .bc-spacer-r { display: block; } }
+
+/* ── Meta section desktop: sidebar assoluto, altezza = intro ─ */
+@media (min-width: 1024px) {
+  .bc-meta {
+    display: block !important;
+    position: relative;
+  }
+  .bc-sidebar {
+    position: absolute;
+    top: 80px;   /* = pt-bc-4xl */
+    left: 32px;  /* = px-bc-page */
+    max-width: calc(50% - 277px);
+  }
+  .bc-intro {
+    max-width: 442px;
+    margin: 0 auto;
+  }
+  .bc-meta .bc-spacer-r { display: none; }
+}
+</style>
