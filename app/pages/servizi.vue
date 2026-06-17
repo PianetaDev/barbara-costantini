@@ -248,6 +248,7 @@ function toggle(g: number, i: number) {
     gap: 140px;
   }
   .sv-cat {
+    flex: none;
     width: 326px;
   }
   .sv-acc {
