@@ -81,11 +81,11 @@ function toggle(g: number, i: number) {
 <template>
   <!-- Hero -->
   <section class="border-b border-bc-black px-bc-page py-bc-4xl flex flex-col items-center gap-bc-2xl text-center">
-    <h1 class="font-garamond font-semibold text-bc-black tracking-[0.02em]"
+    <h1 v-reveal class="font-garamond font-semibold text-bc-black tracking-[0.02em]"
         style="font-size:56px; line-height:1.2; max-width:908px;">
       I servizi
     </h1>
-    <p class="font-garamond font-normal text-bc-black"
+    <p v-reveal="{ delay: '0.12s' }" class="font-garamond font-normal text-bc-black"
        style="font-size:28px; line-height:1.2; max-width:438px;">
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis.
     </p>
@@ -100,7 +100,7 @@ function toggle(g: number, i: number) {
     <div class="px-bc-page py-bc-4xl sv-row">
 
       <!-- Categoria sx -->
-      <div class="flex flex-col gap-bc-xl sv-cat">
+      <div v-reveal class="flex flex-col gap-bc-xl sv-cat">
         <h2 class="font-garamond font-semibold text-bc-black tracking-[0.02em]"
             style="font-size:38px; line-height:1.2;">{{ gruppo.titolo }}</h2>
         <p class="font-garamond font-normal text-bc-black tracking-[0.02em]"
@@ -108,7 +108,7 @@ function toggle(g: number, i: number) {
       </div>
 
       <!-- Accordion dx -->
-      <div class="flex flex-col sv-acc">
+      <div v-reveal="{ delay: '0.12s' }" class="flex flex-col sv-acc">
         <div
           v-for="(s, i) in gruppo.servizi"
           :key="i"
@@ -148,6 +148,7 @@ function toggle(g: number, i: number) {
       <div
         v-for="(p, i) in partner"
         :key="i"
+        v-reveal="{ delay: `${i * 0.1}s` }"
         class="sv-partner-col"
       >
         <div class="sv-partner-inner">
@@ -162,11 +163,11 @@ function toggle(g: number, i: number) {
 
   <!-- CTA finale -->
   <section class="px-bc-page py-bc-4xl flex flex-col items-center gap-bc-2xl text-center">
-    <p class="font-garamond font-semibold text-bc-black tracking-[0.02em]"
+    <p v-reveal class="font-garamond font-semibold text-bc-black tracking-[0.02em]"
        style="font-size:24px; line-height:1.2; max-width:442px;">
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis.
     </p>
-    <NuxtLink to="/contatti" class="bc-btn">Contatta lo studio</NuxtLink>
+    <NuxtLink v-reveal="{ delay: '0.1s' }" to="/contatti" class="bc-btn">Contatta lo studio</NuxtLink>
   </section>
 </template>
 

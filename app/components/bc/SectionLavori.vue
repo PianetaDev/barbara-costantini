@@ -59,7 +59,10 @@ function onTouchEnd(e: TouchEvent) {
                 py-bc-2xl lg:py-bc-4xl lg:items-center">
 
       <!-- Testo + CTA -->
-      <div class="flex flex-col gap-bc-xl items-start md:shrink-0 md:w-[240px] lg:w-[327px]">
+      <div
+        v-reveal
+        class="flex flex-col gap-bc-xl items-start md:shrink-0 md:w-[240px] lg:w-[327px]"
+      >
         <div class="flex flex-col gap-bc-xl">
           <h2 class="font-garamond text-bc-h2 font-semibold text-bc-black tracking-[0.02em]">I lavori</h2>
           <p class="font-garamond text-bc-body1 font-normal text-bc-black tracking-[0.02em]">
@@ -72,8 +75,9 @@ function onTouchEnd(e: TouchEvent) {
       <!-- Card desktop: 3 card fisse, no carousel -->
       <div class="hidden lg:flex gap-[24px] items-start">
         <NuxtLink
-          v-for="p in progetti"
+          v-for="(p, i) in progetti"
           :key="p.slug"
+          v-reveal="{ delay: `${i * 0.08}s` }"
           :to="`/lavori/${p.slug}`"
           class="flex flex-col gap-bc-md items-start group"
           :class="p.tipo === 'horizontal' ? 'w-[210px]' : 'w-[209px]'"

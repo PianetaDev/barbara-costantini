@@ -72,6 +72,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKey))
       <button
         v-for="(img, i) in immagini"
         :key="i"
+        v-reveal="{ delay: `${Math.min(i, 3) * 0.07}s` }"
         class="flex flex-col gap-[16px] group text-left cursor-pointer"
         @click="apriLightbox(i)"
       >

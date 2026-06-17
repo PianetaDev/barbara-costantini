@@ -7,7 +7,10 @@
                 py-bc-2xl md:py-0 lg:h-[713px]
                 gap-bc-xl md:gap-0">
       <!-- Immagine -->
-      <div class="flex items-center md:flex-1 lg:flex-none lg:shrink-0 md:py-bc-2xl lg:py-bc-4xl">
+      <div
+        v-reveal
+        class="flex items-center md:flex-1 lg:flex-none lg:shrink-0 md:py-bc-2xl lg:py-bc-4xl"
+      >
         <div class="w-full lg:w-[442px] aspect-[442/553] bg-bc-black/10 overflow-hidden">
           <slot name="image">
             <img src="" alt="I servizi" class="w-full h-full object-cover" />
@@ -17,7 +20,10 @@
       <!-- Divider verticale (da tablet in su) -->
       <div class="hidden md:block self-stretch w-px bg-bc-black mx-bc-xl lg:mx-0 shrink-0" />
       <!-- Testo + CTA -->
-      <div class="flex flex-col gap-bc-xl items-start md:flex-1 lg:flex-none lg:w-[437px] md:py-bc-2xl lg:py-0">
+      <div
+        v-reveal="{ delay: '0.15s' }"
+        class="flex flex-col gap-bc-xl items-start md:flex-1 lg:flex-none lg:w-[437px] md:py-bc-2xl lg:py-0"
+      >
         <div class="flex flex-col gap-bc-xl">
           <h2 class="font-garamond text-bc-h2 font-semibold text-bc-black tracking-[0.02em]">
             <slot name="title">I servizi</slot>

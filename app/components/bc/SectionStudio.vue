@@ -7,7 +7,10 @@
                 py-bc-2xl md:py-0 lg:h-[713px]
                 gap-bc-xl md:gap-0">
       <!-- Testo + CTA -->
-      <div class="flex flex-col gap-bc-xl items-start justify-center md:flex-1 lg:flex-none lg:w-[442px] md:py-bc-2xl lg:py-0">
+      <div
+        v-reveal
+        class="flex flex-col gap-bc-xl items-start justify-center md:flex-1 lg:flex-none lg:w-[442px] md:py-bc-2xl lg:py-0"
+      >
         <div class="flex flex-col gap-bc-xl">
           <h2 class="font-garamond text-bc-h2 font-semibold text-bc-black tracking-[0.02em]">
             <slot name="title">Lo studio</slot>
@@ -21,7 +24,10 @@
       <!-- Divider verticale (da tablet in su) -->
       <div class="hidden md:block self-stretch w-px bg-bc-black mx-bc-xl lg:mx-bc-2xl shrink-0" />
       <!-- Immagine -->
-      <div class="flex items-center md:flex-1 lg:flex-none md:py-bc-2xl lg:py-bc-4xl">
+      <div
+        v-reveal="{ delay: '0.15s' }"
+        class="flex items-center md:flex-1 lg:flex-none md:py-bc-2xl lg:py-bc-4xl"
+      >
         <div class="w-full lg:w-[443px] aspect-[443/553] bg-bc-black/10 overflow-hidden">
           <slot name="image">
             <img src="" alt="Lo studio" class="w-full h-full object-cover" />
