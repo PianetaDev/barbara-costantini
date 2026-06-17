@@ -152,10 +152,10 @@ function caricaAltri() {
     <!-- HERO -->
     <section class="w-full border-b border-bc-black py-bc-4xl px-bc-page">
       <div class="flex flex-col items-center gap-bc-2xl text-center max-w-[908px] mx-auto">
-        <h1 class="font-garamond text-bc-h1 font-semibold text-bc-black tracking-[0.02em]">
+        <h1 v-reveal class="font-garamond text-bc-h1 font-semibold text-bc-black tracking-[0.02em]">
           I Lavori
         </h1>
-        <p class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:28px; line-height:1.2; max-width:438px;">
+        <p v-reveal="{ delay: '0.12s' }" class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:28px; line-height:1.2; max-width:438px;">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis.
         </p>
       </div>
@@ -164,7 +164,7 @@ function caricaAltri() {
     <!-- ARCHIVIO -->
     <section class="w-full px-bc-page py-bc-4xl">
       <div class="max-w-[1142px] mx-auto flex flex-col gap-bc-2xl">
-        <h2 class="font-garamond text-bc-h2 font-semibold text-bc-black tracking-[0.02em] text-center">
+        <h2 v-reveal class="font-garamond text-bc-h2 font-semibold text-bc-black tracking-[0.02em] text-center">
           Archivio lavori completo
         </h2>
 
@@ -196,6 +196,7 @@ function caricaAltri() {
           <div
             v-for="l in lavoriVisibili"
             :key="l.id"
+            v-reveal
             class="border-b border-bc-black"
           >
             <!-- Riga principale — MOBILE: stacked (ID+Azioni in cima, poi Titolo+Committente) -->
