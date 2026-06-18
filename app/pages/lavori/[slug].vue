@@ -88,8 +88,8 @@ const progetti: Progetto[] = [
       { label: "Condizioni", valore: "Buone" },
     ],
     immagini: [
-      { src: "/images/bc-059.jpg", label: "02-01", aspetto: "h" },
-      { src: "/images/bc-060.jpg", label: "02-02", aspetto: "v" },
+      { src: "/images/bc-026.jpg", label: "02-01", aspetto: "h" },
+      { src: "/images/bc-048.jpg", label: "02-02", aspetto: "v" },
     ],
     immaginiContenuto: ["/images/bc-040.jpg", "/images/bc-070.jpg"],
     intro: [
