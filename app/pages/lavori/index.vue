@@ -21,6 +21,7 @@ const tuttiILavori: Lavoro[] = [
     slug: "archivio-regio",
     descrizione: "Il Restauro conservativo dell'<em>Antico Archivio Regio</em>, si compone, in riferimento ai documenti in oggetto, di <strong>262 unit\u00e0 archivistiche</strong> comprese in un arco temporale che va dal 1381 al 1805.",
     data: "Mar 2023",
+    image: "/images/bc-059.jpg",
     hasDetail: true,
   },
   {
@@ -29,6 +30,7 @@ const tuttiILavori: Lavoro[] = [
     committente: "Munda \u2013 Museo Nazionale d'Abruzzo",
     slug: "restauro-testamenti",
     descrizione: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis.",
+    image: "/images/bc-060.jpg",
     hasDetail: true,
   },
   {
@@ -37,6 +39,7 @@ const tuttiILavori: Lavoro[] = [
     committente: "EUR Spa",
     slug: "restauro-eur",
     descrizione: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet.",
+    image: "/images/bc-025.jpg",
     hasDetail: true,
   },
   {

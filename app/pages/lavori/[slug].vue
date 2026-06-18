@@ -50,10 +50,10 @@ const progetti: Progetto[] = [
       { label: "Condizioni", valore: "Mediocri" },
     ],
     immagini: [
-      { src: "", label: "01-01", aspetto: "h" },
-      { src: "", label: "01-02", aspetto: "v" },
+      { src: "/images/bc-027.jpg", label: "01-01", aspetto: "h" },
+      { src: "/images/bc-003.jpg", label: "01-02", aspetto: "v" },
     ],
-    immaginiContenuto: ["", ""],
+    immaginiContenuto: ["/images/bc-059.jpg", "/images/bc-026.jpg"],
     intro: [
       "Il Restauro conservativo dell'Antico Archivio Regio si compone, in riferimento ai documenti in oggetto, di 262 unit\u00e0 archivistiche comprese in un arco temporale che va dal 1381 al 1805.",
       "Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat. Mauris euismod orci in mauris vehicula vehicula. Pellentesque ornare ullamcorper lorem, sit amet hendrerit purus molestie sed.",
@@ -88,10 +88,10 @@ const progetti: Progetto[] = [
       { label: "Condizioni", valore: "Buone" },
     ],
     immagini: [
-      { src: "", label: "02-01", aspetto: "h" },
-      { src: "", label: "02-02", aspetto: "v" },
+      { src: "/images/bc-059.jpg", label: "02-01", aspetto: "h" },
+      { src: "/images/bc-060.jpg", label: "02-02", aspetto: "v" },
     ],
-    immaginiContenuto: ["", ""],
+    immaginiContenuto: ["/images/bc-040.jpg", "/images/bc-070.jpg"],
     intro: [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis.",
       "Pellentesque ornare ullamcorper lorem, sit amet hendrerit purus molestie sed. Pellentesque ac elit eu ex dictum tempor.",
@@ -126,10 +126,10 @@ const progetti: Progetto[] = [
       { label: "Condizioni", valore: "Mediocri" },
     ],
     immagini: [
-      { src: "", label: "03-01", aspetto: "h" },
-      { src: "", label: "03-02", aspetto: "v" },
+      { src: "/images/bc-038.jpg", label: "03-01", aspetto: "h" },
+      { src: "/images/bc-090.jpg", label: "03-02", aspetto: "v" },
     ],
-    immaginiContenuto: ["", ""],
+    immaginiContenuto: ["/images/bc-003.jpg", "/images/bc-026.jpg"],
     intro: [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis.",
       "Pellentesque ornare ullamcorper lorem, sit amet hendrerit purus molestie sed. Pellentesque ac elit eu ex dictum tempor.",

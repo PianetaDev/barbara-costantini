@@ -15,9 +15,9 @@ const props = withDefaults(defineProps<{
   progetti?: Progetto[]
 }>(), {
   progetti: () => [
-    { codice: '01', committente: 'Archivio di stato di Cagliari', titolo: "Restauro conservativo dell'Antico Archivio Regio", slug: 'archivio-regio', tipo: 'vertical' },
-    { codice: '02', committente: 'Munda – Museo Nazionale d’Abruzzo', titolo: 'Restauro testamenti', slug: 'restauro-testamenti', tipo: 'horizontal' },
-    { codice: '03', committente: 'EUR Spa', titolo: 'Intervento di restauro conservativo', slug: 'restauro-eur', tipo: 'vertical' },
+    { codice: '01', committente: 'Archivio di stato di Cagliari', titolo: "Restauro conservativo dell'Antico Archivio Regio", slug: 'archivio-regio', tipo: 'vertical', image: '/images/bc-059.jpg' },
+    { codice: '02', committente: "Munda – Museo Nazionale d'Abruzzo", titolo: 'Restauro testamenti', slug: 'restauro-testamenti', tipo: 'horizontal', image: '/images/bc-060.jpg' },
+    { codice: '03', committente: 'EUR Spa', titolo: 'Intervento di restauro conservativo', slug: 'restauro-eur', tipo: 'vertical', image: '/images/bc-025.jpg' },
   ]
 })
 

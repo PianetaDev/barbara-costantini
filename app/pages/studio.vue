@@ -5,8 +5,15 @@ useHead({ title: 'Lo Studio — Barbara Costantini Restauro' })
   <div>
     <BcHero>
       <template #title>Lo studio</template>
+      <template #image>
+        <img src="/images/bc-036.jpg" alt="Lo studio di restauro" class="w-full h-full object-cover" />
+      </template>
     </BcHero>
-    <BcSectionBio />
+    <BcSectionBio>
+      <template #image>
+        <img src="/images/bc-030.jpg" alt="Barbara Costantini" class="w-full h-full object-cover" />
+      </template>
+    </BcSectionBio>
     <BcSectionTeam />
   </div>
 </template>

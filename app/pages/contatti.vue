@@ -32,7 +32,7 @@
       <!-- Immagine sotto -->
       <div v-reveal="{ delay: '0.15s' }" class="px-[24px] py-bc-4xl">
         <div class="w-full aspect-[342/427] overflow-hidden bg-bc-black/10">
-          <!-- immagine verrà da CMS -->
+          <img src="/images/bc-003.jpg" alt="Restauro documenti" class="w-full h-full object-cover" />
         </div>
       </div>
     </div>
@@ -66,7 +66,7 @@
           <!-- Colonna destra: immagine -->
           <div v-reveal="{ delay: '0.15s' }" class="w-1/2 pl-bc-4xl flex justify-start items-center">
             <div class="w-full max-w-[443px] aspect-[443/553] overflow-hidden bg-bc-black/10">
-              <!-- immagine verrà da CMS -->
+              <img src="/images/bc-003.jpg" alt="Restauro documenti" class="w-full h-full object-cover" />
             </div>
           </div>
 

@@ -10,18 +10,18 @@ interface Immagine {
 
 const props = withDefaults(defineProps<{ immagini?: Immagine[] }>(), {
   immagini: () => [
-    { codice: 'PRJ01', committente: 'Committente', titolo: 'Nome progetto', tipo: 'vertical' },
-    { codice: 'PRJ02', committente: 'Committente', titolo: 'Nome progetto', tipo: 'horizontal' },
-    { codice: 'PRJ03', committente: 'Committente', titolo: 'Nome progetto', tipo: 'vertical' },
-    { codice: 'PRJ04', committente: 'Committente', titolo: 'Nome progetto', tipo: 'horizontal' },
-    { codice: 'PRJ05', committente: 'Committente', titolo: 'Nome progetto', tipo: 'horizontal' },
-    { codice: 'PRJ06', committente: 'Committente', titolo: 'Nome progetto', tipo: 'vertical' },
-    { codice: 'PRJ07', committente: 'Committente', titolo: 'Nome progetto', tipo: 'vertical' },
-    { codice: 'PRJ08', committente: 'Committente', titolo: 'Nome progetto', tipo: 'horizontal' },
-    { codice: 'PRJ09', committente: 'Committente', titolo: 'Nome progetto', tipo: 'horizontal' },
-    { codice: 'PRJ10', committente: 'Committente', titolo: 'Nome progetto', tipo: 'horizontal' },
-    { codice: 'PRJ11', committente: 'Committente', titolo: 'Nome progetto', tipo: 'vertical' },
-    { codice: 'PRJ12', committente: 'Committente', titolo: 'Nome progetto', tipo: 'vertical' },
+    { codice: 'PRJ01', committente: 'Committente', titolo: 'Nome progetto', tipo: 'horizontal', image: '/images/bc-020.jpg' },
+    { codice: 'PRJ02', committente: 'Committente', titolo: 'Nome progetto', tipo: 'vertical',   image: '/images/bc-030.jpg' },
+    { codice: 'PRJ03', committente: 'Committente', titolo: 'Nome progetto', tipo: 'horizontal', image: '/images/bc-050.jpg' },
+    { codice: 'PRJ04', committente: 'Committente', titolo: 'Nome progetto', tipo: 'horizontal', image: '/images/bc-007.jpg' },
+    { codice: 'PRJ05', committente: 'Committente', titolo: 'Nome progetto', tipo: 'horizontal', image: '/images/bc-015.jpg' },
+    { codice: 'PRJ06', committente: 'Committente', titolo: 'Nome progetto', tipo: 'vertical',   image: '/images/bc-080.jpg' },
+    { codice: 'PRJ07', committente: 'Committente', titolo: 'Nome progetto', tipo: 'horizontal', image: '/images/bc-070.jpg' },
+    { codice: 'PRJ08', committente: 'Committente', titolo: 'Nome progetto', tipo: 'horizontal', image: '/images/bc-090.jpg' },
+    { codice: 'PRJ09', committente: 'Committente', titolo: 'Nome progetto', tipo: 'horizontal', image: '/images/bc-005.jpg' },
+    { codice: 'PRJ10', committente: 'Committente', titolo: 'Nome progetto', tipo: 'horizontal', image: '/images/bc-040.jpg' },
+    { codice: 'PRJ11', committente: 'Committente', titolo: 'Nome progetto', tipo: 'vertical',   image: '/images/bc-010.jpg' },
+    { codice: 'PRJ12', committente: 'Committente', titolo: 'Nome progetto', tipo: 'horizontal', image: '/images/bc-068.jpg' },
   ]
 })
 
