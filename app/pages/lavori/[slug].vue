@@ -282,7 +282,9 @@ const heroImgStyle = computed(() => {
     <!-- Immagine grande contenuto -->
     <div class="px-bc-page pb-bc-4xl bc-grid bc-2col bc-676">
       <div class="bc-spacer-l" />
-      <div style="aspect-ratio:676/451; background:rgba(0,0,0,0.1);" />
+      <div style="aspect-ratio:676/451; background:rgba(0,0,0,0.1); overflow:hidden;">
+        <img v-if="progetto.immaginiContenuto[0]" :src="progetto.immaginiContenuto[0]" :alt="progetto.titolo" style="width:100%; height:100%; object-fit:cover;" />
+      </div>
       <div class="bc-spacer-r" />
     </div>
 
@@ -316,8 +318,12 @@ const heroImgStyle = computed(() => {
     <div class="px-bc-page pb-bc-4xl bc-grid bc-2col bc-676">
       <div class="bc-spacer-l" />
       <div style="display:flex; gap:24px;">
-        <div style="flex:1; min-width:0; aspect-ratio:326/406; background:rgba(0,0,0,0.1);" />
-        <div style="flex:1; min-width:0; aspect-ratio:326/406; background:rgba(0,0,0,0.1);" />
+        <div style="flex:1; min-width:0; aspect-ratio:326/406; background:rgba(0,0,0,0.1); overflow:hidden;">
+          <img v-if="progetto.immaginiContenuto[0]" :src="progetto.immaginiContenuto[0]" :alt="progetto.titolo" style="width:100%; height:100%; object-fit:cover;" />
+        </div>
+        <div style="flex:1; min-width:0; aspect-ratio:326/406; background:rgba(0,0,0,0.1); overflow:hidden;">
+          <img v-if="progetto.immaginiContenuto[1]" :src="progetto.immaginiContenuto[1]" :alt="progetto.titolo" style="width:100%; height:100%; object-fit:cover;" />
+        </div>
       </div>
       <div class="bc-spacer-r" />
     </div>
@@ -358,7 +364,9 @@ const heroImgStyle = computed(() => {
           <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.2;">Progetto:</p>
           <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.2;">{{ successivo.id }}</p>
         </div>
-        <div class="bc-col2-r2" style="aspect-ratio:677/451; background:rgba(0,0,0,0.1);" />
+        <div class="bc-col2-r2" style="aspect-ratio:677/451; background:rgba(0,0,0,0.1); overflow:hidden;">
+          <img v-if="successivo.immagini[0]?.src" :src="successivo.immagini[0].src" :alt="successivo.titolo" style="width:100%; height:100%; object-fit:cover;" />
+        </div>
       </div>
       <!-- Sfumatura che copre il fondo dell'immagine -->
       <div class="absolute bottom-0 left-0 right-0 h-[60%] bg-gradient-to-t from-bc-canvas to-transparent pointer-events-none" />

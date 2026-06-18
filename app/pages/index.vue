@@ -11,7 +11,7 @@ useHead({ title: 'Barbara Costantini Restauro' })
     </BcHero>
     <BcSectionStudio>
       <template #image>
-        <img src="/images/bc-096.jpg" alt="Lo studio" class="w-full h-full object-cover" />
+        <img src="/images/bc-097.jpg" alt="Lo studio" class="w-full h-full object-cover" />
       </template>
     </BcSectionStudio>
     <BcSectionLavori />
