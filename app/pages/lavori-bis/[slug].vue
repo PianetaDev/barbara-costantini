@@ -196,7 +196,7 @@ const heroImgStyle = computed(() => {
     </div>
 
     <!-- Sfoglia altri lavori -->
-    <BcSectionLavori titolo="Sfoglia altri lavori" cta-label="Vedi tutti" />
+    <BcSectionLavori titolo="Sfoglia altri lavori" cta-label="Vedi tutti" titolo-size="32px" paragrafo-size="20px" card-titolo-size="20px" />
 
   </div>
 
