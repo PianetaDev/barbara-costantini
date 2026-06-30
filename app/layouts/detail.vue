@@ -2,7 +2,7 @@
   <div class="min-h-screen flex flex-col bg-bc-canvas">
     <!-- Go back bar — sticky, stessa altezza di BcNav -->
     <header class="w-full border-b border-bc-black sticky top-0 z-40 bg-bc-canvas">
-      <div class="flex items-center px-bc-page py-bc-xl">
+      <div class="flex items-center px-bc-page py-[24px]">
         <NuxtLink
           to="/lavori"
           class="font-garamond font-normal text-bc-black border-b border-bc-black hover:font-semibold"
