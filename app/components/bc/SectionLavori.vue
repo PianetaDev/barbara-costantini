@@ -18,12 +18,14 @@ const props = withDefaults(defineProps<{
   titoloSize?: string
   paragrafoSize?: string
   cardTitoloSize?: string
+  borderTop?: boolean
 }>(), {
   titolo: 'I lavori',
   ctaLabel: 'Esplora i lavori',
   titoloSize: undefined,
   paragrafoSize: undefined,
   cardTitoloSize: undefined,
+  borderTop: false,
   progetti: () => [
     { codice: '01', committente: 'Archivio di stato di Cagliari', titolo: "Restauro conservativo dell'Antico Archivio Regio", slug: 'archivio-regio', tipo: 'vertical', image: '/images/bc-059.jpg' },
     { codice: '02', committente: "Munda – Museo Nazionale d'Abruzzo", titolo: 'Restauro testamenti', slug: 'restauro-testamenti', tipo: 'horizontal', image: '/images/bc-060.jpg' },
@@ -62,7 +64,7 @@ function onTouchEnd(e: TouchEvent) {
 }
 </script>
 <template>
-  <section class="w-full border-t border-bc-black px-bc-page overflow-hidden">
+  <section class="w-full border-b border-bc-black px-bc-page overflow-hidden" :class="{ 'border-t': props.borderTop }">
     <div class="mx-auto max-w-bc-content
                 flex flex-col md:flex-row md:items-start
                 gap-bc-xl md:gap-bc-2xl lg:gap-0 lg:justify-between
