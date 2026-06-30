@@ -98,7 +98,7 @@ const heroImgStyle = computed(() => {
     <div class="px-bc-page py-[64px] bc-hero-grid">
       <h1
         class="font-garamond text-bc-black text-center tracking-[0.02em] bc-col2-r1"
-        style="font-size:38px; line-height:1.2; margin-bottom:48px; font-weight:500;"
+        style="font-size:32px; line-height:1.2; margin-bottom:48px; font-weight:500;"
       >{{ progetto.titolo }}</h1>
       <div class="hidden md:flex md:flex-col gap-[8px] bc-col1-r2">
         <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.2;">Progetto:</p>

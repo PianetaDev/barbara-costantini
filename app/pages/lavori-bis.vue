@@ -16,10 +16,10 @@ const progetti = [...base, ...base, ...base, ...base]
     <!-- Hero: titolo + descrizione centrati -->
     <section class="w-full border-b border-bc-black px-bc-page py-[64px]">
       <div class="mx-auto max-w-[908px] flex flex-col items-center text-center" style="gap: 24px;">
-        <h1 v-reveal class="font-garamond font-medium text-bc-black tracking-[0.02em] leading-[1.2]" style="font-size: 32px; font-weight: 500;">
+        <h1 v-reveal class="font-garamond font-medium text-bc-black tracking-[0.02em] leading-[1.2]" style="font-size: 40px; font-weight: 500;">
           I lavori
         </h1>
-        <p v-reveal="{ delay: '0.12s' }" class="font-garamond font-normal text-bc-black tracking-[0.02em] max-w-[700px]" style="font-size: 22px;">
+        <p v-reveal="{ delay: '0.12s' }" class="font-garamond font-normal text-bc-black tracking-[0.02em] max-w-[700px]" style="font-size: 24px;">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
         </p>
       </div>
