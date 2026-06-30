@@ -13,7 +13,11 @@ interface Progetto {
 
 const props = withDefaults(defineProps<{
   progetti?: Progetto[]
+  titolo?: string
+  ctaLabel?: string
 }>(), {
+  titolo: 'I lavori',
+  ctaLabel: 'Esplora i lavori',
   progetti: () => [
     { codice: '01', committente: 'Archivio di stato di Cagliari', titolo: "Restauro conservativo dell'Antico Archivio Regio", slug: 'archivio-regio', tipo: 'vertical', image: '/images/bc-059.jpg' },
     { codice: '02', committente: "Munda – Museo Nazionale d'Abruzzo", titolo: 'Restauro testamenti', slug: 'restauro-testamenti', tipo: 'horizontal', image: '/images/bc-060.jpg' },
@@ -64,12 +68,12 @@ function onTouchEnd(e: TouchEvent) {
         class="flex flex-col gap-bc-xl items-start md:shrink-0 md:w-[240px] lg:w-[327px]"
       >
         <div class="flex flex-col gap-bc-xl">
-          <h2 class="font-garamond text-bc-h2 font-semibold text-bc-black tracking-[0.02em]">I lavori</h2>
+          <h2 class="font-garamond text-bc-h2 font-semibold text-bc-black tracking-[0.02em]">{{ props.titolo }}</h2>
           <p class="font-garamond text-bc-body1 font-normal text-bc-black tracking-[0.02em]">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac.
           </p>
         </div>
-        <NuxtLink to="/lavori" class="bc-btn">Esplora i lavori</NuxtLink>
+        <NuxtLink to="/lavori" class="bc-btn">{{ props.ctaLabel }}</NuxtLink>
       </div>
 
       <!-- Card desktop: 3 card fisse, no carousel -->

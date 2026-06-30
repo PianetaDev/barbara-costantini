@@ -31,7 +31,7 @@ const progetti = [...base, ...base, ...base, ...base]
         <NuxtLink
           v-for="(p, i) in progetti"
           :key="i"
-          :to="`/lavori/${p.slug}`"
+          :to="`/lavori-bis/${p.slug}`"
           v-reveal="{ delay: `${Math.min(i, 3) * 0.07}s` }"
           class="flex flex-col gap-[16px] group text-left"
         >
