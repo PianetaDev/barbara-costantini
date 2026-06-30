@@ -13,14 +13,11 @@ const progetti = [...base, ...base, ...base, ...base]
 </script>
 <template>
   <div>
-    <!-- Hero: titolo + descrizione centrati -->
-    <section class="w-full border-b border-bc-black px-bc-page py-[64px]">
-      <div class="mx-auto max-w-[908px] flex flex-col items-center text-center" style="gap: 24px;">
-        <h1 v-reveal class="font-garamond font-medium text-bc-black tracking-[0.02em] leading-[1.2]" style="font-size: 40px; font-weight: 500;">
-          I lavori
-        </h1>
-        <p v-reveal="{ delay: '0.12s' }" class="font-garamond font-normal text-bc-black tracking-[0.02em] max-w-[700px]" style="font-size: 24px;">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    <!-- Hero: descrizione centrata -->
+    <section class="w-full px-bc-page py-[64px]">
+      <div class="mx-auto max-w-[908px] flex flex-col items-center text-center">
+        <p v-reveal class="font-garamond font-normal text-bc-black tracking-[0.02em] max-w-[700px]" style="font-size: 24px;">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.
         </p>
       </div>
     </section>
@@ -49,7 +46,7 @@ const progetti = [...base, ...base, ...base, ...base]
           <div class="flex flex-col gap-[4px]">
             <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.028em]">{{ p.codice }}</p>
             <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.028em]">{{ p.committente }}</p>
-            <p class="font-garamond text-bc-h4 text-bc-black tracking-[0.02em] group-hover:underline" style="font-weight: 500;">{{ p.titolo }}</p>
+            <p class="font-garamond text-bc-black tracking-[0.02em] group-hover:underline" style="font-size: 20px; font-weight: 500;">{{ p.titolo }}</p>
           </div>
         </NuxtLink>
       </div>
