@@ -20,9 +20,8 @@ watch(menuOpen, (val) => {
   <header class="w-full border-b border-bc-black sticky top-0 z-40 bg-bc-canvas">
     <div class="flex items-center justify-between px-bc-page py-bc-xl">
       <!-- Logo -->
-      <NuxtLink to="/" class="flex items-center gap-3" @click="menuOpen = false">
-        <img src="/logo.svg" alt="Barbara Costantini Restauro" class="h-[30px] w-auto" />
-        <span class="hidden lg:block font-garamond text-bc-body2 font-bold tracking-[0.02em]">
+      <NuxtLink to="/" class="flex items-center" @click="menuOpen = false">
+        <span class="font-garamond text-bc-body2 tracking-[0.02em]" style="font-weight: 500;">
           Barbara Costantini Restauro
         </span>
       </NuxtLink>
@@ -60,8 +59,10 @@ watch(menuOpen, (val) => {
       >
         <!-- Header overlay: logo + X -->
         <div class="flex items-center justify-between px-bc-page py-bc-xl border-b border-bc-black shrink-0">
-          <NuxtLink to="/" class="flex items-center gap-3" @click="menuOpen = false">
-            <img src="/logo.svg" alt="Barbara Costantini Restauro" class="h-[30px] w-auto" />
+          <NuxtLink to="/" class="flex items-center" @click="menuOpen = false">
+            <span class="font-garamond text-bc-body2 tracking-[0.02em]" style="font-weight: 500;">
+              Barbara Costantini Restauro
+            </span>
           </NuxtLink>
           <button class="p-2" aria-label="Chiudi menu" @click="menuOpen = false">
             <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
