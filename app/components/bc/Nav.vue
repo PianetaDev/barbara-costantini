@@ -6,8 +6,8 @@ const links = [
   { label: 'Lavori', to: '/lavori' },
   { label: 'Servizi', to: '/servizi' },
   { label: 'Gallery', to: '/gallery' },
-  { label: 'Lavori-Bis', to: '/lavori-bis' },
   { label: 'Contatti', to: '/contatti' },
+  { label: 'Lavori-Bis', to: '/lavori-bis' },
 ]
 
 const menuOpen = ref(false)
