@@ -18,7 +18,7 @@ watch(menuOpen, (val) => {
 </script>
 <template>
   <header class="w-full border-b border-bc-black sticky top-0 z-40 bg-bc-canvas">
-    <div class="flex items-center justify-between px-bc-page py-bc-xl">
+    <div class="flex items-center justify-between px-bc-page py-[24px]">
       <!-- Logo -->
       <NuxtLink to="/" class="flex items-center" @click="menuOpen = false">
         <span class="font-garamond text-bc-body2 tracking-[0.02em]" style="font-weight: 500;">
@@ -27,7 +27,7 @@ watch(menuOpen, (val) => {
       </NuxtLink>
 
       <!-- Nav desktop: hover = font-semibold (style guide 457:8130) -->
-      <nav class="hidden lg:flex items-center gap-[24px]">
+      <nav class="hidden lg:flex items-center justify-between w-[676px]">
         <NuxtLink
           v-for="l in links"
           :key="l.to"
