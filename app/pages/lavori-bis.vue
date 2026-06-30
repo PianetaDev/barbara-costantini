@@ -20,7 +20,7 @@ const progetti = [...base, ...base, ...base, ...base]
           I lavori
         </h1>
         <p v-reveal="{ delay: '0.12s' }" class="font-garamond text-bc-sub font-normal text-bc-black tracking-[0.02em] max-w-[700px]">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
         </p>
       </div>
     </section>
