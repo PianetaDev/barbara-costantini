@@ -28,12 +28,13 @@ watch(menuOpen, (val) => {
       </NuxtLink>
 
       <!-- Nav desktop: hover = font-semibold (style guide 457:8130) -->
-      <nav class="hidden lg:flex items-center justify-between w-[820px]">
+      <nav class="hidden lg:flex items-center gap-[24px]">
         <NuxtLink
           v-for="l in links"
           :key="l.to"
           :to="l.to"
-          class="font-sans text-bc-nav font-normal tracking-[0.02em] px-bc-md py-bc-sm hover:font-semibold"
+          exact-active-class="font-semibold"
+          class="font-sans text-bc-nav font-normal tracking-[0.02em] py-bc-sm hover:font-semibold"
         >
           {{ l.label }}
         </NuxtLink>

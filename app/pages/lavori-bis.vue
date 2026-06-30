@@ -14,7 +14,7 @@ const progetti = [...base, ...base, ...base, ...base]
 <template>
   <div>
     <!-- Hero: titolo + descrizione centrati -->
-    <section class="w-full border-b border-bc-black px-bc-page py-bc-4xl">
+    <section class="w-full border-b border-bc-black px-bc-page py-[64px]">
       <div class="mx-auto max-w-[908px] flex flex-col items-center text-center" style="gap: 24px;">
         <h1 v-reveal class="font-garamond font-medium text-bc-black tracking-[0.02em] leading-[1.2]" style="font-size: 48px; font-weight: 500;">
           I lavori
@@ -26,7 +26,7 @@ const progetti = [...base, ...base, ...base, ...base]
     </section>
 
     <!-- Griglia progetti -->
-    <section class="w-full px-bc-page py-bc-4xl">
+    <section class="w-full px-bc-page py-[64px]">
       <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-x-[24px] gap-y-bc-2xl items-start">
         <NuxtLink
           v-for="(p, i) in progetti"
