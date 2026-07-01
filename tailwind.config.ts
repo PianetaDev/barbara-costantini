@@ -26,7 +26,7 @@ export default {
         'bc-label2':  ['14px', { lineHeight: '1.2', letterSpacing: '0.028em' }],
         'bc-label1':  ['16px', { lineHeight: '1.2', letterSpacing: '0.02em' }],
         'bc-nav':     ['16px', { lineHeight: '1.2', letterSpacing: '0.02em' }],
-        'bc-btn':     ['18px', { lineHeight: '1.2', letterSpacing: '0.02em' }],
+        'bc-btn':     ['16px', { lineHeight: '1.2', letterSpacing: '0.02em' }],
         'bc-body2':   ['18px', { lineHeight: '1.2', letterSpacing: '0.02em' }],
         'bc-body1':   ['20px', { lineHeight: '1.2', letterSpacing: '0.02em' }],
         'bc-sub':     ['28px', { lineHeight: '1.2' }],

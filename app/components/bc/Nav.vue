@@ -21,7 +21,7 @@ watch(menuOpen, (val) => {
     <div class="flex items-center justify-between px-bc-page py-[24px]">
       <!-- Logo -->
       <NuxtLink to="/" class="flex items-center" @click="menuOpen = false">
-        <span class="font-garamond text-bc-body2 tracking-[0.02em]" style="font-weight: 500;">
+        <span class="font-sans text-bc-nav tracking-[0.02em]" style="font-weight: 700;">
           Barbara Costantini Restauro
         </span>
       </NuxtLink>
@@ -60,7 +60,7 @@ watch(menuOpen, (val) => {
         <!-- Header overlay: logo + X -->
         <div class="flex items-center justify-between px-bc-page py-bc-xl border-b border-bc-black shrink-0">
           <NuxtLink to="/" class="flex items-center" @click="menuOpen = false">
-            <span class="font-garamond text-bc-body2 tracking-[0.02em]" style="font-weight: 500;">
+            <span class="font-sans text-bc-nav tracking-[0.02em]" style="font-weight: 700;">
               Barbara Costantini Restauro
             </span>
           </NuxtLink>
