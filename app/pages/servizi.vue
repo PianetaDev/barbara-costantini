@@ -121,7 +121,7 @@ function toggle(g: number, i: number) {
       <div v-reveal="{ delay: '0.12s' }" class="flex flex-col sv-acc">
         <h2
           class="font-garamond font-medium text-bc-black tracking-[0.02em]"
-          style="font-size:32px; line-height:1.2; margin-bottom:32px;"
+          style="font-size:24px; line-height:1.2; margin-bottom:32px;"
         >{{ gruppo.titolo }}</h2>
 
         <div
@@ -175,7 +175,7 @@ function toggle(g: number, i: number) {
           <h3 class="font-garamond font-medium text-bc-black tracking-[0.02em] mt-bc-xl"
               style="font-size:24px; line-height:1.2;">{{ p.titolo }}</h3>
           <p class="font-garamond font-light text-bc-black tracking-[0.02em] mt-bc-xl"
-             style="font-size:20px; line-height:1.2;">{{ p.testo }}</p>
+             style="font-size:16px; line-height:1.2;">{{ p.testo }}</p>
         </div>
       </div>
     </div>
