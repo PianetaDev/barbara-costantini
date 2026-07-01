@@ -220,7 +220,7 @@ function toggle(g: number, i: number) {
 @media (min-width: 1280px) {
   .sv-row {
     justify-content: center;
-    gap: 80px;
+    gap: 140px;
   }
   .sv-img {
     flex: none;
