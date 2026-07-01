@@ -9,7 +9,7 @@
       <!-- Immagine -->
       <div
         v-reveal
-        class="flex items-center md:flex-1 lg:flex-none lg:shrink-0 md:py-bc-2xl lg:py-bc-4xl"
+        class="flex items-center md:flex-1 lg:flex-none lg:shrink-0 md:py-bc-2xl lg:py-[64px]"
       >
         <div class="w-full lg:w-[442px] aspect-[442/553] bg-bc-black/10 overflow-hidden">
           <slot name="image">

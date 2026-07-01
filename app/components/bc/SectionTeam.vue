@@ -71,7 +71,7 @@ function onTouchEnd(e: TouchEvent) {
     <div class="hidden lg:flex lg:items-stretch mx-auto max-w-bc-content">
       <template v-for="(m, i) in membri" :key="`d-${i}`">
         <div v-if="i > 0" class="w-px bg-bc-black self-stretch shrink-0 mx-[40px]" />
-        <div class="flex flex-col gap-bc-xl flex-1 py-bc-4xl">
+        <div class="flex flex-col gap-bc-xl flex-1 py-[64px]">
           <div class="w-full bg-bc-black/10 overflow-hidden" style="aspect-ratio: 327/407;">
             <img v-if="m.image" :src="m.image" :alt="m.nome" class="w-full h-full object-cover" />
           </div>

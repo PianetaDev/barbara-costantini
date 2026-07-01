@@ -80,7 +80,7 @@ function toggle(g: number, i: number) {
 
 <template>
   <!-- Hero -->
-  <section class="border-b border-bc-black px-bc-page py-bc-4xl flex flex-col items-center gap-bc-2xl text-center">
+  <section class="border-b border-bc-black px-bc-page py-[64px] flex flex-col items-center gap-bc-2xl text-center">
     <h1 v-reveal class="font-garamond font-medium text-bc-black tracking-[0.02em]"
         style="font-size:40px; line-height:1.2; max-width:908px;">
       I servizi
@@ -97,7 +97,7 @@ function toggle(g: number, i: number) {
     :key="g"
     class="border-b border-bc-black"
   >
-    <div class="px-bc-page py-bc-4xl sv-row">
+    <div class="px-bc-page py-[64px] sv-row">
 
       <!-- Categoria sx -->
       <div v-reveal class="flex flex-col gap-bc-xl sv-cat">
@@ -162,7 +162,7 @@ function toggle(g: number, i: number) {
   </section>
 
   <!-- CTA finale -->
-  <section class="px-bc-page py-bc-4xl flex flex-col items-center gap-bc-2xl text-center">
+  <section class="px-bc-page py-[64px] flex flex-col items-center gap-bc-2xl text-center">
     <p v-reveal class="font-garamond font-medium text-bc-black tracking-[0.02em]"
        style="font-size:20px; line-height:1.2; max-width:442px;">
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis.

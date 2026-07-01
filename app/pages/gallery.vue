@@ -5,7 +5,7 @@ useHead({ title: 'Gallery — Barbara Costantini Restauro' })
 <template>
   <div>
     <!-- Hero gallery: title + description centrati -->
-    <section class="w-full border-b border-bc-black px-bc-page py-bc-4xl">
+    <section class="w-full border-b border-bc-black px-bc-page py-[64px]">
       <div class="mx-auto max-w-[908px] flex flex-col items-center gap-bc-2xl text-center">
         <h1 v-reveal class="font-garamond text-[36px] md:text-[44px] lg:text-bc-h1 font-medium text-bc-black tracking-[0.02em] leading-[1.2]">
           Gallery fotografica

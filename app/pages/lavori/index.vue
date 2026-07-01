@@ -153,7 +153,7 @@ function caricaAltri() {
 <template>
   <div>
     <!-- HERO -->
-    <section class="w-full border-b border-bc-black py-bc-4xl px-bc-page">
+    <section class="w-full border-b border-bc-black py-[64px] px-bc-page">
       <div class="flex flex-col items-center gap-bc-2xl text-center max-w-[908px] mx-auto">
         <h1 v-reveal class="font-garamond text-bc-h1 font-medium text-bc-black tracking-[0.02em]">
           I Lavori
@@ -165,7 +165,7 @@ function caricaAltri() {
     </section>
 
     <!-- ARCHIVIO -->
-    <section class="w-full px-bc-page py-bc-4xl">
+    <section class="w-full px-bc-page py-[64px]">
       <div class="max-w-[1142px] mx-auto flex flex-col gap-bc-2xl">
         <h2 v-reveal class="font-garamond text-bc-h2 font-medium text-bc-black tracking-[0.02em] text-center">
           Archivio lavori completo
@@ -294,7 +294,7 @@ function caricaAltri() {
           </div>
 
           <!-- Scopri di più: scompare quando finiscono gli elementi -->
-          <div v-if="haAltri" class="flex justify-center pt-bc-4xl pb-bc-4xl">
+          <div v-if="haAltri" class="flex justify-center pt-[64px] pb-[64px]">
             <button
               class="font-garamond font-light text-bc-black border-b border-bc-black hover:font-semibold"
               style="font-size:18px; line-height:1.2; padding-bottom:2px;"

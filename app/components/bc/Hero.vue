@@ -1,7 +1,7 @@
 <!-- Figma: 590:1413 — Hero, y=107, 1376×1101 -->
 <!-- H1 56px SemiBold centrato + immagine 1142×642 + subtext 440px centrato -->
 <template>
-  <section class="flex flex-col items-center py-bc-2xl lg:py-bc-4xl px-bc-page max-w-bc-wrap mx-auto">
+  <section class="flex flex-col items-center py-bc-2xl lg:py-[64px] px-bc-page max-w-bc-wrap mx-auto">
     <h1
       v-reveal
       class="font-sans text-[28px] md:text-[34px] lg:text-bc-h1 font-medium text-center text-bc-black tracking-[0.02em] max-w-[908px] mb-[24px]"

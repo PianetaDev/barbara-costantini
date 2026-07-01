@@ -67,7 +67,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKey))
 
 <template>
   <!-- Griglia gallery -->
-  <section class="w-full px-bc-page py-bc-4xl">
+  <section class="w-full px-bc-page py-[64px]">
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-x-[24px] gap-y-bc-2xl items-start">
       <button
         v-for="(img, i) in immagini"

@@ -26,7 +26,7 @@
       <!-- Immagine -->
       <div
         v-reveal="{ delay: '0.15s' }"
-        class="flex items-center md:flex-1 lg:flex-none md:py-bc-2xl lg:py-bc-4xl"
+        class="flex items-center md:flex-1 lg:flex-none md:py-bc-2xl lg:py-[64px]"
       >
         <div class="w-full lg:w-[443px] aspect-[443/553] bg-bc-black/10 overflow-hidden">
           <slot name="image">

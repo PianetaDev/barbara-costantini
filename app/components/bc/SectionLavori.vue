@@ -68,7 +68,7 @@ function onTouchEnd(e: TouchEvent) {
     <div class="mx-auto max-w-bc-content
                 flex flex-col md:flex-row md:items-start
                 gap-bc-xl md:gap-bc-2xl lg:gap-0 lg:justify-between
-                py-bc-2xl lg:py-bc-4xl lg:items-center">
+                py-bc-2xl lg:py-[64px] lg:items-center">
 
       <!-- Testo + CTA -->
       <div

@@ -8,7 +8,7 @@
     <!-- MOBILE / TABLET: stack verticale -->
     <div class="lg:hidden flex flex-col">
       <!-- Testo centrato -->
-      <div class="flex flex-col gap-bc-2xl items-start px-[24px] py-bc-4xl">
+      <div class="flex flex-col gap-bc-2xl items-start px-[24px] py-[64px]">
         <h1 v-reveal class="font-garamond text-bc-h1 font-medium text-bc-black tracking-[0.02em] w-full">
           Contatti
         </h1>
@@ -30,7 +30,7 @@
       <!-- Linea orizzontale separatrice -->
       <div class="w-full h-px bg-bc-black" aria-hidden="true" />
       <!-- Immagine sotto -->
-      <div v-reveal="{ delay: '0.15s' }" class="px-[24px] py-bc-4xl">
+      <div v-reveal="{ delay: '0.15s' }" class="px-[24px] py-[64px]">
         <div class="w-full aspect-[342/427] overflow-hidden bg-bc-black/10">
           <img src="/images/bc-055.jpg" alt="Restauro documenti" class="w-full h-full object-cover" />
         </div>
@@ -40,7 +40,7 @@
     <!-- DESKTOP: split layout -->
     <section class="hidden lg:flex flex-1 w-full px-bc-page">
       <div class="max-w-[1142px] mx-auto w-full h-full">
-        <div class="flex flex-row items-center gap-bc-4xl py-bc-4xl h-full">
+        <div class="flex flex-row items-center gap-bc-4xl py-[64px] h-full">
 
           <!-- Colonna sinistra: testo -->
           <div v-reveal class="flex flex-col gap-bc-2xl w-1/2 pr-bc-4xl">
