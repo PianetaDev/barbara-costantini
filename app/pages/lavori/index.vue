@@ -23,7 +23,7 @@ const progetti = [...base, ...base, ...base, ...base]
     </section>
 
     <!-- Griglia progetti -->
-    <section class="w-full px-bc-page py-[64px]">
+    <section class="w-full px-bc-page pb-[64px]">
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-[24px] gap-y-bc-2xl items-start">
         <NuxtLink
           v-for="(p, i) in progetti"
