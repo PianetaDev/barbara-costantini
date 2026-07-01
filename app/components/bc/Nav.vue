@@ -70,12 +70,13 @@ watch(menuOpen, (val) => {
           </button>
         </div>
         <!-- Links centrati verticalmente -->
-        <nav class="flex-1 flex flex-col items-center justify-center gap-[32px]">
+        <nav class="flex-1 flex flex-col items-center justify-center gap-[48px]">
           <NuxtLink
             v-for="l in links"
             :key="l.to"
             :to="l.to"
-            class="font-sans text-bc-body1 font-light tracking-[0.02em] hover:font-semibold"
+            class="font-sans font-light tracking-[0.02em] hover:font-semibold"
+            style="font-size:40px; line-height:1.2;"
             @click="menuOpen = false"
           >
             {{ l.label }}
