@@ -5,8 +5,7 @@
       <div class="flex items-center px-bc-page py-[24px]">
         <NuxtLink
           to="/lavori"
-          class="font-sans font-light text-bc-black border-b border-bc-black hover:font-semibold"
-          style="font-size:16px; line-height:1.2; padding-bottom:2px;"
+          class="font-sans text-bc-nav font-light text-bc-black tracking-[0.02em] hover:font-semibold"
         >
           Torna indietro
         </NuxtLink>
