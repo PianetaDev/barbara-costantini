@@ -186,7 +186,7 @@ const heroImgStyle = computed(() => {
 
     <!-- Hero: responsive grid — centrato su desktop, progetto+immagine su tablet, stacked su mobile -->
     <div
-      class="px-bc-page py-bc-4xl bc-hero-grid"
+      class="px-bc-page py-[64px] bc-hero-grid"
     >
       <!-- Titolo: col 2, row 1 -->
       <h1
@@ -257,7 +257,7 @@ const heroImgStyle = computed(() => {
     </div>
 
     <!-- Contenuto: metadata sinistra + intro destra -->
-    <div class="px-bc-page pt-bc-4xl pb-bc-4xl bc-grid bc-2col bc-442 bc-meta">
+    <div class="px-bc-page pt-[64px] pb-[64px] bc-grid bc-2col bc-442 bc-meta">
       <div class="flex flex-col gap-bc-md bc-sidebar">
         <div
           v-for="(m, i) in progetto.meta"
@@ -280,7 +280,7 @@ const heroImgStyle = computed(() => {
     </div>
 
     <!-- Immagine grande contenuto -->
-    <div class="px-bc-page pb-bc-4xl bc-grid bc-2col bc-676">
+    <div class="px-bc-page pb-[64px] bc-grid bc-2col bc-676">
       <div class="bc-spacer-l" />
       <div style="aspect-ratio:676/451; background:rgba(0,0,0,0.1); overflow:hidden;">
         <img v-if="progetto.immaginiContenuto[0]" :src="progetto.immaginiContenuto[0]" :alt="progetto.titolo" style="width:100%; height:100%; object-fit:cover;" />
@@ -292,7 +292,7 @@ const heroImgStyle = computed(() => {
     <div
       v-for="(s, i) in progetto.sezioni"
       :key="i"
-      class="px-bc-page pb-bc-4xl bc-grid bc-2col bc-442"
+      class="px-bc-page pb-[64px] bc-grid bc-2col bc-442"
     >
       <div class="bc-spacer-l" />
       <div>
@@ -315,7 +315,7 @@ const heroImgStyle = computed(() => {
     </div>
 
     <!-- Due immagini affiancate -->
-    <div class="px-bc-page pb-bc-4xl bc-grid bc-2col bc-676">
+    <div class="px-bc-page pb-[64px] bc-grid bc-2col bc-676">
       <div class="bc-spacer-l" />
       <div style="display:flex; gap:24px;">
         <div style="flex:1; min-width:0; aspect-ratio:326/406; background:rgba(0,0,0,0.1); overflow:hidden;">
@@ -329,7 +329,7 @@ const heroImgStyle = computed(() => {
     </div>
 
     <!-- Testo metodo -->
-    <div class="px-bc-page pb-bc-4xl bc-grid bc-2col bc-442">
+    <div class="px-bc-page pb-[64px] bc-grid bc-2col bc-442">
       <div class="bc-spacer-l" />
       <div>
         <div style="display:flex; flex-direction:column; gap:32px;">
@@ -354,7 +354,7 @@ const heroImgStyle = computed(() => {
     <div v-if="successivo" class="relative overflow-hidden">
       <div class="border-t border-bc-black" />
       <div
-        class="px-bc-page py-bc-4xl bc-hero-grid"
+        class="px-bc-page py-[64px] bc-hero-grid"
       >
         <h2
           class="font-garamond font-medium text-bc-black text-center tracking-[0.02em] bc-col2-r1"
@@ -371,7 +371,7 @@ const heroImgStyle = computed(() => {
       <!-- Sfumatura che copre il fondo dell'immagine -->
       <div class="absolute bottom-0 left-0 right-0 h-[60%] bg-gradient-to-t from-bc-canvas to-transparent pointer-events-none" />
       <!-- CTA -->
-      <div class="relative z-10 flex justify-center pb-bc-4xl">
+      <div class="relative z-10 flex justify-center pb-[64px]">
         <NuxtLink
           :to="`/lavori/${successivo.slug}`"
           class="font-garamond font-light text-bc-black border-b border-bc-black hover:font-semibold"
@@ -383,7 +383,7 @@ const heroImgStyle = computed(() => {
   </div>
 
   <!-- 404 -->
-  <div v-else class="px-bc-page py-bc-4xl flex flex-col items-center gap-bc-xl">
+  <div v-else class="px-bc-page py-[64px] flex flex-col items-center gap-bc-xl">
     <p class="font-garamond font-medium text-bc-black" style="font-size:32px;">Progetto non trovato</p>
     <NuxtLink to="/lavori" class="bc-btn">Torna ai lavori</NuxtLink>
   </div>
@@ -433,7 +433,7 @@ const heroImgStyle = computed(() => {
   }
   .bc-sidebar {
     position: absolute;
-    top: 80px;   /* = pt-bc-4xl */
+    top: 64px;   /* = pt-[64px] */
     left: 32px;  /* = px-bc-page */
     max-width: calc(50% - 277px);
   }
