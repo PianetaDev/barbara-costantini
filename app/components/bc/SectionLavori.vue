@@ -67,15 +67,14 @@ function onTouchEnd(e: TouchEvent) {
 </script>
 <template>
   <section class="w-full px-bc-page overflow-hidden" :class="{ 'border-t border-bc-black': props.borderTop, 'border-b border-bc-black': props.borderBottom }">
-    <div class="mx-auto max-w-bc-content
-                flex flex-col md:flex-row md:items-start
-                gap-bc-xl md:gap-bc-2xl lg:gap-0 lg:justify-between
-                py-bc-2xl lg:py-[64px] lg:items-center">
+    <div class="flex flex-col md:flex-row md:items-start
+                gap-bc-xl lg:gap-[140px]
+                py-bc-2xl lg:py-[80px] lg:items-center">
 
       <!-- Testo + CTA -->
       <div
         v-reveal
-        class="flex flex-col gap-bc-xl items-start md:shrink-0 md:w-[240px] lg:w-[327px]"
+        class="flex flex-col gap-bc-xl items-start md:shrink-0 md:w-[240px] lg:w-[560px]"
       >
         <div class="flex flex-col gap-bc-xl">
           <h2 class="font-garamond font-medium text-bc-black tracking-[0.02em]" :class="!props.titoloSize ? 'text-bc-h2' : ''" :style="props.titoloSize ? `font-size:${props.titoloSize}` : ''">{{ props.titolo }}</h2>

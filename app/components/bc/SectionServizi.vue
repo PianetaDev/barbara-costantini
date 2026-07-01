@@ -1,30 +1,29 @@
-<!-- Figma: 590:1417 — section 3 "I servizi" — immagine sx + divider + testo dx -->
-<!-- Tablet 590:2197: due colonne da md (768px) -->
+<!-- Figma: 761:3281 — section 3 "I servizi" — full-width, immagine sx + divider + testo dx -->
 <template>
-  <section class="w-full px-bc-page overflow-hidden">
-    <div class="mx-auto max-w-bc-content
-                flex flex-col md:flex-row md:items-center md:justify-between
-                py-bc-2xl md:py-0 lg:h-[713px]
-                gap-bc-xl md:gap-0">
-      <!-- Immagine -->
+  <section class="w-full border-t border-b border-bc-black px-bc-page overflow-hidden">
+    <div class="flex flex-col lg:flex-row lg:items-stretch">
+
+      <!-- Immagine sx -->
       <div
         v-reveal
-        class="flex items-center md:flex-1 lg:flex-none lg:shrink-0 md:py-bc-2xl lg:py-[64px]"
+        class="flex items-center lg:w-1/2 lg:pr-[105px] py-bc-2xl lg:py-[80px]"
       >
-        <div class="w-full lg:w-[442px] aspect-[442/553] bg-bc-black/10 overflow-hidden">
+        <div class="w-full aspect-[559/553] bg-bc-black/10 overflow-hidden">
           <slot name="image">
             <img src="" alt="I servizi" class="w-full h-full object-cover" />
           </slot>
         </div>
       </div>
-      <!-- Divider verticale (da tablet in su) -->
-      <div class="hidden md:block self-stretch w-px bg-bc-black mx-bc-xl lg:mx-0 shrink-0" />
-      <!-- Testo + CTA -->
+
+      <!-- Divider verticale (solo lg) -->
+      <div class="hidden lg:block self-stretch w-px bg-bc-black shrink-0" />
+
+      <!-- Testo + CTA dx -->
       <div
         v-reveal="{ delay: '0.15s' }"
-        class="flex flex-col gap-bc-xl items-start md:flex-1 lg:flex-none lg:w-[437px] md:py-bc-2xl lg:py-0"
+        class="flex flex-col gap-bc-xl justify-center lg:w-1/2 lg:pl-[105px] py-bc-2xl lg:py-[80px]"
       >
-        <div class="flex flex-col gap-bc-xl">
+        <div class="flex flex-col gap-bc-xl lg:max-w-[442px]">
           <h2 class="font-garamond text-bc-h2 font-medium text-bc-black tracking-[0.02em]">
             <slot name="title">I servizi</slot>
           </h2>
@@ -34,6 +33,7 @@
         </div>
         <NuxtLink to="/servizi" class="bc-btn"><slot name="cta">Scopri i servizi</slot></NuxtLink>
       </div>
+
     </div>
   </section>
 </template>
