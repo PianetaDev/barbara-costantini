@@ -75,7 +75,7 @@ watch(menuOpen, (val) => {
             v-for="l in links"
             :key="l.to"
             :to="l.to"
-            class="font-sans text-bc-nav font-light tracking-[0.02em] hover:font-semibold"
+            class="font-sans text-bc-body1 font-light tracking-[0.02em] hover:font-semibold"
             @click="menuOpen = false"
           >
             {{ l.label }}
