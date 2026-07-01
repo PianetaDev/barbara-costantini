@@ -76,7 +76,7 @@ watch(menuOpen, (val) => {
             :key="l.to"
             :to="l.to"
             class="font-sans font-light tracking-[0.02em] hover:font-semibold"
-            style="font-size:40px; line-height:1.2;"
+            style="font-size:28px; line-height:1.2;"
             @click="menuOpen = false"
           >
             {{ l.label }}
