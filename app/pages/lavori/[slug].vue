@@ -113,10 +113,11 @@ const heroImgStyle = computed(() => {
     </div>
 
     <!-- Navigation thumbnails carosello -->
-    <div class="border-t border-b border-bc-black px-bc-page py-[24px] flex items-end gap-[32px]">
-      <div class="flex items-center gap-[8px] shrink-0">
+    <div class="border-t border-b border-bc-black px-bc-page py-[24px] bc-strip-grid">
+      <!-- frecce: mobile=inline, desktop=col1 allineato a dx -->
+      <div class="bc-strip-arrows flex items-end gap-[8px] shrink-0">
         <button
-          class="flex items-center justify-center w-[44px] h-[44px] border border-bc-black hover:opacity-60 transition-opacity disabled:opacity-25"
+          class="flex items-center justify-center w-[44px] h-[44px] hover:opacity-60 transition-opacity disabled:opacity-25"
           :disabled="imgIndex === 0"
           @click="imgPrev"
           aria-label="Immagine precedente"
@@ -124,7 +125,7 @@ const heroImgStyle = computed(() => {
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="currentColor"/></svg>
         </button>
         <button
-          class="flex items-center justify-center w-[44px] h-[44px] border border-bc-black hover:opacity-60 transition-opacity disabled:opacity-25"
+          class="flex items-center justify-center w-[44px] h-[44px] hover:opacity-60 transition-opacity disabled:opacity-25"
           :disabled="imgIndex === progetto.immagini.length - 1"
           @click="imgNext"
           aria-label="Immagine successiva"
@@ -132,7 +133,8 @@ const heroImgStyle = computed(() => {
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4L10.59 5.41L16.17 11H4V13H16.17L10.59 18.59L12 20L20 12L12 4Z" fill="currentColor"/></svg>
         </button>
       </div>
-      <div class="flex gap-[24px] items-end overflow-x-auto">
+      <!-- thumbnail: mobile=flex item, desktop=col2 = bordo sx foto hero -->
+      <div class="bc-strip-thumbs flex gap-[24px] items-end overflow-x-auto">
         <button
           v-for="(img, i) in progetto.immagini"
           :key="i"
@@ -222,6 +224,12 @@ const heroImgStyle = computed(() => {
 </template>
 
 <style>
+/* Thumbnail strip allineata con col2 hero (stessa grid 1fr 677px 1fr) */
+.bc-strip-grid { display: flex; gap: 32px; align-items: flex-end; }
+@media (min-width: 1024px) {
+  .bc-strip-grid { display: grid; grid-template-columns: 1fr 677px 1fr; gap: 0 24px; }
+  .bc-strip-arrows { justify-content: flex-end; }
+}
 .bc-hero-grid { display: grid; grid-template-rows: auto auto; gap: 0 24px; }
 @media (min-width: 768px) { .bc-hero-grid { grid-template-columns: 120px 1fr; } }
 @media (min-width: 1024px) { .bc-hero-grid { grid-template-columns: 1fr 677px 1fr; } }
