@@ -74,10 +74,53 @@ const partner = [
   },
 ]
 
+// Accordion
 const aperto = ref<Record<number, number>>({ 0: 0, 1: 0, 2: 0, 3: 0 })
-
 function toggle(g: number, i: number) {
   aperto.value = { ...aperto.value, [g]: aperto.value[g] === i ? -1 : i }
+}
+
+// Carousel partner (come SectionTeam)
+const isMobile = ref(false)
+const partnerCarouselEl = ref<HTMLElement>()
+const partnerStart = ref(0)
+const partnerOffset = ref(0)
+
+onMounted(() => {
+  const mq = window.matchMedia('(max-width: 767px)')
+  isMobile.value = mq.matches
+  mq.addEventListener('change', (e: MediaQueryListEvent) => {
+    isMobile.value = e.matches
+    nextTick(updatePartnerOffset)
+  })
+  window.addEventListener('resize', () => nextTick(updatePartnerOffset))
+})
+
+const partnerVisible = computed(() => isMobile.value ? 1 : 2)
+const partnerMax = computed(() => Math.max(0, partner.length - partnerVisible.value))
+
+watch(partnerMax, (max) => {
+  if (partnerStart.value > max) { partnerStart.value = max; updatePartnerOffset() }
+})
+
+function partnerCardWidth() {
+  if (!partnerCarouselEl.value) return 0
+  const w = partnerCarouselEl.value.offsetWidth
+  return partnerVisible.value === 1 ? w : (w - 16) / 2
+}
+function updatePartnerOffset() {
+  partnerOffset.value = -(partnerStart.value * (partnerCardWidth() + 16))
+}
+function partnerPrev() { if (partnerStart.value > 0) { partnerStart.value--; updatePartnerOffset() } }
+function partnerNext() { if (partnerStart.value < partnerMax.value) { partnerStart.value++; updatePartnerOffset() } }
+
+const touchStartX = ref(0)
+function onTouchStart(e: TouchEvent) { touchStartX.value = e.touches[0].clientX }
+function onTouchEnd(e: TouchEvent) {
+  const delta = touchStartX.value - e.changedTouches[0].clientX
+  if (Math.abs(delta) < 40) return
+  if (delta > 0) partnerNext()
+  else partnerPrev()
 }
 </script>
 
@@ -98,28 +141,32 @@ function toggle(g: number, i: number) {
     </p>
   </section>
 
-  <!-- Gruppi accordion: immagine sx + divider + titolo e accordion dx -->
+  <!-- Gruppi accordion -->
   <section
     v-for="(gruppo, g) in gruppi"
     :key="g"
     class="border-b border-bc-black px-bc-page"
   >
-    <div class="mx-auto max-w-bc-content">
-    <div class="sv-row">
+    <div class="mx-auto max-w-bc-content
+                flex flex-col md:flex-row md:items-center md:justify-between
+                py-bc-2xl md:py-0 lg:h-[713px]
+                gap-bc-xl md:gap-0">
 
       <!-- Immagine sx -->
-      <div v-reveal class="sv-img">
-        <div class="w-full aspect-[442/553] bg-bc-black/10 overflow-hidden">
+      <div v-reveal class="flex items-center md:flex-1 lg:flex-none lg:shrink-0 md:py-bc-2xl lg:py-[64px]">
+        <div class="w-full lg:w-[442px] aspect-[442/553] bg-bc-black/10 overflow-hidden">
           <img :src="gruppo.image" :alt="gruppo.titolo" class="w-full h-full object-cover" />
         </div>
       </div>
 
+      <!-- Divider verticale (da md in su) -->
+      <div class="hidden md:block self-stretch w-px bg-bc-black mx-bc-xl lg:mx-0 shrink-0" />
 
       <!-- Titolo + Accordion dx -->
-      <div v-reveal="{ delay: '0.12s' }" class="flex flex-col sv-acc">
+      <div v-reveal="{ delay: '0.12s' }" class="flex flex-col md:flex-1 lg:flex-none lg:w-[556px] md:py-bc-2xl lg:py-[64px]">
         <h2
-          class="font-garamond text-bc-black tracking-[0.02em]"
-          style="font-size:20px; line-height:1.2; font-weight:700; margin-bottom:32px;"
+          class="font-garamond text-bc-black tracking-[0.02em] mb-[32px]"
+          style="font-size:20px; line-height:1.2; font-weight:700;"
         >{{ gruppo.titolo }}</h2>
 
         <div
@@ -153,18 +200,18 @@ function toggle(g: number, i: number) {
       </div>
 
     </div>
-    </div>
   </section>
 
-  <!-- Partner: 3 colonne con immagine sopra -->
-  <section class="border-b border-bc-black px-bc-page">
-    <div class="mx-auto max-w-bc-content">
-    <div class="flex items-stretch">
-      <template v-for="(p, i) in partner" :key="i">
+  <!-- Partner: 3 colonne desktop, carousel mobile/tablet -->
+  <section class="border-b border-bc-black px-bc-page overflow-hidden">
+
+    <!-- Desktop: 3 colonne con divider verticali -->
+    <div class="hidden lg:flex lg:items-stretch mx-auto max-w-bc-content">
+      <template v-for="(p, i) in partner" :key="`d-${i}`">
         <div v-if="i > 0" class="w-px bg-bc-black self-stretch shrink-0 mx-[40px]" />
         <div
           v-reveal="{ delay: `${i * 0.1}s` }"
-          class="flex flex-col gap-bc-xl flex-1 py-[64px]"
+          class="flex flex-col gap-[32px] flex-1 py-[64px]"
         >
           <div class="w-full bg-bc-black/10 overflow-hidden" style="aspect-ratio:327/407;">
             <img v-if="p.image" :src="p.image" :alt="p.titolo" class="w-full h-full object-cover" />
@@ -178,7 +225,58 @@ function toggle(g: number, i: number) {
         </div>
       </template>
     </div>
+
+    <!-- Mobile + Tablet: carousel -->
+    <div class="lg:hidden mx-auto max-w-bc-content py-bc-2xl">
+      <div class="flex flex-col gap-bc-md">
+        <div class="flex justify-end items-center gap-[8px]">
+          <button
+            class="flex items-center justify-center w-[44px] h-[44px] hover:opacity-60 transition-opacity disabled:opacity-25"
+            :disabled="partnerStart === 0"
+            @click="partnerPrev"
+            aria-label="Precedente"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="currentColor"/></svg>
+          </button>
+          <button
+            class="flex items-center justify-center w-[44px] h-[44px] hover:opacity-60 transition-opacity disabled:opacity-25"
+            :disabled="partnerStart >= partnerMax"
+            @click="partnerNext"
+            aria-label="Successivo"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4L10.59 5.41L16.17 11H4V13H16.17L10.59 18.59L12 20L20 12L12 4Z" fill="currentColor"/></svg>
+          </button>
+        </div>
+        <div
+          ref="partnerCarouselEl"
+          class="overflow-hidden"
+          @touchstart="onTouchStart"
+          @touchend="onTouchEnd"
+        >
+          <div
+            class="flex gap-[16px] items-start transition-transform duration-500 ease-out"
+            :style="{ transform: `translateX(${partnerOffset}px)` }"
+          >
+            <div
+              v-for="(p, i) in partner"
+              :key="i"
+              class="flex-none flex flex-col gap-[32px] w-full md:w-[calc(50%-8px)]"
+            >
+              <div class="w-full bg-bc-black/10 overflow-hidden" style="aspect-ratio:327/407;">
+                <img v-if="p.image" :src="p.image" :alt="p.titolo" class="w-full h-full object-cover" />
+              </div>
+              <div class="flex flex-col gap-bc-md">
+                <h3 class="font-garamond font-medium text-bc-black tracking-[0.02em]"
+                    style="font-size:24px; line-height:1.2;">{{ p.titolo }}</h3>
+                <p class="font-garamond font-light text-bc-black tracking-[0.02em]"
+                   style="font-size:16px; line-height:1.2;">{{ p.testo }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
   </section>
 
   <!-- CTA finale -->
@@ -192,50 +290,6 @@ function toggle(g: number, i: number) {
 </template>
 
 <style>
-/* ── Gruppi accordion: immagine sx + divider + contenuto dx ── */
-.sv-row {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  padding: 64px 0;
-}
-@media (min-width: 768px) {
-  .sv-row {
-    flex-direction: row;
-    gap: 0;
-    align-items: stretch;
-    padding: 0;
-  }
-  .sv-img {
-    flex: 1;
-    padding: 64px 80px 64px 0;
-    display: flex;
-    align-items: center;
-  }
-  .sv-acc {
-    flex: 1;
-    padding: 64px 0 64px 80px;
-  }
-}
-@media (min-width: 1280px) {
-  .sv-row {
-    justify-content: center;
-    gap: 140px;
-  }
-  .sv-img {
-    flex: none;
-    width: 442px;
-    padding: 64px 0;
-  }
-  .sv-acc {
-    flex: none;
-    width: 556px;
-    padding: 64px 0;
-  }
-}
-
-
-
 /* ── Accordion: animazione apertura/chiusura ─────────────── */
 .sv-acc-body {
   display: grid;
