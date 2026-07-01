@@ -76,7 +76,7 @@ function onTouchEnd(e: TouchEvent) {
             <img v-if="m.image" :src="m.image" :alt="m.nome" class="w-full h-full object-cover" />
           </div>
           <div class="flex flex-col gap-bc-md">
-            <div class="flex flex-col gap-[4px]">
+            <div class="flex flex-col gap-[12px]">
               <h3 class="font-sans text-bc-h3 font-medium text-bc-black tracking-[0.02em]">{{ m.nome }}</h3>
               <p class="font-garamond text-bc-h4 font-medium text-bc-black tracking-[0.02em]">{{ m.ruolo }}</p>
             </div>
@@ -123,7 +123,7 @@ function onTouchEnd(e: TouchEvent) {
                 <img v-if="m.image" :src="m.image" :alt="m.nome" class="w-full h-full object-cover" />
               </div>
               <div class="flex flex-col gap-bc-md">
-                <div class="flex flex-col gap-[4px]">
+                <div class="flex flex-col gap-[12px]">
                   <h3 class="font-sans text-bc-h3 font-medium text-bc-black tracking-[0.02em]">{{ m.nome }}</h3>
                   <p class="font-garamond text-bc-h4 font-medium text-bc-black tracking-[0.02em]">{{ m.ruolo }}</p>
                 </div>
