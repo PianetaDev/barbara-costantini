@@ -77,7 +77,7 @@ function onTouchEnd(e: TouchEvent) {
           </div>
           <div class="flex flex-col gap-bc-md">
             <div class="flex flex-col gap-[4px]">
-              <h3 class="font-garamond text-[32px] leading-[1.2] font-medium text-bc-black tracking-[0.02em]">{{ m.nome }}</h3>
+              <h3 class="font-sans text-bc-h3 font-medium text-bc-black tracking-[0.02em]">{{ m.nome }}</h3>
               <p class="font-garamond text-bc-h4 font-medium text-bc-black tracking-[0.02em]">{{ m.ruolo }}</p>
             </div>
             <p class="font-garamond text-bc-body2 font-light text-bc-black tracking-[0.02em]">{{ m.bio }}</p>
@@ -124,7 +124,7 @@ function onTouchEnd(e: TouchEvent) {
               </div>
               <div class="flex flex-col gap-bc-md">
                 <div class="flex flex-col gap-[4px]">
-                  <h3 class="font-garamond text-[32px] leading-[1.2] font-medium text-bc-black tracking-[0.02em]">{{ m.nome }}</h3>
+                  <h3 class="font-sans text-bc-h3 font-medium text-bc-black tracking-[0.02em]">{{ m.nome }}</h3>
                   <p class="font-garamond text-bc-h4 font-medium text-bc-black tracking-[0.02em]">{{ m.ruolo }}</p>
                 </div>
                 <p class="font-garamond text-bc-body2 font-light text-bc-black tracking-[0.02em]">{{ m.bio }}</p>
