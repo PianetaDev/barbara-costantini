@@ -18,22 +18,22 @@ export default {
         },
       },
       fontFamily: {
-        garamond: ['"EB Garamond"', 'Georgia', 'serif'],
+        garamond: ['"Public Sans"', 'system-ui', 'sans-serif'],
         sans:     ['"Public Sans"', 'system-ui', 'sans-serif'],
       },
       fontSize: {
-        // Scale tipografica esatta da Figma MCP
-        'bc-label2':  ['14px', { lineHeight: '1.2', letterSpacing: '0.028em' }], // Public Sans Light
-        'bc-label1':  ['16px', { lineHeight: '1.2', letterSpacing: '0.02em' }],  // Public Sans Light
-        'bc-nav':     ['16px', { lineHeight: '1.2', letterSpacing: '0.02em' }],  // Public Sans Regular
-        'bc-btn':     ['18px', { lineHeight: '1.2', letterSpacing: '0.02em' }],  // EB Garamond Regular
-        'bc-body2':   ['18px', { lineHeight: '1.2', letterSpacing: '0.02em' }],  // EB Garamond Regular
-        'bc-body1':   ['22px', { lineHeight: '1.2', letterSpacing: '0.02em' }],  // EB Garamond Regular
-        'bc-sub':     ['28px', { lineHeight: '1.2' }],                           // EB Garamond Regular
-        'bc-h4':      ['24px', { lineHeight: '1.2', letterSpacing: '0.02em' }],  // EB Garamond SemiBold
-        'bc-h3':      ['32px', { lineHeight: '1.2', letterSpacing: '0.02em' }],  // EB Garamond SemiBold
-        'bc-h2':      ['38px', { lineHeight: '1.2', letterSpacing: '0.02em' }],  // EB Garamond SemiBold
-        'bc-h1':      ['56px', { lineHeight: '1.2', letterSpacing: '0.02em' }],  // EB Garamond SemiBold
+        // Scale tipografica — Public Sans
+        'bc-label2':  ['14px', { lineHeight: '1.2', letterSpacing: '0.028em' }],
+        'bc-label1':  ['16px', { lineHeight: '1.2', letterSpacing: '0.02em' }],
+        'bc-nav':     ['16px', { lineHeight: '1.2', letterSpacing: '0.02em' }],
+        'bc-btn':     ['18px', { lineHeight: '1.2', letterSpacing: '0.02em' }],
+        'bc-body2':   ['18px', { lineHeight: '1.2', letterSpacing: '0.02em' }],
+        'bc-body1':   ['20px', { lineHeight: '1.2', letterSpacing: '0.02em' }],
+        'bc-sub':     ['28px', { lineHeight: '1.2' }],
+        'bc-h4':      ['20px', { lineHeight: '1.2', letterSpacing: '0.02em' }],
+        'bc-h3':      ['24px', { lineHeight: '1.2', letterSpacing: '0.02em' }],
+        'bc-h2':      ['32px', { lineHeight: '1.2', letterSpacing: '0.02em' }],
+        'bc-h1':      ['40px', { lineHeight: '1.2', letterSpacing: '0.02em' }],
       },
       spacing: {
         // Spacing tokens da Figma (--spacing/*)

@@ -191,7 +191,7 @@ const heroImgStyle = computed(() => {
       <!-- Titolo: col 2, row 1 -->
       <h1
         class="font-garamond font-semibold text-bc-black text-center tracking-[0.02em] bc-col2-r1"
-        style="font-size:38px; line-height:1.2; margin-bottom:48px;"
+        style="font-size:32px; line-height:1.2; margin-bottom:48px;"
       >{{ progetto.titolo }}</h1>
       <!-- Metadata: nascosto su mobile, visibile da md — col 1 row 2 -->
       <div class="hidden md:flex md:flex-col gap-[8px] bc-col1-r2">
@@ -298,11 +298,11 @@ const heroImgStyle = computed(() => {
       <div>
         <h2
           class="font-garamond font-semibold text-bc-black text-center tracking-[0.02em]"
-          style="font-size:32px; line-height:1.2; margin-bottom:32px;"
+          style="font-size:24px; line-height:1.2; margin-bottom:32px;"
         >{{ s.titolo }}</h2>
         <h3
           class="font-garamond font-semibold text-bc-black tracking-[0.02em]"
-          style="font-size:24px; line-height:1.2; margin-bottom:16px;"
+          style="font-size:20px; line-height:1.2; margin-bottom:16px;"
         >{{ s.sottotitolo }}</h3>
         <p
           v-for="(t, j) in s.testi"
@@ -358,7 +358,7 @@ const heroImgStyle = computed(() => {
       >
         <h2
           class="font-garamond font-semibold text-bc-black text-center tracking-[0.02em] bc-col2-r1"
-          style="font-size:38px; line-height:1.2; margin-bottom:48px;"
+          style="font-size:32px; line-height:1.2; margin-bottom:48px;"
         >{{ successivo.titolo }}</h2>
         <div class="hidden md:flex md:flex-col gap-[8px] bc-col1-r2">
           <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.2;">Progetto:</p>
@@ -384,7 +384,7 @@ const heroImgStyle = computed(() => {
 
   <!-- 404 -->
   <div v-else class="px-bc-page py-bc-4xl flex flex-col items-center gap-bc-xl">
-    <p class="font-garamond font-semibold text-bc-black" style="font-size:38px;">Progetto non trovato</p>
+    <p class="font-garamond font-semibold text-bc-black" style="font-size:32px;">Progetto non trovato</p>
     <NuxtLink to="/lavori" class="bc-btn">Torna ai lavori</NuxtLink>
   </div>
 </template>

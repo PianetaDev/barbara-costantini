@@ -13,16 +13,16 @@
           Contatti
         </h1>
         <div v-reveal="{ delay: '0.12s' }" class="flex flex-col gap-bc-md w-full">
-          <a href="mailto:bb.costantini@gmail.com" class="font-garamond font-normal text-bc-black tracking-[0.02em] hover:opacity-60 transition-opacity" style="font-size:32px; line-height:1.2;">
+          <a href="mailto:bb.costantini@gmail.com" class="font-garamond font-normal text-bc-black tracking-[0.02em] hover:opacity-60 transition-opacity" style="font-size:24px; line-height:1.2;">
             bb.costantini@gmail.com
           </a>
-          <p class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:32px; line-height:1.2;">
+          <p class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:24px; line-height:1.2;">
             +39 349 6718022
           </p>
-          <p class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:32px; line-height:1.2;">
+          <p class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:24px; line-height:1.2;">
             Largo dell'Olgiata 15 -<br />00123 Roma
           </p>
-          <a href="https://instagram.com/barbara_costantini" target="_blank" rel="noopener noreferrer" class="font-garamond font-normal text-bc-black tracking-[0.02em] hover:opacity-60 transition-opacity" style="font-size:32px; line-height:1.2;">
+          <a href="https://instagram.com/barbara_costantini" target="_blank" rel="noopener noreferrer" class="font-garamond font-normal text-bc-black tracking-[0.02em] hover:opacity-60 transition-opacity" style="font-size:24px; line-height:1.2;">
             @barbara_costantini
           </a>
         </div>
@@ -48,16 +48,16 @@
               Contatti
             </h1>
             <div class="flex flex-col gap-bc-md">
-              <a href="mailto:bb.costantini@gmail.com" class="font-garamond font-normal text-bc-black tracking-[0.02em] hover:opacity-60 transition-opacity" style="font-size:32px; line-height:1.2;">
+              <a href="mailto:bb.costantini@gmail.com" class="font-garamond font-normal text-bc-black tracking-[0.02em] hover:opacity-60 transition-opacity" style="font-size:24px; line-height:1.2;">
                 bb.costantini@gmail.com
               </a>
-              <p class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:32px; line-height:1.2;">
+              <p class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:24px; line-height:1.2;">
                 +39 349 6718022
               </p>
-              <p class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:32px; line-height:1.2;">
+              <p class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:24px; line-height:1.2;">
                 Largo dell'Olgiata 15 -<br />00123 Roma
               </p>
-              <a href="https://instagram.com/barbara_costantini" target="_blank" rel="noopener noreferrer" class="font-garamond font-normal text-bc-black tracking-[0.02em] hover:opacity-60 transition-opacity" style="font-size:32px; line-height:1.2;">
+              <a href="https://instagram.com/barbara_costantini" target="_blank" rel="noopener noreferrer" class="font-garamond font-normal text-bc-black tracking-[0.02em] hover:opacity-60 transition-opacity" style="font-size:24px; line-height:1.2;">
                 @barbara_costantini
               </a>
             </div>

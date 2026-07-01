@@ -164,8 +164,8 @@ const heroImgStyle = computed(() => {
     <div v-for="(s, i) in progetto.sezioni" :key="i" class="px-bc-page pb-[64px] bc-grid bc-2col bc-442">
       <div class="bc-spacer-l" />
       <div>
-        <h2 class="font-garamond text-bc-black text-center tracking-[0.02em]" style="font-size:32px; line-height:1.2; margin-bottom:32px; font-weight:500;">{{ s.titolo }}</h2>
-        <h3 class="font-garamond text-bc-black tracking-[0.02em]" style="font-size:24px; line-height:1.2; margin-bottom:16px; font-weight:500;">{{ s.sottotitolo }}</h3>
+        <h2 class="font-garamond text-bc-black text-center tracking-[0.02em]" style="font-size:24px; line-height:1.2; margin-bottom:32px; font-weight:500;">{{ s.titolo }}</h2>
+        <h3 class="font-garamond text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.2; margin-bottom:16px; font-weight:500;">{{ s.sottotitolo }}</h3>
         <p v-for="(t, j) in s.testi" :key="j" class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.2; margin-bottom:16px;">{{ t }}</p>
       </div>
       <div class="bc-spacer-r" />
@@ -202,7 +202,7 @@ const heroImgStyle = computed(() => {
 
   <!-- 404 -->
   <div v-else class="px-bc-page py-[64px] flex flex-col items-center gap-bc-xl">
-    <p class="font-garamond text-bc-black" style="font-size:38px; font-weight:500;">Progetto non trovato</p>
+    <p class="font-garamond text-bc-black" style="font-size:32px; font-weight:500;">Progetto non trovato</p>
     <NuxtLink to="/lavori-bis" class="bc-btn">Torna ai lavori</NuxtLink>
   </div>
 </template>

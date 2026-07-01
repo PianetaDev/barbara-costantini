@@ -205,7 +205,7 @@ function caricaAltri() {
             <!-- Riga principale — MOBILE: stacked (ID+Azioni in cima, poi Titolo+Committente) -->
             <div class="md:hidden flex flex-col gap-[16px] py-[24px] cursor-pointer" @click="toggle(l.id)">
               <div class="flex items-center justify-between">
-                <p class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:22px; line-height:1.2;">{{ l.id }}</p>
+                <p class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.2;">{{ l.id }}</p>
                 <div class="flex items-center gap-bc-md">
                   <NuxtLink v-if="l.hasDetail" :to="`/lavori/${l.slug}`" class="font-garamond font-normal text-bc-black underline underline-offset-2 hover:font-semibold whitespace-nowrap" style="font-size:18px;" @click.stop>Vedi di più</NuxtLink>
                   <span v-else class="w-[80px]" />
@@ -215,18 +215,18 @@ function caricaAltri() {
                 </div>
               </div>
               <div class="flex flex-col gap-[8px]">
-                <p class="font-garamond font-semibold text-bc-black tracking-[0.02em]" style="font-size:24px; line-height:1.2;">{{ l.titolo }}</p>
-                <p class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:22px; line-height:1.2;">{{ l.committente }}</p>
+                <p class="font-garamond font-semibold text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.2;">{{ l.titolo }}</p>
+                <p class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.2;">{{ l.committente }}</p>
               </div>
             </div>
             <!-- Riga principale — TABLET+: colonne affiancate -->
             <div class="hidden md:flex gap-[24px] items-center py-[24px] cursor-pointer" @click="toggle(l.id)">
-              <p class="font-garamond font-normal text-bc-black tracking-[0.02em] w-[91px] shrink-0" style="font-size:22px; line-height:1.2;">{{ l.id }}</p>
+              <p class="font-garamond font-normal text-bc-black tracking-[0.02em] w-[91px] shrink-0" style="font-size:20px; line-height:1.2;">{{ l.id }}</p>
               <div class="flex-1 min-w-0 flex flex-col gap-[8px]">
-                <p class="font-garamond font-semibold text-bc-black tracking-[0.02em]" style="font-size:24px; line-height:1.2;">{{ l.titolo }}</p>
-                <p class="md:block lg:hidden font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:22px; line-height:1.2;">{{ l.committente }}</p>
+                <p class="font-garamond font-semibold text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.2;">{{ l.titolo }}</p>
+                <p class="md:block lg:hidden font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.2;">{{ l.committente }}</p>
               </div>
-              <p class="hidden lg:block font-garamond font-normal text-bc-black tracking-[0.02em] w-[209px] shrink-0" style="font-size:22px; line-height:1.2;">{{ l.committente }}</p>
+              <p class="hidden lg:block font-garamond font-normal text-bc-black tracking-[0.02em] w-[209px] shrink-0" style="font-size:20px; line-height:1.2;">{{ l.committente }}</p>
               <div class="flex items-center gap-bc-md justify-end w-[209px] shrink-0">
                 <NuxtLink v-if="l.hasDetail" :to="`/lavori/${l.slug}`" class="font-garamond font-normal text-bc-black underline underline-offset-2 hover:font-semibold whitespace-nowrap" style="font-size:18px;" @click.stop>Vedi di più</NuxtLink>
                 <span v-else class="w-[80px]" />
