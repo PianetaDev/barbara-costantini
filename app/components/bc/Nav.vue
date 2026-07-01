@@ -30,8 +30,8 @@ watch(menuOpen, (val) => {
           v-for="l in links"
           :key="l.to"
           :to="l.to"
-          exact-active-class="font-semibold"
-          class="font-sans text-bc-nav font-light tracking-[0.02em] py-bc-sm hover:font-semibold"
+          exact-active-class="font-semibold underline"
+          class="font-sans text-bc-nav font-light tracking-[0.02em] py-bc-sm hover:font-semibold hover:underline"
         >
           {{ l.label }}
         </NuxtLink>
