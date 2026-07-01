@@ -66,7 +66,7 @@ function onTouchEnd(e: TouchEvent) {
 }
 </script>
 <template>
-  <section class="w-full px-bc-page overflow-hidden" :class="{ 'border-t': props.borderTop, 'border-b border-bc-black': props.borderBottom }">
+  <section class="w-full px-bc-page overflow-hidden" :class="{ 'border-t border-bc-black': props.borderTop, 'border-b border-bc-black': props.borderBottom }">
     <div class="mx-auto max-w-bc-content
                 flex flex-col md:flex-row md:items-start
                 gap-bc-xl md:gap-bc-2xl lg:gap-0 lg:justify-between
