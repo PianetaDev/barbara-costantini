@@ -2,14 +2,20 @@
 <script setup lang="ts">
 useHead({ title: 'Lavori — Barbara Costantini Restauro' })
 
-const base = [
-  { codice: '01', committente: 'Archivio di stato di Cagliari', titolo: "Restauro conservativo dell'Antico Archivio Regio", slug: 'archivio-regio', tipo: 'horizontal' as const, image: '/images/bc-059.jpg' },
-  { codice: '02', committente: "Munda – Museo Nazionale d'Abruzzo", titolo: 'Restauro testamenti', slug: 'restauro-testamenti', tipo: 'vertical' as const, image: '/images/bc-060.jpg' },
-  { codice: '03', committente: 'EUR Spa', titolo: 'Intervento di restauro conservativo', slug: 'restauro-eur', tipo: 'horizontal' as const, image: '/images/bc-025.jpg' },
+const progetti = [
+  { codice: 'PRJ01', committente: 'Archivio di stato di Cagliari', titolo: "Restauro conservativo dell'Antico Archivio Regio", slug: 'archivio-regio', tipo: 'horizontal' as const, image: '/images/bc-059.jpg' },
+  { codice: 'PRJ02', committente: "Munda – Museo Nazionale d'Abruzzo", titolo: 'Restauro testamenti', slug: 'restauro-testamenti', tipo: 'vertical' as const, image: '/images/bc-060.jpg' },
+  { codice: 'PRJ03', committente: 'EUR Spa', titolo: 'Intervento di restauro conservativo', slug: 'restauro-eur', tipo: 'horizontal' as const, image: '/images/bc-025.jpg' },
+  { codice: 'PRJ04', committente: 'Comune di Roma', titolo: 'Restauro su pergamena medievale', slug: 'restauro-pergamena', tipo: 'vertical' as const, image: '/images/bc-027.jpg' },
+  { codice: 'PRJ05', committente: 'Biblioteca Nazionale', titolo: 'Restauro codice miniato', slug: 'restauro-codice', tipo: 'horizontal' as const, image: '/images/bc-026.jpg' },
+  { codice: 'PRJ06', committente: 'Museo Nazionale', titolo: 'Conservazione mappe storiche', slug: 'restauro-mappe', tipo: 'vertical' as const, image: '/images/bc-038.jpg' },
+  { codice: 'PRJ07', committente: 'Soprintendenza Roma', titolo: 'Restauro carteggio diplomatico', slug: 'restauro-carteggio', tipo: 'horizontal' as const, image: '/images/bc-003.jpg' },
+  { codice: 'PRJ08', committente: 'Archivio Vaticano', titolo: 'Restauro atti notarili', slug: 'restauro-atti', tipo: 'vertical' as const, image: '/images/bc-040.jpg' },
+  { codice: 'PRJ09', committente: 'Fondazione Prada', titolo: 'Conservazione documenti novecenteschi', slug: 'restauro-fondazione', tipo: 'horizontal' as const, image: '/images/bc-070.jpg' },
+  { codice: 'PRJ10', committente: 'Università di Bologna', titolo: 'Restauro incunaboli', slug: 'restauro-incunaboli', tipo: 'vertical' as const, image: '/images/bc-025.jpg' },
+  { codice: 'PRJ11', committente: 'Ministero della Cultura', titolo: 'Conservazione planimetrie storiche', slug: 'restauro-planimetrie', tipo: 'horizontal' as const, image: '/images/bc-059.jpg' },
+  { codice: 'PRJ12', committente: 'Città del Vaticano', titolo: 'Restauro manoscritti pontifici', slug: 'restauro-manoscritti', tipo: 'vertical' as const, image: '/images/bc-060.jpg' },
 ]
-
-// 12 card = 3 righe × 4 colonne su desktop
-const progetti = [...base, ...base, ...base, ...base]
 </script>
 <template>
   <div>

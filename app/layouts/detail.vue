@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen flex flex-col bg-bc-canvas">
-    <!-- Go back bar — sticky, stessa altezza di BcNav -->
+    <!-- Torna indietro bar — sticky, stessa altezza di BcNav -->
     <header class="w-full border-b border-bc-black sticky top-0 z-40 bg-bc-canvas">
       <div class="flex items-center px-bc-page py-[24px]">
         <NuxtLink

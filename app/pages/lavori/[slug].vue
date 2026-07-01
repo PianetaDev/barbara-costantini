@@ -1,5 +1,6 @@
 <!-- Dettaglio lavoro accessibile da Lavori-Bis: layout full, no "prossimo progetto", BcSectionLavori al fondo -->
 <script setup lang="ts">
+definePageMeta({ layout: 'detail' })
 const route = useRoute()
 
 interface MetaVoce { label: string; valore: string }
@@ -114,9 +115,22 @@ const heroImgStyle = computed(() => {
     <!-- Navigation thumbnails carosello -->
     <div class="border-t border-b border-bc-black px-bc-page py-[24px] flex items-end gap-[32px]">
       <div class="flex items-center gap-[8px] shrink-0">
-        <button class="font-sans font-light text-bc-black hover:underline disabled:opacity-30 transition-opacity" style="font-size:16px;" :disabled="imgIndex === 0" @click="imgPrev">Previous</button>
-        <span class="font-sans font-light text-bc-black" style="font-size:16px;">/</span>
-        <button class="font-sans font-light text-bc-black hover:underline disabled:opacity-30 transition-opacity" style="font-size:16px;" :disabled="imgIndex === progetto.immagini.length - 1" @click="imgNext">Next</button>
+        <button
+          class="flex items-center justify-center w-[44px] h-[44px] border border-bc-black hover:opacity-60 transition-opacity disabled:opacity-25"
+          :disabled="imgIndex === 0"
+          @click="imgPrev"
+          aria-label="Immagine precedente"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="currentColor"/></svg>
+        </button>
+        <button
+          class="flex items-center justify-center w-[44px] h-[44px] border border-bc-black hover:opacity-60 transition-opacity disabled:opacity-25"
+          :disabled="imgIndex === progetto.immagini.length - 1"
+          @click="imgNext"
+          aria-label="Immagine successiva"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4L10.59 5.41L16.17 11H4V13H16.17L10.59 18.59L12 20L20 12L12 4Z" fill="currentColor"/></svg>
+        </button>
       </div>
       <div class="flex gap-[24px] items-end overflow-x-auto">
         <button
@@ -196,7 +210,7 @@ const heroImgStyle = computed(() => {
     </div>
 
     <!-- Sfoglia altri lavori -->
-    <BcSectionLavori titolo="Sfoglia altri lavori" cta-label="Vedi tutti" titolo-size="32px" paragrafo-size="20px" card-titolo-size="20px" :border-top="true" />
+    <BcSectionLavori titolo="Sfoglia altri lavori" cta-label="Vedi tutti" titolo-size="32px" paragrafo-size="20px" card-titolo-size="20px" :border-top="true" :border-bottom="false" />
 
   </div>
 

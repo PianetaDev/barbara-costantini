@@ -19,6 +19,7 @@ const props = withDefaults(defineProps<{
   paragrafoSize?: string
   cardTitoloSize?: string
   borderTop?: boolean
+  borderBottom?: boolean
 }>(), {
   titolo: 'I lavori',
   ctaLabel: 'Esplora i lavori',
@@ -26,6 +27,7 @@ const props = withDefaults(defineProps<{
   paragrafoSize: undefined,
   cardTitoloSize: undefined,
   borderTop: false,
+  borderBottom: true,
   progetti: () => [
     { codice: '01', committente: 'Archivio di stato di Cagliari', titolo: "Restauro conservativo dell'Antico Archivio Regio", slug: 'archivio-regio', tipo: 'vertical', image: '/images/bc-059.jpg' },
     { codice: '02', committente: "Munda – Museo Nazionale d'Abruzzo", titolo: 'Restauro testamenti', slug: 'restauro-testamenti', tipo: 'horizontal', image: '/images/bc-060.jpg' },
@@ -64,7 +66,7 @@ function onTouchEnd(e: TouchEvent) {
 }
 </script>
 <template>
-  <section class="w-full border-b border-bc-black px-bc-page overflow-hidden" :class="{ 'border-t': props.borderTop }">
+  <section class="w-full px-bc-page overflow-hidden" :class="{ 'border-t': props.borderTop, 'border-b border-bc-black': props.borderBottom }">
     <div class="mx-auto max-w-bc-content
                 flex flex-col md:flex-row md:items-start
                 gap-bc-xl md:gap-bc-2xl lg:gap-0 lg:justify-between
@@ -112,18 +114,23 @@ function onTouchEnd(e: TouchEvent) {
       <!-- Card mobile/tablet: carousel con swipe touch -->
       <div class="lg:hidden flex flex-col gap-bc-md flex-1 min-w-0">
         <!-- Previous / Next sopra, destra -->
-        <div class="flex justify-end items-center gap-bc-md">
+        <div class="flex justify-end items-center gap-[8px]">
           <button
-            class="font-garamond text-bc-body2 font-light text-bc-black tracking-[0.02em] hover:opacity-60 transition-opacity disabled:opacity-25"
+            class="flex items-center justify-center w-[44px] h-[44px] border border-bc-black hover:opacity-60 transition-opacity disabled:opacity-25"
             :disabled="startIndex === 0"
             @click="prev"
-          >Previous</button>
-          <span class="font-garamond text-bc-body2 text-bc-black">/</span>
+            aria-label="Precedente"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="currentColor"/></svg>
+          </button>
           <button
-            class="font-garamond text-bc-body2 font-light text-bc-black tracking-[0.02em] hover:opacity-60 transition-opacity disabled:opacity-25"
+            class="flex items-center justify-center w-[44px] h-[44px] border border-bc-black hover:opacity-60 transition-opacity disabled:opacity-25"
             :disabled="startIndex >= maxIndex"
             @click="next"
-          >Next</button>
+            aria-label="Successivo"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4L10.59 5.41L16.17 11H4V13H16.17L10.59 18.59L12 20L20 12L12 4Z" fill="currentColor"/></svg>
+          </button>
         </div>
         <!-- Track con slide animato -->
         <div
