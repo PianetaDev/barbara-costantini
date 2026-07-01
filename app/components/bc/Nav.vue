@@ -16,7 +16,7 @@ watch(menuOpen, (val) => {
 </script>
 <template>
   <header class="w-full border-b border-bc-black sticky top-0 z-40 bg-bc-canvas">
-    <div class="flex items-center justify-between px-bc-page py-[24px]">
+    <div class="flex items-center justify-between px-bc-page h-[80px]">
       <!-- Logo -->
       <NuxtLink to="/" class="flex items-center" @click="menuOpen = false">
         <span class="font-sans text-bc-nav tracking-[0.02em]" style="font-weight: 700;">
