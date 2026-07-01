@@ -145,7 +145,7 @@ function onTouchEnd(e: TouchEvent) {
   <section
     v-for="(gruppo, g) in gruppi"
     :key="g"
-    class="border-b border-bc-black px-bc-page"
+    class="border-b border-bc-black px-bc-page overflow-hidden"
   >
     <div class="mx-auto max-w-bc-content
                 flex flex-col md:flex-row md:items-start
@@ -153,14 +153,14 @@ function onTouchEnd(e: TouchEvent) {
                 gap-bc-xl md:gap-[80px] lg:gap-[140px]">
 
       <!-- Immagine sx -->
-      <div v-reveal class="flex items-start md:flex-1 lg:flex-none lg:shrink-0 md:py-[64px]">
+      <div v-reveal class="flex items-start md:flex-1 lg:flex-none lg:shrink-0 min-w-0 md:py-[64px]">
         <div class="w-full lg:w-[442px] aspect-[442/553] bg-bc-black/10 overflow-hidden">
           <img :src="gruppo.image" :alt="gruppo.titolo" class="w-full h-full object-cover" />
         </div>
       </div>
 
       <!-- Titolo + Accordion dx -->
-      <div v-reveal="{ delay: '0.12s' }" class="flex flex-col md:flex-1 lg:flex-none lg:w-[556px] md:py-[64px]">
+      <div v-reveal="{ delay: '0.12s' }" class="flex flex-col md:flex-1 lg:flex-none lg:w-[556px] min-w-0 md:py-[64px]">
         <h2
           class="font-garamond text-bc-black tracking-[0.02em] mb-[32px]"
           style="font-size:20px; line-height:1.2; font-weight:700;"
