@@ -114,14 +114,12 @@ function toggle(g: number, i: number) {
         </div>
       </div>
 
-      <!-- Divider verticale -->
-      <div class="sv-divider" />
 
       <!-- Titolo + Accordion dx -->
       <div v-reveal="{ delay: '0.12s' }" class="flex flex-col sv-acc">
         <h2
-          class="font-garamond font-medium text-bc-black tracking-[0.02em]"
-          style="font-size:24px; line-height:1.2; margin-bottom:32px;"
+          class="font-garamond text-bc-black tracking-[0.02em]"
+          style="font-size:20px; line-height:1.2; font-weight:700; margin-bottom:32px;"
         >{{ gruppo.titolo }}</h2>
 
         <div
@@ -161,23 +159,24 @@ function toggle(g: number, i: number) {
   <!-- Partner: 3 colonne con immagine sopra -->
   <section class="border-b border-bc-black px-bc-page">
     <div class="mx-auto max-w-bc-content">
-    <div class="sv-partner-row">
-      <div
-        v-for="(p, i) in partner"
-        :key="i"
-        v-reveal="{ delay: `${i * 0.1}s` }"
-        class="sv-partner-col"
-      >
-        <div class="sv-partner-inner">
+    <div class="flex items-stretch">
+      <template v-for="(p, i) in partner" :key="i">
+        <div v-if="i > 0" class="w-px bg-bc-black self-stretch shrink-0 mx-[40px]" />
+        <div
+          v-reveal="{ delay: `${i * 0.1}s` }"
+          class="flex flex-col gap-bc-xl flex-1 py-[64px]"
+        >
           <div class="w-full bg-bc-black/10 overflow-hidden" style="aspect-ratio:327/407;">
             <img v-if="p.image" :src="p.image" :alt="p.titolo" class="w-full h-full object-cover" />
           </div>
-          <h3 class="font-garamond font-medium text-bc-black tracking-[0.02em] mt-bc-xl"
-              style="font-size:24px; line-height:1.2;">{{ p.titolo }}</h3>
-          <p class="font-garamond font-light text-bc-black tracking-[0.02em] mt-bc-xl"
-             style="font-size:16px; line-height:1.2;">{{ p.testo }}</p>
+          <div class="flex flex-col gap-bc-md">
+            <h3 class="font-garamond font-medium text-bc-black tracking-[0.02em]"
+                style="font-size:24px; line-height:1.2;">{{ p.titolo }}</h3>
+            <p class="font-garamond font-light text-bc-black tracking-[0.02em]"
+               style="font-size:16px; line-height:1.2;">{{ p.testo }}</p>
+          </div>
         </div>
-      </div>
+      </template>
     </div>
     </div>
   </section>
@@ -200,9 +199,6 @@ function toggle(g: number, i: number) {
   gap: 32px;
   padding: 64px 0;
 }
-.sv-divider {
-  display: none;
-}
 @media (min-width: 768px) {
   .sv-row {
     flex-direction: row;
@@ -212,20 +208,13 @@ function toggle(g: number, i: number) {
   }
   .sv-img {
     flex: 1;
-    padding: 64px 48px 64px 0;
+    padding: 64px 80px 64px 0;
     display: flex;
     align-items: center;
   }
-  .sv-divider {
-    display: block;
-    width: 1px;
-    background: black;
-    align-self: stretch;
-    flex-shrink: 0;
-  }
   .sv-acc {
     flex: 1;
-    padding: 64px 0 64px 48px;
+    padding: 64px 0 64px 80px;
   }
 }
 @media (min-width: 1280px) {
@@ -234,9 +223,6 @@ function toggle(g: number, i: number) {
     width: 442px;
     padding-right: 0;
   }
-  .sv-divider {
-    margin: 0 80px;
-  }
   .sv-acc {
     flex: none;
     width: 556px;
@@ -244,39 +230,7 @@ function toggle(g: number, i: number) {
   }
 }
 
-/* ── Partner: 3 colonne con divisori verticali ───────────── */
-.sv-partner-row {
-  display: flex;
-  flex-direction: column;
-}
-.sv-partner-col {
-  padding: 48px 32px;
-  border-bottom: 1px solid black;
-}
-.sv-partner-col:last-child {
-  border-bottom: none;
-}
-.sv-partner-inner {
-  max-width: 327px;
-}
-@media (min-width: 768px) {
-  .sv-partner-row {
-    flex-direction: row;
-    align-items: stretch;
-  }
-  .sv-partner-col {
-    flex: 1;
-    padding: 64px 48px;
-    border-bottom: none;
-    border-right: 1px solid black;
-  }
-  .sv-partner-col:last-child {
-    border-right: none;
-  }
-  .sv-partner-inner {
-    max-width: 100%;
-  }
-}
+
 
 /* ── Accordion: animazione apertura/chiusura ─────────────── */
 .sv-acc-body {
