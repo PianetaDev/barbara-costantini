@@ -9,14 +9,14 @@ interface Servizio {
 
 interface Gruppo {
   titolo: string
-  descrizione: string
+  image: string
   servizi: Servizio[]
 }
 
 const gruppi: Gruppo[] = [
   {
     titolo: 'Beni Archivistici e Librari',
-    descrizione: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac.',
+    image: '/images/bc-059.jpg',
     servizi: [
       { titolo: 'Servizio 1', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.' },
       { titolo: 'Servizio 2', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat. Mauris euismod orci in mauris vehicula vehicula. Pellentesque ornare ullamcorper lorem, sit amet hendrerit purus molestie sed.' },
@@ -25,8 +25,8 @@ const gruppi: Gruppo[] = [
     ],
   },
   {
-    titolo: 'Opere d\u2019arte su carta',
-    descrizione: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac.',
+    titolo: 'Opere d’arte su carta',
+    image: '/images/bc-060.jpg',
     servizi: [
       { titolo: 'Servizio 1', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.' },
       { titolo: 'Servizio 2', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.' },
@@ -36,7 +36,7 @@ const gruppi: Gruppo[] = [
   },
   {
     titolo: 'Materiali fotografici',
-    descrizione: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac.',
+    image: '/images/bc-025.jpg',
     servizi: [
       { titolo: 'Servizio 1', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.' },
       { titolo: 'Servizio 2', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.' },
@@ -46,7 +46,7 @@ const gruppi: Gruppo[] = [
   },
   {
     titolo: 'Servizi trasversali',
-    descrizione: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac.',
+    image: '/images/bc-027.jpg',
     servizi: [
       { titolo: 'Progettazione', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.' },
       { titolo: 'Redazione di condition report', corpo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.' },
@@ -59,14 +59,17 @@ const gruppi: Gruppo[] = [
 const partner = [
   {
     titolo: 'Cornici',
+    image: '/images/bc-003.jpg',
     testo: 'Collaboriamo con il laboratorio di incorniciatura Pierluigi Ferro Cornici. Tale collaborazione consente di integrare gli interventi conservativi soluzioni espositive e di montaggio di altissimo livello, compatibili con esigenze di tutela, valorizzazione e sicurezza delle opere.',
   },
   {
     titolo: 'Fotografia',
+    image: '/images/bc-026.jpg',
     testo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac.',
   },
   {
     titolo: 'Diagnostica',
+    image: '/images/bc-038.jpg',
     testo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac.',
   },
 ]
@@ -79,36 +82,47 @@ function toggle(g: number, i: number) {
 </script>
 
 <template>
-  <!-- Hero -->
-  <section class="border-b border-bc-black px-bc-page py-[64px] flex flex-col items-center gap-bc-2xl text-center">
-    <h1 v-reveal class="font-garamond font-medium text-bc-black tracking-[0.02em]"
-        style="font-size:40px; line-height:1.2; max-width:908px;">
+  <!-- Hero: stessa struttura di home/studio senza immagine -->
+  <section class="border-b border-bc-black px-bc-page py-[64px] flex flex-col items-center text-center">
+    <h1
+      v-reveal
+      class="font-sans text-[28px] md:text-[34px] lg:text-bc-h1 font-medium text-bc-black tracking-[0.02em] max-w-[908px] mb-[24px]"
+    >
       I servizi
     </h1>
-    <p v-reveal="{ delay: '0.12s' }" class="font-garamond font-light text-bc-black"
-       style="font-size:28px; line-height:1.2; max-width:438px;">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis.
+    <p
+      v-reveal="{ delay: '0.12s' }"
+      class="font-garamond text-bc-body1 font-light text-bc-black max-w-[440px]"
+    >
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.
     </p>
   </section>
 
-  <!-- Gruppi accordion -->
+  <!-- Gruppi accordion: immagine sx + divider + titolo e accordion dx -->
   <section
     v-for="(gruppo, g) in gruppi"
     :key="g"
-    class="border-b border-bc-black"
+    class="border-b border-bc-black px-bc-page"
   >
-    <div class="px-bc-page py-[64px] sv-row">
+    <div class="sv-row">
 
-      <!-- Categoria sx -->
-      <div v-reveal class="flex flex-col gap-bc-xl sv-cat">
-        <h2 class="font-garamond font-medium text-bc-black tracking-[0.02em]"
-            style="font-size:32px; line-height:1.2;">{{ gruppo.titolo }}</h2>
-        <p class="font-garamond font-light text-bc-black tracking-[0.02em]"
-           style="font-size:20px; line-height:1.2;">{{ gruppo.descrizione }}</p>
+      <!-- Immagine sx -->
+      <div v-reveal class="sv-img">
+        <div class="w-full aspect-[442/553] bg-bc-black/10 overflow-hidden">
+          <img :src="gruppo.image" :alt="gruppo.titolo" class="w-full h-full object-cover" />
+        </div>
       </div>
 
-      <!-- Accordion dx -->
+      <!-- Divider verticale -->
+      <div class="sv-divider" />
+
+      <!-- Titolo + Accordion dx -->
       <div v-reveal="{ delay: '0.12s' }" class="flex flex-col sv-acc">
+        <h2
+          class="font-garamond font-medium text-bc-black tracking-[0.02em]"
+          style="font-size:32px; line-height:1.2; margin-bottom:32px;"
+        >{{ gruppo.titolo }}</h2>
+
         <div
           v-for="(s, i) in gruppo.servizi"
           :key="i"
@@ -142,7 +156,7 @@ function toggle(g: number, i: number) {
     </div>
   </section>
 
-  <!-- Partner: 3 colonne con divisori -->
+  <!-- Partner: 3 colonne con immagine sopra -->
   <section class="border-b border-bc-black">
     <div class="sv-partner-row">
       <div
@@ -152,7 +166,10 @@ function toggle(g: number, i: number) {
         class="sv-partner-col"
       >
         <div class="sv-partner-inner">
-          <h3 class="font-garamond font-medium text-bc-black tracking-[0.02em]"
+          <div class="w-full bg-bc-black/10 overflow-hidden" style="aspect-ratio:327/407;">
+            <img v-if="p.image" :src="p.image" :alt="p.titolo" class="w-full h-full object-cover" />
+          </div>
+          <h3 class="font-garamond font-medium text-bc-black tracking-[0.02em] mt-bc-xl"
               style="font-size:24px; line-height:1.2;">{{ p.titolo }}</h3>
           <p class="font-garamond font-light text-bc-black tracking-[0.02em] mt-bc-xl"
              style="font-size:20px; line-height:1.2;">{{ p.testo }}</p>
@@ -172,6 +189,57 @@ function toggle(g: number, i: number) {
 </template>
 
 <style>
+/* ── Gruppi accordion: immagine sx + divider + contenuto dx ── */
+.sv-row {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 64px 0;
+}
+.sv-divider {
+  display: none;
+}
+@media (min-width: 768px) {
+  .sv-row {
+    flex-direction: row;
+    gap: 0;
+    align-items: stretch;
+    padding: 0;
+  }
+  .sv-img {
+    flex: 1;
+    padding: 64px 48px 64px 0;
+    display: flex;
+    align-items: center;
+  }
+  .sv-divider {
+    display: block;
+    width: 1px;
+    background: black;
+    align-self: stretch;
+    flex-shrink: 0;
+  }
+  .sv-acc {
+    flex: 1;
+    padding: 64px 0 64px 48px;
+  }
+}
+@media (min-width: 1280px) {
+  .sv-img {
+    flex: none;
+    width: 442px;
+    padding-right: 0;
+  }
+  .sv-divider {
+    margin: 0 80px;
+  }
+  .sv-acc {
+    flex: none;
+    width: 556px;
+    padding-left: 0;
+  }
+}
+
 /* ── Partner: 3 colonne con divisori verticali ───────────── */
 .sv-partner-row {
   display: flex;
@@ -194,12 +262,15 @@ function toggle(g: number, i: number) {
   }
   .sv-partner-col {
     flex: 1;
-    padding: 80px 48px;
+    padding: 64px 48px;
     border-bottom: none;
     border-right: 1px solid black;
   }
   .sv-partner-col:last-child {
     border-right: none;
+  }
+  .sv-partner-inner {
+    max-width: 100%;
   }
 }
 
@@ -220,41 +291,5 @@ function toggle(g: number, i: number) {
 }
 .sv-acc-body.sv-acc-open .sv-acc-inner {
   padding-bottom: 48px;
-}
-
-/* ── Gruppi: due colonne da tablet in su ─────────────────── */
-.sv-row {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-}
-@media (min-width: 768px) {
-  .sv-row {
-    flex-direction: row;
-    gap: 48px;
-    align-items: flex-start;
-  }
-  .sv-cat {
-    flex: 1;
-    min-width: 0;
-  }
-  .sv-acc {
-    flex: 1;
-    min-width: 0;
-  }
-}
-@media (min-width: 1280px) {
-  .sv-row {
-    justify-content: center;
-    gap: 140px;
-  }
-  .sv-cat {
-    flex: none;
-    width: 326px;
-  }
-  .sv-acc {
-    flex: none;
-    width: 676px;
-  }
 }
 </style>
