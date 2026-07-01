@@ -150,17 +150,17 @@ function onTouchEnd(e: TouchEvent) {
     <div class="mx-auto max-w-bc-content
                 flex flex-col md:flex-row md:items-start
                 py-bc-2xl md:py-0
-                gap-bc-xl md:gap-[80px] lg:gap-[140px]">
+                gap-bc-xl md:gap-[80px] xl:gap-[140px]">
 
       <!-- Immagine sx -->
-      <div v-reveal class="flex items-start md:flex-1 lg:flex-none lg:shrink-0 min-w-0 md:py-[64px]">
-        <div class="w-full lg:w-[442px] aspect-[442/553] bg-bc-black/10 overflow-hidden">
+      <div v-reveal class="flex items-start md:flex-1 xl:flex-none xl:shrink-0 min-w-0 md:py-[64px]">
+        <div class="w-full xl:w-[442px] aspect-[442/553] bg-bc-black/10 overflow-hidden">
           <img :src="gruppo.image" :alt="gruppo.titolo" class="w-full h-full object-cover" />
         </div>
       </div>
 
       <!-- Titolo + Accordion dx -->
-      <div v-reveal="{ delay: '0.12s' }" class="flex flex-col md:flex-1 lg:flex-none lg:w-[556px] min-w-0 md:py-[64px]">
+      <div v-reveal="{ delay: '0.12s' }" class="flex flex-col md:flex-1 xl:flex-none xl:w-[556px] min-w-0 md:py-[64px]">
         <h2
           class="font-garamond text-bc-black tracking-[0.02em] mb-[32px]"
           style="font-size:20px; line-height:1.2; font-weight:700;"
