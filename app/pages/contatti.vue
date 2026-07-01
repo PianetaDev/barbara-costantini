@@ -38,9 +38,9 @@
     </div>
 
     <!-- TABLET + DESKTOP: split layout a 2 colonne -->
-    <section class="hidden md:flex flex-1 w-full px-bc-page">
-      <div class="max-w-[1142px] mx-auto w-full h-full">
-        <div class="flex flex-row items-center gap-bc-4xl py-[64px] h-full">
+    <section class="hidden md:flex flex-1 w-full px-bc-page items-center">
+      <div class="max-w-[1142px] mx-auto w-full">
+        <div class="flex flex-row items-center gap-bc-4xl py-[64px]">
 
           <!-- Colonna sinistra: testo -->
           <div v-reveal class="flex flex-col gap-bc-2xl w-1/2 pr-bc-4xl">
@@ -64,7 +64,7 @@
           </div>
 
           <!-- Colonna destra: immagine centrata verticalmente -->
-          <div v-reveal="{ delay: '0.15s' }" class="w-1/2 pl-bc-4xl flex justify-start items-center h-full">
+          <div v-reveal="{ delay: '0.15s' }" class="w-1/2 pl-bc-4xl flex justify-start items-center">
             <div class="w-full max-w-[443px] aspect-[443/553] overflow-hidden bg-bc-black/10">
               <img src="/images/bc-055.jpg" alt="Restauro documenti" class="w-full h-full object-cover" />
             </div>
