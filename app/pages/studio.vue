@@ -4,7 +4,8 @@ useHead({ title: 'Lo Studio — Barbara Costantini Restauro' })
 <template>
   <div>
     <BcHero>
-      <template #title>Lo studio</template>
+      <template #title>Lorem ipsum dolor sit amet</template>
+      <template #subtext>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.</template>
       <template #image>
         <img src="/images/bc-097.jpg" alt="Lo studio di restauro" class="w-full h-full object-cover" />
       </template>

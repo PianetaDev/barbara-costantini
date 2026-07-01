@@ -5,6 +5,8 @@ useHead({ title: 'Barbara Costantini Restauro' })
 <template>
   <div>
     <BcHero>
+      <template #title>Lorem ipsum dolor sit amet</template>
+      <template #subtext>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.</template>
       <template #image>
         <img src="/images/bc-095.jpg" alt="Barbara Costantini restauro" class="w-full h-full object-cover" />
       </template>
