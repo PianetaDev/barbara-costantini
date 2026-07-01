@@ -218,15 +218,19 @@ function toggle(g: number, i: number) {
   }
 }
 @media (min-width: 1280px) {
+  .sv-row {
+    justify-content: center;
+    gap: 80px;
+  }
   .sv-img {
     flex: none;
     width: 442px;
-    padding-right: 0;
+    padding: 64px 0;
   }
   .sv-acc {
     flex: none;
     width: 556px;
-    padding-left: 0;
+    padding: 64px 0;
   }
 }
 
