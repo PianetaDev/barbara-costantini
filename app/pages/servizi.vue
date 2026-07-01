@@ -104,6 +104,7 @@ function toggle(g: number, i: number) {
     :key="g"
     class="border-b border-bc-black px-bc-page"
   >
+    <div class="mx-auto max-w-bc-content">
     <div class="sv-row">
 
       <!-- Immagine sx -->
@@ -154,10 +155,12 @@ function toggle(g: number, i: number) {
       </div>
 
     </div>
+    </div>
   </section>
 
   <!-- Partner: 3 colonne con immagine sopra -->
-  <section class="border-b border-bc-black">
+  <section class="border-b border-bc-black px-bc-page">
+    <div class="mx-auto max-w-bc-content">
     <div class="sv-partner-row">
       <div
         v-for="(p, i) in partner"
@@ -175,6 +178,7 @@ function toggle(g: number, i: number) {
              style="font-size:20px; line-height:1.2;">{{ p.testo }}</p>
         </div>
       </div>
+    </div>
     </div>
   </section>
 
