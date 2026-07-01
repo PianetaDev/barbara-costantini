@@ -76,8 +76,8 @@ function onTouchEnd(e: TouchEvent) {
         class="flex flex-col gap-bc-xl items-start md:shrink-0 md:w-[240px] lg:w-[327px]"
       >
         <div class="flex flex-col gap-bc-xl">
-          <h2 class="font-garamond font-semibold text-bc-black tracking-[0.02em]" :class="!props.titoloSize ? 'text-bc-h2' : ''" :style="props.titoloSize ? `font-size:${props.titoloSize}` : ''">{{ props.titolo }}</h2>
-          <p class="font-garamond font-normal text-bc-black tracking-[0.02em]" :class="!props.paragrafoSize ? 'text-bc-body1' : ''" :style="props.paragrafoSize ? `font-size:${props.paragrafoSize}` : ''">
+          <h2 class="font-garamond font-medium text-bc-black tracking-[0.02em]" :class="!props.titoloSize ? 'text-bc-h2' : ''" :style="props.titoloSize ? `font-size:${props.titoloSize}` : ''">{{ props.titolo }}</h2>
+          <p class="font-garamond font-light text-bc-black tracking-[0.02em]" :class="!props.paragrafoSize ? 'text-bc-body1' : ''" :style="props.paragrafoSize ? `font-size:${props.paragrafoSize}` : ''">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac.
           </p>
         </div>
@@ -104,7 +104,7 @@ function onTouchEnd(e: TouchEvent) {
           <div class="flex flex-col gap-[4px]">
             <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">{{ p.codice }}</p>
             <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">{{ p.committente }}</p>
-            <p class="font-garamond font-semibold text-bc-black tracking-[0.02em] group-hover:underline" :class="!props.cardTitoloSize ? 'text-bc-h4' : ''" :style="props.cardTitoloSize ? `font-size:${props.cardTitoloSize}` : ''">{{ p.titolo }}</p>
+            <p class="font-garamond font-medium text-bc-black tracking-[0.02em] group-hover:underline" :class="!props.cardTitoloSize ? 'text-bc-h4' : ''" :style="props.cardTitoloSize ? `font-size:${props.cardTitoloSize}` : ''">{{ p.titolo }}</p>
           </div>
         </NuxtLink>
       </div>
@@ -114,13 +114,13 @@ function onTouchEnd(e: TouchEvent) {
         <!-- Previous / Next sopra, destra -->
         <div class="flex justify-end items-center gap-bc-md">
           <button
-            class="font-garamond text-bc-body2 font-normal text-bc-black tracking-[0.02em] hover:opacity-60 transition-opacity disabled:opacity-25"
+            class="font-garamond text-bc-body2 font-light text-bc-black tracking-[0.02em] hover:opacity-60 transition-opacity disabled:opacity-25"
             :disabled="startIndex === 0"
             @click="prev"
           >Previous</button>
           <span class="font-garamond text-bc-body2 text-bc-black">/</span>
           <button
-            class="font-garamond text-bc-body2 font-normal text-bc-black tracking-[0.02em] hover:opacity-60 transition-opacity disabled:opacity-25"
+            class="font-garamond text-bc-body2 font-light text-bc-black tracking-[0.02em] hover:opacity-60 transition-opacity disabled:opacity-25"
             :disabled="startIndex >= maxIndex"
             @click="next"
           >Next</button>
@@ -152,7 +152,7 @@ function onTouchEnd(e: TouchEvent) {
               <div class="flex flex-col gap-[4px]">
                 <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">{{ p.codice }}</p>
                 <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">{{ p.committente }}</p>
-                <p class="font-garamond font-semibold text-bc-black tracking-[0.02em] group-hover:underline" :class="!props.cardTitoloSize ? 'text-bc-h4' : ''" :style="props.cardTitoloSize ? `font-size:${props.cardTitoloSize}` : ''">{{ p.titolo }}</p>
+                <p class="font-garamond font-medium text-bc-black tracking-[0.02em] group-hover:underline" :class="!props.cardTitoloSize ? 'text-bc-h4' : ''" :style="props.cardTitoloSize ? `font-size:${props.cardTitoloSize}` : ''">{{ p.titolo }}</p>
               </div>
             </NuxtLink>
           </div>

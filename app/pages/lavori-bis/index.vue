@@ -16,7 +16,7 @@ const progetti = [...base, ...base, ...base, ...base]
     <!-- Hero: descrizione centrata -->
     <section class="w-full px-bc-page py-[64px]">
       <div class="mx-auto max-w-[908px] flex flex-col items-center text-center">
-        <p v-reveal class="font-garamond font-normal text-bc-black tracking-[0.02em] max-w-[700px]" style="font-size: 20px;">
+        <p v-reveal class="font-garamond font-light text-bc-black tracking-[0.02em] max-w-[700px]" style="font-size: 20px;">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
         </p>
       </div>

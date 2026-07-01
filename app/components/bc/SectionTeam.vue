@@ -77,10 +77,10 @@ function onTouchEnd(e: TouchEvent) {
           </div>
           <div class="flex flex-col gap-bc-md">
             <div class="flex flex-col gap-[4px]">
-              <h3 class="font-garamond text-[32px] leading-[1.2] font-semibold text-bc-black tracking-[0.02em]">{{ m.nome }}</h3>
-              <p class="font-garamond text-bc-h4 font-semibold text-bc-black tracking-[0.02em]">{{ m.ruolo }}</p>
+              <h3 class="font-garamond text-[32px] leading-[1.2] font-medium text-bc-black tracking-[0.02em]">{{ m.nome }}</h3>
+              <p class="font-garamond text-bc-h4 font-medium text-bc-black tracking-[0.02em]">{{ m.ruolo }}</p>
             </div>
-            <p class="font-garamond text-bc-body2 font-normal text-bc-black tracking-[0.02em]">{{ m.bio }}</p>
+            <p class="font-garamond text-bc-body2 font-light text-bc-black tracking-[0.02em]">{{ m.bio }}</p>
           </div>
         </div>
       </template>
@@ -92,13 +92,13 @@ function onTouchEnd(e: TouchEvent) {
         <!-- Previous / Next -->
         <div class="flex justify-end items-center gap-bc-md">
           <button
-            class="font-garamond text-bc-body2 font-normal text-bc-black tracking-[0.02em] hover:opacity-60 transition-opacity disabled:opacity-25"
+            class="font-garamond text-bc-body2 font-light text-bc-black tracking-[0.02em] hover:opacity-60 transition-opacity disabled:opacity-25"
             :disabled="startIndex === 0"
             @click="prev"
           >Previous</button>
           <span class="font-garamond text-bc-body2 text-bc-black">/</span>
           <button
-            class="font-garamond text-bc-body2 font-normal text-bc-black tracking-[0.02em] hover:opacity-60 transition-opacity disabled:opacity-25"
+            class="font-garamond text-bc-body2 font-light text-bc-black tracking-[0.02em] hover:opacity-60 transition-opacity disabled:opacity-25"
             :disabled="startIndex >= maxIndex"
             @click="next"
           >Next</button>
@@ -124,10 +124,10 @@ function onTouchEnd(e: TouchEvent) {
               </div>
               <div class="flex flex-col gap-bc-md">
                 <div class="flex flex-col gap-[4px]">
-                  <h3 class="font-garamond text-[32px] leading-[1.2] font-semibold text-bc-black tracking-[0.02em]">{{ m.nome }}</h3>
-                  <p class="font-garamond text-bc-h4 font-semibold text-bc-black tracking-[0.02em]">{{ m.ruolo }}</p>
+                  <h3 class="font-garamond text-[32px] leading-[1.2] font-medium text-bc-black tracking-[0.02em]">{{ m.nome }}</h3>
+                  <p class="font-garamond text-bc-h4 font-medium text-bc-black tracking-[0.02em]">{{ m.ruolo }}</p>
                 </div>
-                <p class="font-garamond text-bc-body2 font-normal text-bc-black tracking-[0.02em]">{{ m.bio }}</p>
+                <p class="font-garamond text-bc-body2 font-light text-bc-black tracking-[0.02em]">{{ m.bio }}</p>
               </div>
             </div>
           </div>

@@ -20,16 +20,16 @@
       <div class="flex flex-col gap-bc-xl items-start md:flex-1 lg:flex-none lg:w-[442px] md:py-bc-2xl lg:py-0">
         <div class="flex flex-col gap-bc-md">
           <!-- Nome -->
-          <h2 class="font-garamond text-bc-h2 font-semibold text-bc-black tracking-[0.02em] leading-[1.2]">
+          <h2 class="font-garamond text-bc-h2 font-medium text-bc-black tracking-[0.02em] leading-[1.2]">
             <slot name="nome">Barbara Costantini</slot>
           </h2>
           <!-- Ruolo -->
-          <p class="font-garamond text-bc-h4 font-semibold text-bc-black tracking-[0.02em]">
+          <p class="font-garamond text-bc-h4 font-medium text-bc-black tracking-[0.02em]">
             <slot name="ruolo">Ruolo</slot>
           </p>
         </div>
         <!-- Bio -->
-        <p class="font-garamond text-bc-body1 font-normal text-bc-black tracking-[0.02em]">
+        <p class="font-garamond text-bc-body1 font-light text-bc-black tracking-[0.02em]">
           <slot name="bio">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat. Mauris euismod orci in mauris vehicula vehicula.</slot>
         </p>
       </div>

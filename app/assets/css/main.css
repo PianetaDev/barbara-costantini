@@ -17,7 +17,7 @@
     @apply inline-flex items-center
            border border-bc-black
            px-bc-md py-bc-xs
-           font-sans text-bc-btn font-normal text-bc-black
+           font-sans text-bc-btn font-light text-bc-black
            tracking-[0.02em]
            hover:bg-bc-black hover:text-bc-canvas
            transition-colors duration-200;

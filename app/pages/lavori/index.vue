@@ -155,10 +155,10 @@ function caricaAltri() {
     <!-- HERO -->
     <section class="w-full border-b border-bc-black py-bc-4xl px-bc-page">
       <div class="flex flex-col items-center gap-bc-2xl text-center max-w-[908px] mx-auto">
-        <h1 v-reveal class="font-garamond text-bc-h1 font-semibold text-bc-black tracking-[0.02em]">
+        <h1 v-reveal class="font-garamond text-bc-h1 font-medium text-bc-black tracking-[0.02em]">
           I Lavori
         </h1>
-        <p v-reveal="{ delay: '0.12s' }" class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:28px; line-height:1.2; max-width:438px;">
+        <p v-reveal="{ delay: '0.12s' }" class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:28px; line-height:1.2; max-width:438px;">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis.
         </p>
       </div>
@@ -167,7 +167,7 @@ function caricaAltri() {
     <!-- ARCHIVIO -->
     <section class="w-full px-bc-page py-bc-4xl">
       <div class="max-w-[1142px] mx-auto flex flex-col gap-bc-2xl">
-        <h2 v-reveal class="font-garamond text-bc-h2 font-semibold text-bc-black tracking-[0.02em] text-center">
+        <h2 v-reveal class="font-garamond text-bc-h2 font-medium text-bc-black tracking-[0.02em] text-center">
           Archivio lavori completo
         </h2>
 
@@ -205,9 +205,9 @@ function caricaAltri() {
             <!-- Riga principale — MOBILE: stacked (ID+Azioni in cima, poi Titolo+Committente) -->
             <div class="md:hidden flex flex-col gap-[16px] py-[24px] cursor-pointer" @click="toggle(l.id)">
               <div class="flex items-center justify-between">
-                <p class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.2;">{{ l.id }}</p>
+                <p class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.2;">{{ l.id }}</p>
                 <div class="flex items-center gap-bc-md">
-                  <NuxtLink v-if="l.hasDetail" :to="`/lavori/${l.slug}`" class="font-garamond font-normal text-bc-black underline underline-offset-2 hover:font-semibold whitespace-nowrap" style="font-size:18px;" @click.stop>Vedi di più</NuxtLink>
+                  <NuxtLink v-if="l.hasDetail" :to="`/lavori/${l.slug}`" class="font-garamond font-light text-bc-black underline underline-offset-2 hover:font-semibold whitespace-nowrap" style="font-size:18px;" @click.stop>Vedi di più</NuxtLink>
                   <span v-else class="w-[80px]" />
                   <button class="w-[40px] h-[40px] flex items-center justify-center shrink-0 hover:opacity-60 transition-opacity" :aria-label="aperto === l.id ? 'Chiudi' : 'Apri'" @click.stop="toggle(l.id)">
                     <span class="font-garamond leading-none select-none" style="font-size:28px;">{{ aperto === l.id ? '−' : '+' }}</span>
@@ -215,20 +215,20 @@ function caricaAltri() {
                 </div>
               </div>
               <div class="flex flex-col gap-[8px]">
-                <p class="font-garamond font-semibold text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.2;">{{ l.titolo }}</p>
-                <p class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.2;">{{ l.committente }}</p>
+                <p class="font-garamond font-medium text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.2;">{{ l.titolo }}</p>
+                <p class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.2;">{{ l.committente }}</p>
               </div>
             </div>
             <!-- Riga principale — TABLET+: colonne affiancate -->
             <div class="hidden md:flex gap-[24px] items-center py-[24px] cursor-pointer" @click="toggle(l.id)">
-              <p class="font-garamond font-normal text-bc-black tracking-[0.02em] w-[91px] shrink-0" style="font-size:20px; line-height:1.2;">{{ l.id }}</p>
+              <p class="font-garamond font-light text-bc-black tracking-[0.02em] w-[91px] shrink-0" style="font-size:20px; line-height:1.2;">{{ l.id }}</p>
               <div class="flex-1 min-w-0 flex flex-col gap-[8px]">
-                <p class="font-garamond font-semibold text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.2;">{{ l.titolo }}</p>
-                <p class="md:block lg:hidden font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.2;">{{ l.committente }}</p>
+                <p class="font-garamond font-medium text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.2;">{{ l.titolo }}</p>
+                <p class="md:block lg:hidden font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.2;">{{ l.committente }}</p>
               </div>
-              <p class="hidden lg:block font-garamond font-normal text-bc-black tracking-[0.02em] w-[209px] shrink-0" style="font-size:20px; line-height:1.2;">{{ l.committente }}</p>
+              <p class="hidden lg:block font-garamond font-light text-bc-black tracking-[0.02em] w-[209px] shrink-0" style="font-size:20px; line-height:1.2;">{{ l.committente }}</p>
               <div class="flex items-center gap-bc-md justify-end w-[209px] shrink-0">
-                <NuxtLink v-if="l.hasDetail" :to="`/lavori/${l.slug}`" class="font-garamond font-normal text-bc-black underline underline-offset-2 hover:font-semibold whitespace-nowrap" style="font-size:18px;" @click.stop>Vedi di più</NuxtLink>
+                <NuxtLink v-if="l.hasDetail" :to="`/lavori/${l.slug}`" class="font-garamond font-light text-bc-black underline underline-offset-2 hover:font-semibold whitespace-nowrap" style="font-size:18px;" @click.stop>Vedi di più</NuxtLink>
                 <span v-else class="w-[80px]" />
                 <button class="w-[40px] h-[40px] flex items-center justify-center shrink-0 hover:opacity-60 transition-opacity" :aria-label="aperto === l.id ? 'Chiudi' : 'Apri'" @click.stop="toggle(l.id)">
                   <span class="font-garamond leading-none select-none" style="font-size:28px;">{{ aperto === l.id ? '−' : '+' }}</span>
@@ -246,7 +246,7 @@ function caricaAltri() {
                   <!-- Descrizione: sotto il Titolo -->
                   <div class="flex flex-col gap-bc-md flex-1 min-w-0">
                     <p
-                      class="font-garamond font-normal text-bc-black"
+                      class="font-garamond font-light text-bc-black"
                       style="font-size:18px; line-height:1.2;"
                       v-html="l.descrizione"
                     />
@@ -268,7 +268,7 @@ function caricaAltri() {
                   <!-- Descrizione: flex-1, sotto il Titolo+Committente -->
                   <div class="flex flex-col gap-bc-md flex-1 min-w-0">
                     <p
-                      class="font-garamond font-normal text-bc-black"
+                      class="font-garamond font-light text-bc-black"
                       style="font-size:18px; line-height:1.2;"
                       v-html="l.descrizione"
                     />
@@ -283,7 +283,7 @@ function caricaAltri() {
                 </div>
                 <!-- Mobile: stack con immagine -->
                 <div class="md:hidden flex flex-col gap-bc-md">
-                  <p class="font-garamond font-normal text-bc-black" style="font-size:18px; line-height:1.2;" v-html="l.descrizione" />
+                  <p class="font-garamond font-light text-bc-black" style="font-size:18px; line-height:1.2;" v-html="l.descrizione" />
                   <p v-if="l.data" class="font-garamond italic text-bc-black" style="font-size:18px; line-height:1.2;">{{ l.data }}</p>
                   <div class="w-[207px] h-[258px] overflow-hidden bg-bc-black/10">
                     <img v-if="l.image" :src="l.image" :alt="l.titolo" class="w-full h-full object-cover" />
@@ -296,7 +296,7 @@ function caricaAltri() {
           <!-- Scopri di più: scompare quando finiscono gli elementi -->
           <div v-if="haAltri" class="flex justify-center pt-bc-4xl pb-bc-4xl">
             <button
-              class="font-garamond font-normal text-bc-black border-b border-bc-black hover:font-semibold"
+              class="font-garamond font-light text-bc-black border-b border-bc-black hover:font-semibold"
               style="font-size:18px; line-height:1.2; padding-bottom:2px;"
               @click="caricaAltri"
             >

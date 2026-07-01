@@ -12,10 +12,10 @@
         class="flex flex-col gap-bc-xl items-start justify-center md:flex-1 lg:flex-none lg:w-[442px] md:py-bc-2xl lg:py-0"
       >
         <div class="flex flex-col gap-bc-xl">
-          <h2 class="font-garamond text-bc-h2 font-semibold text-bc-black tracking-[0.02em]">
+          <h2 class="font-garamond text-bc-h2 font-medium text-bc-black tracking-[0.02em]">
             <slot name="title">Lo studio</slot>
           </h2>
-          <p class="font-garamond text-bc-body1 font-normal text-bc-black tracking-[0.02em]">
+          <p class="font-garamond text-bc-body1 font-light text-bc-black tracking-[0.02em]">
             <slot name="body">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis.</slot>
           </p>
         </div>

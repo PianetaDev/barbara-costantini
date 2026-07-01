@@ -146,7 +146,7 @@ const heroImgStyle = computed(() => {
         </div>
       </div>
       <div class="flex flex-col gap-bc-md bc-intro">
-        <p v-for="(t, i) in progetto.intro" :key="i" class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.2;">{{ t }}</p>
+        <p v-for="(t, i) in progetto.intro" :key="i" class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.2;">{{ t }}</p>
       </div>
       <div class="bc-spacer-r" />
     </div>
@@ -166,7 +166,7 @@ const heroImgStyle = computed(() => {
       <div>
         <h2 class="font-garamond text-bc-black text-center tracking-[0.02em]" style="font-size:24px; line-height:1.2; margin-bottom:32px; font-weight:500;">{{ s.titolo }}</h2>
         <h3 class="font-garamond text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.2; margin-bottom:16px; font-weight:500;">{{ s.sottotitolo }}</h3>
-        <p v-for="(t, j) in s.testi" :key="j" class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.2; margin-bottom:16px;">{{ t }}</p>
+        <p v-for="(t, j) in s.testi" :key="j" class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.2; margin-bottom:16px;">{{ t }}</p>
       </div>
       <div class="bc-spacer-r" />
     </div>
@@ -189,9 +189,9 @@ const heroImgStyle = computed(() => {
     <div class="px-bc-page pb-[64px] bc-grid bc-2col bc-442">
       <div class="bc-spacer-l" />
       <div style="display:flex; flex-direction:column; gap:32px;">
-        <p class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.2;">{{ progetto.metodo.testi[0] }}</p>
-        <p class="font-garamond font-bold text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.2;">"{{ progetto.metodo.citazione }}"</p>
-        <p v-if="progetto.metodo.testi[1]" class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.2;">{{ progetto.metodo.testi[1] }}</p>
+        <p class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.2;">{{ progetto.metodo.testi[0] }}</p>
+        <p class="font-garamond font-medium text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.2;">"{{ progetto.metodo.citazione }}"</p>
+        <p v-if="progetto.metodo.testi[1]" class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.2;">{{ progetto.metodo.testi[1] }}</p>
       </div>
     </div>
 

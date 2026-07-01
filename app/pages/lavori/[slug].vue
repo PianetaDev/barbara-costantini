@@ -190,7 +190,7 @@ const heroImgStyle = computed(() => {
     >
       <!-- Titolo: col 2, row 1 -->
       <h1
-        class="font-garamond font-semibold text-bc-black text-center tracking-[0.02em] bc-col2-r1"
+        class="font-garamond font-medium text-bc-black text-center tracking-[0.02em] bc-col2-r1"
         style="font-size:32px; line-height:1.2; margin-bottom:48px;"
       >{{ progetto.titolo }}</h1>
       <!-- Metadata: nascosto su mobile, visibile da md — col 1 row 2 -->
@@ -272,7 +272,7 @@ const heroImgStyle = computed(() => {
         <p
           v-for="(t, i) in progetto.intro"
           :key="i"
-          class="font-garamond font-normal text-bc-black tracking-[0.02em]"
+          class="font-garamond font-light text-bc-black tracking-[0.02em]"
           style="font-size:18px; line-height:1.2;"
         >{{ t }}</p>
       </div>
@@ -297,17 +297,17 @@ const heroImgStyle = computed(() => {
       <div class="bc-spacer-l" />
       <div>
         <h2
-          class="font-garamond font-semibold text-bc-black text-center tracking-[0.02em]"
+          class="font-garamond font-medium text-bc-black text-center tracking-[0.02em]"
           style="font-size:24px; line-height:1.2; margin-bottom:32px;"
         >{{ s.titolo }}</h2>
         <h3
-          class="font-garamond font-semibold text-bc-black tracking-[0.02em]"
+          class="font-garamond font-medium text-bc-black tracking-[0.02em]"
           style="font-size:20px; line-height:1.2; margin-bottom:16px;"
         >{{ s.sottotitolo }}</h3>
         <p
           v-for="(t, j) in s.testi"
           :key="j"
-          class="font-garamond font-normal text-bc-black tracking-[0.02em]"
+          class="font-garamond font-light text-bc-black tracking-[0.02em]"
           style="font-size:18px; line-height:1.2; margin-bottom:16px;"
         >{{ t }}</p>
       </div>
@@ -334,16 +334,16 @@ const heroImgStyle = computed(() => {
       <div>
         <div style="display:flex; flex-direction:column; gap:32px;">
           <p
-            class="font-garamond font-normal text-bc-black tracking-[0.02em]"
+            class="font-garamond font-light text-bc-black tracking-[0.02em]"
             style="font-size:18px; line-height:1.2;"
           >{{ progetto.metodo.testi[0] }}</p>
           <p
-            class="font-garamond font-bold text-bc-black tracking-[0.02em]"
+            class="font-garamond font-medium text-bc-black tracking-[0.02em]"
             style="font-size:18px; line-height:1.2;"
           >"{{ progetto.metodo.citazione }}"</p>
           <p
             v-if="progetto.metodo.testi[1]"
-            class="font-garamond font-normal text-bc-black tracking-[0.02em]"
+            class="font-garamond font-light text-bc-black tracking-[0.02em]"
             style="font-size:18px; line-height:1.2;"
           >{{ progetto.metodo.testi[1] }}</p>
         </div>
@@ -357,7 +357,7 @@ const heroImgStyle = computed(() => {
         class="px-bc-page py-bc-4xl bc-hero-grid"
       >
         <h2
-          class="font-garamond font-semibold text-bc-black text-center tracking-[0.02em] bc-col2-r1"
+          class="font-garamond font-medium text-bc-black text-center tracking-[0.02em] bc-col2-r1"
           style="font-size:32px; line-height:1.2; margin-bottom:48px;"
         >{{ successivo.titolo }}</h2>
         <div class="hidden md:flex md:flex-col gap-[8px] bc-col1-r2">
@@ -374,7 +374,7 @@ const heroImgStyle = computed(() => {
       <div class="relative z-10 flex justify-center pb-bc-4xl">
         <NuxtLink
           :to="`/lavori/${successivo.slug}`"
-          class="font-garamond font-normal text-bc-black border-b border-bc-black hover:font-semibold"
+          class="font-garamond font-light text-bc-black border-b border-bc-black hover:font-semibold"
           style="font-size:18px; line-height:1.2; padding-bottom:2px;"
         >Continua a leggere</NuxtLink>
       </div>
@@ -384,7 +384,7 @@ const heroImgStyle = computed(() => {
 
   <!-- 404 -->
   <div v-else class="px-bc-page py-bc-4xl flex flex-col items-center gap-bc-xl">
-    <p class="font-garamond font-semibold text-bc-black" style="font-size:32px;">Progetto non trovato</p>
+    <p class="font-garamond font-medium text-bc-black" style="font-size:32px;">Progetto non trovato</p>
     <NuxtLink to="/lavori" class="bc-btn">Torna ai lavori</NuxtLink>
   </div>
 </template>

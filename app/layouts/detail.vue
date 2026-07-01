@@ -5,7 +5,7 @@
       <div class="flex items-center px-bc-page py-[24px]">
         <NuxtLink
           to="/lavori"
-          class="font-garamond font-normal text-bc-black border-b border-bc-black hover:font-semibold"
+          class="font-garamond font-light text-bc-black border-b border-bc-black hover:font-semibold"
           style="font-size:18px; line-height:1.2; padding-bottom:2px;"
         >
           Go back

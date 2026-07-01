@@ -9,7 +9,7 @@
                   py-bc-xl gap-bc-xl md:gap-0">
         <!-- Info legali -->
         <div class="flex flex-col gap-bc-xs text-center md:text-left">
-          <p class="font-sans text-bc-nav font-bold text-bc-black tracking-[0.02em]">
+          <p class="font-sans text-bc-nav font-medium text-bc-black tracking-[0.02em]">
             Barbara Costantini Restauro Srl
           </p>
           <div class="flex flex-col gap-[8px]">

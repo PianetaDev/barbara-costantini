@@ -90,7 +90,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKey))
         <div class="flex flex-col gap-[4px]">
           <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.028em]">{{ img.codice }}</p>
           <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.028em]">{{ img.committente }}</p>
-          <p class="font-garamond text-bc-h4 font-semibold text-bc-black tracking-[0.02em] group-hover:underline">{{ img.titolo }}</p>
+          <p class="font-garamond text-bc-h4 font-medium text-bc-black tracking-[0.02em] group-hover:underline">{{ img.titolo }}</p>
         </div>
       </button>
     </div>

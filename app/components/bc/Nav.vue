@@ -1,5 +1,5 @@
 <!-- Figma: 590:1395 > Menu-desktop (590:1428) — 1440×107, border-bottom -->
-<!-- Style guide 457:8130: nav hover = font-semibold | mobile menu = fullscreen overlay -->
+<!-- Style guide 457:8130: nav hover = font-medium | mobile menu = fullscreen overlay -->
 <script setup lang="ts">
 const links = [
   { label: 'Studio', to: '/studio' },
@@ -26,14 +26,14 @@ watch(menuOpen, (val) => {
         </span>
       </NuxtLink>
 
-      <!-- Nav desktop: hover = font-semibold (style guide 457:8130) -->
+      <!-- Nav desktop: hover = font-medium (style guide 457:8130) -->
       <nav class="hidden lg:flex items-center justify-between w-[676px]">
         <NuxtLink
           v-for="l in links"
           :key="l.to"
           :to="l.to"
           exact-active-class="font-semibold"
-          class="font-sans text-bc-nav font-normal tracking-[0.02em] py-bc-sm hover:font-semibold"
+          class="font-sans text-bc-nav font-light tracking-[0.02em] py-bc-sm hover:font-semibold"
         >
           {{ l.label }}
         </NuxtLink>
@@ -77,7 +77,7 @@ watch(menuOpen, (val) => {
             v-for="l in links"
             :key="l.to"
             :to="l.to"
-            class="font-sans text-bc-nav font-normal tracking-[0.02em] hover:font-semibold"
+            class="font-sans text-bc-nav font-light tracking-[0.02em] hover:font-semibold"
             @click="menuOpen = false"
           >
             {{ l.label }}
