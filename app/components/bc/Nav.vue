@@ -25,7 +25,7 @@ watch(menuOpen, (val) => {
       </NuxtLink>
 
       <!-- Nav desktop: hover = font-medium (style guide 457:8130) -->
-      <nav class="hidden lg:flex items-center justify-between w-[676px]">
+      <nav class="hidden lg:flex items-center gap-[32px]">
         <NuxtLink
           v-for="l in links"
           :key="l.to"
