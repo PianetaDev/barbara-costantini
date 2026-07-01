@@ -125,7 +125,7 @@ function toggle(g: number, i: number) {
         <div
           v-for="(s, i) in gruppo.servizi"
           :key="i"
-          class="border-b border-bc-black"
+          class="border-t border-bc-black"
         >
           <button
             class="w-full flex items-center justify-between py-[24px] text-left cursor-pointer"
