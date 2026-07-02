@@ -163,7 +163,7 @@ function onTouchEnd(e: TouchEvent) {
       <div v-reveal="{ delay: '0.12s' }" class="flex flex-col md:flex-1 xl:flex-none xl:w-[556px] min-w-0 md:py-[64px]">
         <h2
           class="font-garamond text-bc-black tracking-[0.02em] mb-[32px]"
-          style="font-size:20px; line-height:1.2; font-weight:700;"
+          style="font-size:20px; line-height:1.5; font-weight:700;"
         >{{ gruppo.titolo }}</h2>
 
         <div
@@ -176,7 +176,7 @@ function onTouchEnd(e: TouchEvent) {
             @click="toggle(g, i)"
           >
             <span class="font-garamond font-medium text-bc-black tracking-[0.02em]"
-                  style="font-size:20px; line-height:1.2;">{{ s.titolo }}</span>
+                  style="font-size:20px; line-height:1.5;">{{ s.titolo }}</span>
             <span
               class="shrink-0 w-[40px] h-[40px] flex items-center justify-center transition-transform duration-300"
               :style="aperto[g] === i ? 'transform:rotate(45deg)' : ''"
@@ -190,7 +190,7 @@ function onTouchEnd(e: TouchEvent) {
           <div class="sv-acc-body" :class="aperto[g] === i ? 'sv-acc-open' : ''">
             <div class="sv-acc-inner">
               <p class="font-garamond font-light text-bc-black tracking-[0.02em]"
-                 style="font-size:20px; line-height:1.2;">{{ s.corpo }}</p>
+                 style="font-size:20px; line-height:1.5;">{{ s.corpo }}</p>
             </div>
           </div>
         </div>
@@ -215,9 +215,9 @@ function onTouchEnd(e: TouchEvent) {
           </div>
           <div class="flex flex-col gap-bc-md">
             <h3 class="font-garamond font-medium text-bc-black tracking-[0.02em]"
-                style="font-size:24px; line-height:1.2;">{{ p.titolo }}</h3>
+                style="font-size:24px; line-height:1.5;">{{ p.titolo }}</h3>
             <p class="font-garamond font-light text-bc-black tracking-[0.02em]"
-               style="font-size:16px; line-height:1.2;">{{ p.testo }}</p>
+               style="font-size:16px; line-height:1.5;">{{ p.testo }}</p>
           </div>
         </div>
       </template>
@@ -264,9 +264,9 @@ function onTouchEnd(e: TouchEvent) {
               </div>
               <div class="flex flex-col gap-bc-md">
                 <h3 class="font-garamond font-medium text-bc-black tracking-[0.02em]"
-                    style="font-size:24px; line-height:1.2;">{{ p.titolo }}</h3>
+                    style="font-size:24px; line-height:1.5;">{{ p.titolo }}</h3>
                 <p class="font-garamond font-light text-bc-black tracking-[0.02em]"
-                   style="font-size:16px; line-height:1.2;">{{ p.testo }}</p>
+                   style="font-size:16px; line-height:1.5;">{{ p.testo }}</p>
               </div>
             </div>
           </div>
@@ -279,7 +279,7 @@ function onTouchEnd(e: TouchEvent) {
   <!-- CTA finale -->
   <section class="px-bc-page py-[64px] flex flex-col items-center gap-bc-2xl text-center">
     <p v-reveal class="font-garamond font-medium text-bc-black tracking-[0.02em]"
-       style="font-size:20px; line-height:1.2; max-width:442px;">
+       style="font-size:20px; line-height:1.5; max-width:442px;">
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis.
     </p>
     <NuxtLink v-reveal="{ delay: '0.1s' }" to="/contatti" class="bc-btn">Contatta lo studio</NuxtLink>

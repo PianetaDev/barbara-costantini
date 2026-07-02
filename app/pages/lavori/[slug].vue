@@ -99,11 +99,11 @@ const heroImgStyle = computed(() => {
     <div class="px-bc-page py-[64px] bc-hero-grid">
       <h1
         class="font-garamond text-bc-black text-center tracking-[0.02em] bc-col2-r1"
-        style="font-size:32px; line-height:1.2; margin-bottom:48px; font-weight:500;"
+        style="font-size:32px; line-height:1.5; margin-bottom:48px; font-weight:500;"
       >{{ progetto.titolo }}</h1>
       <div class="hidden md:flex md:flex-col gap-[8px] bc-col1-r2">
-        <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.2;">Progetto:</p>
-        <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.2;">{{ progetto.id }}</p>
+        <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.5;">Progetto:</p>
+        <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.5;">{{ progetto.id }}</p>
       </div>
       <div class="flex justify-center bc-col2-r2">
         <div class="w-full overflow-hidden" :style="heroImgStyle">
@@ -146,7 +146,7 @@ const heroImgStyle = computed(() => {
           >
             <img v-if="img.src" :src="img.src" :alt="img.label" class="w-full h-full object-cover" />
           </div>
-          <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:14px; line-height:1.2;">({{ img.label }})</p>
+          <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:14px; line-height:1.5;">({{ img.label }})</p>
         </button>
       </div>
     </div>
@@ -155,12 +155,12 @@ const heroImgStyle = computed(() => {
     <div class="px-bc-page pt-[64px] pb-[64px] bc-grid bc-2col bc-442 bc-meta">
       <div class="flex flex-col gap-bc-md bc-sidebar">
         <div v-for="(m, i) in progetto.meta" :key="i" class="flex flex-col gap-[8px]">
-          <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.2;">{{ m.label }}:</p>
-          <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.2;">{{ m.valore }}</p>
+          <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.5;">{{ m.label }}:</p>
+          <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.5;">{{ m.valore }}</p>
         </div>
       </div>
       <div class="flex flex-col gap-bc-md bc-intro">
-        <p v-for="(t, i) in progetto.intro" :key="i" class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.2;">{{ t }}</p>
+        <p v-for="(t, i) in progetto.intro" :key="i" class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5;">{{ t }}</p>
       </div>
       <div class="bc-spacer-r" />
     </div>
@@ -178,9 +178,9 @@ const heroImgStyle = computed(() => {
     <div v-for="(s, i) in progetto.sezioni" :key="i" class="px-bc-page pb-[64px] bc-grid bc-2col bc-442">
       <div class="bc-spacer-l" />
       <div>
-        <h2 class="font-garamond text-bc-black text-center tracking-[0.02em]" style="font-size:24px; line-height:1.2; margin-bottom:32px; font-weight:500;">{{ s.titolo }}</h2>
-        <h3 class="font-garamond text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.2; margin-bottom:16px; font-weight:500;">{{ s.sottotitolo }}</h3>
-        <p v-for="(t, j) in s.testi" :key="j" class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.2; margin-bottom:16px;">{{ t }}</p>
+        <h2 class="font-garamond text-bc-black text-center tracking-[0.02em]" style="font-size:24px; line-height:1.5; margin-bottom:32px; font-weight:500;">{{ s.titolo }}</h2>
+        <h3 class="font-garamond text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.5; margin-bottom:16px; font-weight:500;">{{ s.sottotitolo }}</h3>
+        <p v-for="(t, j) in s.testi" :key="j" class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5; margin-bottom:16px;">{{ t }}</p>
       </div>
       <div class="bc-spacer-r" />
     </div>
@@ -203,9 +203,9 @@ const heroImgStyle = computed(() => {
     <div class="px-bc-page pb-[64px] bc-grid bc-2col bc-442">
       <div class="bc-spacer-l" />
       <div style="display:flex; flex-direction:column; gap:32px;">
-        <p class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.2;">{{ progetto.metodo.testi[0] }}</p>
-        <p class="font-garamond font-medium text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.2;">"{{ progetto.metodo.citazione }}"</p>
-        <p v-if="progetto.metodo.testi[1]" class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.2;">{{ progetto.metodo.testi[1] }}</p>
+        <p class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5;">{{ progetto.metodo.testi[0] }}</p>
+        <p class="font-garamond font-medium text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5;">"{{ progetto.metodo.citazione }}"</p>
+        <p v-if="progetto.metodo.testi[1]" class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5;">{{ progetto.metodo.testi[1] }}</p>
       </div>
     </div>
 
