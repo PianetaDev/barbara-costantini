@@ -148,7 +148,7 @@ function onTouchEnd(e: TouchEvent) {
     class="border-b border-bc-black px-bc-page overflow-hidden"
   >
     <div class="mx-auto max-w-bc-content
-                flex flex-col md:flex-row md:items-start
+                flex flex-col md:flex-row md:items-center
                 py-bc-2xl md:py-0
                 gap-bc-xl md:gap-[80px] xl:gap-[140px]">
 
@@ -162,7 +162,7 @@ function onTouchEnd(e: TouchEvent) {
       <!-- Titolo + Accordion dx -->
       <div v-reveal="{ delay: '0.12s' }" class="flex flex-col md:flex-1 xl:flex-none xl:w-[556px] min-w-0 md:py-[64px]">
         <h2
-          class="font-garamond text-bc-black tracking-[0.02em] mb-[32px]"
+          class="font-garamond text-bc-black tracking-[0.02em] mb-[24px]"
           style="font-size:20px; line-height:1.5; font-weight:700;"
         >{{ gruppo.titolo }}</h2>
 
