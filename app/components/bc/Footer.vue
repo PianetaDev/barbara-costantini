@@ -3,7 +3,7 @@
 <!-- Tablet 590:2197: two-column (sx info, dx link) -->
 <template>
   <footer class="w-full border-t border-bc-black mt-auto px-bc-page">
-    <div>
+    <div class="max-w-bc-wrap mx-auto">
       <!-- Riga principale -->
       <div class="flex flex-col items-center md:flex-row md:items-end md:justify-between
                   py-bc-xl gap-bc-xl md:gap-0">

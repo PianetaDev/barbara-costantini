@@ -1,7 +1,7 @@
 <!-- Figma: 759:2799 — section 1 "Lo studio" — full-width, split 50/50, divider centrale -->
 <template>
   <section class="w-full border-t border-b border-bc-black px-bc-page overflow-hidden">
-    <div class="flex flex-col lg:flex-row lg:items-stretch">
+    <div class="flex flex-col lg:flex-row lg:items-stretch max-w-bc-wrap mx-auto w-full">
 
       <!-- Testo + CTA sx -->
       <div

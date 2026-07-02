@@ -1,7 +1,7 @@
 <!-- Figma: 761:3281 — section 3 "I servizi" — full-width, immagine sx + divider + testo dx -->
 <template>
-  <section class="w-full border-t border-b border-bc-black px-bc-page overflow-hidden">
-    <div class="flex flex-col lg:flex-row lg:items-stretch">
+  <section class="w-full px-bc-page overflow-hidden">
+    <div class="flex flex-col lg:flex-row lg:items-stretch max-w-bc-wrap mx-auto w-full">
 
       <!-- Immagine sx -->
       <div

@@ -14,7 +14,7 @@
 @layer components {
   /* Bottone — border 1px black, padding 8px 16px, Public Sans 18px */
   .bc-btn {
-    @apply inline-flex items-center
+    @apply inline-flex items-center w-fit
            border border-bc-black
            px-bc-md py-bc-xs
            font-sans text-bc-btn font-light text-bc-black
