@@ -162,7 +162,7 @@ function onTouchEnd(e: TouchEvent) {
       <!-- Titolo + Accordion dx -->
       <div v-reveal="{ delay: '0.12s' }" class="flex flex-col md:flex-1 xl:flex-none xl:w-[556px] min-w-0 md:py-[64px]">
         <h2
-          class="font-garamond text-bc-black tracking-[0.02em] mb-[24px]"
+          class="font-garamond text-bc-black tracking-[0.02em] mb-[16px]"
           style="font-size:20px; line-height:1.5; font-weight:700;"
         >{{ gruppo.titolo }}</h2>
 
