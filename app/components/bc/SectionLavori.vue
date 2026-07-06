@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<{
   borderBottom?: boolean
 }>(), {
   titolo: 'I lavori',
-  ctaLabel: 'Esplora i lavori',
+  ctaLabel: 'Esplora i lavori →',
   titoloSize: undefined,
   paragrafoSize: undefined,
   cardTitoloSize: undefined,
