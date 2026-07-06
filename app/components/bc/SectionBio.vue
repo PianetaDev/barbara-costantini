@@ -7,7 +7,7 @@
                 gap-y-bc-xl tablet:gap-y-0">
 
       <!-- Immagine: 443px fissi a desktop -->
-      <div class="flex items-center tablet:shrink-0 tablet:py-[80px]">
+      <div v-reveal class="flex items-center tablet:shrink-0 tablet:py-[80px]">
         <div class="w-full tablet:w-[443px] aspect-[443/553] bg-bc-black/10 overflow-hidden">
           <slot name="image">
             <img src="" alt="" class="w-full h-full object-cover" />
@@ -19,7 +19,7 @@
       <div class="hidden tablet:block self-stretch w-px bg-bc-black shrink-0" />
 
       <!-- Testo: 443px fissi a desktop -->
-      <div class="flex flex-col gap-[64px] items-start tablet:w-[443px] tablet:shrink-0">
+      <div v-reveal="{ delay: '0.15s' }" class="flex flex-col gap-[64px] items-start tablet:w-[443px] tablet:shrink-0">
         <div class="flex flex-col gap-bc-md">
           <!-- Nome -->
           <h2 class="font-garamond text-[28px] lg:text-bc-h2 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">

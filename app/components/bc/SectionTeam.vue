@@ -71,7 +71,7 @@ function onTouchEnd(e: TouchEvent) {
     <div class="hidden lg:flex lg:items-stretch mx-auto max-w-bc-content w-full">
       <template v-for="(m, i) in membri" :key="`d-${i}`">
         <div v-if="i > 0" class="w-px bg-bc-black self-stretch shrink-0 mx-[40px]" />
-        <div class="flex flex-col gap-bc-xl flex-1 py-[64px]">
+        <div v-reveal="{ delay: `${i * 0.1}s` }" class="flex flex-col gap-bc-xl flex-1 py-[64px]">
           <div class="w-full bg-bc-black/10 overflow-hidden" style="aspect-ratio: 327/407;">
             <img v-if="m.image" :src="m.image" :alt="m.nome" class="w-full h-full object-cover" />
           </div>
@@ -123,6 +123,7 @@ function onTouchEnd(e: TouchEvent) {
               v-for="(m, i) in membri"
               :key="i"
               class="flex-none flex flex-col gap-bc-xl w-full md:w-[calc(50%-8px)]"
+              v-reveal="{ delay: `${i * 0.08}s` }"
             >
               <div class="w-full bg-bc-black/10 overflow-hidden" style="aspect-ratio: 327/407;">
                 <img v-if="m.image" :src="m.image" :alt="m.nome" class="w-full h-full object-cover" />
