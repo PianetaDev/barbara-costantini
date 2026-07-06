@@ -89,12 +89,11 @@ function onTouchEnd(e: TouchEvent) {
           :key="p.slug"
           v-reveal="{ delay: `${i * 0.08}s` }"
           :to="`/lavori/${p.slug}`"
-          class="flex flex-col gap-bc-md items-start group"
-          :class="p.tipo === 'horizontal' ? 'w-[210px]' : 'w-[209px]'"
+          class="flex-1 min-w-0 flex flex-col gap-bc-md items-start group"
         >
           <div
             class="relative w-full overflow-hidden bg-bc-black/10 ring-0 group-hover:ring-1 group-hover:ring-bc-black transition-shadow"
-            :class="p.tipo === 'horizontal' ? 'aspect-[209/139]' : 'aspect-[209/260]'"
+            :class="p.tipo === 'horizontal' ? 'aspect-[3/2]' : 'aspect-[4/5]'"
           >
             <img v-if="p.image" :src="p.image" :alt="p.titolo"
               class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
