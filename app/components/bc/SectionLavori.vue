@@ -66,8 +66,8 @@ function onTouchEnd(e: TouchEvent) {
 }
 </script>
 <template>
-  <section class="w-full px-bc-page overflow-hidden" :class="{ 'border-t border-bc-black': props.borderTop, 'border-b border-bc-black': props.borderBottom }">
-    <div class="grid grid-cols-1 tablet:grid-cols-2 py-bc-2xl tablet:py-[80px] max-w-bc-wrap mx-auto w-full">
+  <section class="w-full px-[24px] tablet:px-bc-page overflow-hidden" :class="{ 'border-t border-bc-black': props.borderTop, 'border-b border-bc-black': props.borderBottom }">
+    <div class="grid grid-cols-1 tablet:grid-cols-2 gap-y-[40px] tablet:gap-y-0 py-[48px] tablet:py-[80px] max-w-bc-wrap mx-auto w-full">
 
       <!-- Testo + CTA: centrato nella colonna sx -->
       <div class="flex items-center justify-center tablet:pr-[40px] lg:pr-0">
@@ -108,8 +108,8 @@ function onTouchEnd(e: TouchEvent) {
 
       <!-- Card tablet+mobile: carousel (<lg) — frecce visibili solo su tablet -->
       <div class="lg:hidden flex flex-col gap-bc-md flex-1 min-w-0">
-        <!-- Previous / Next: visibili solo su tablet (844px+), nascosti su mobile -->
-        <div class="hidden tablet:flex justify-end items-center gap-[8px]">
+        <!-- Previous / Next: visibili sempre sotto lg -->
+        <div class="flex justify-end items-center gap-[8px]">
           <button
             class="flex items-center justify-center w-[44px] h-[44px] hover:opacity-60 transition-opacity disabled:opacity-25"
             :disabled="startIndex === 0"

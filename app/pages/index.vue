@@ -5,9 +5,9 @@ useHead({ title: 'Barbara Costantini Restauro' })
 <template>
   <div class="w-full">
     <!-- Hero: testo sx + foto quadrata dx -->
-    <section class="w-full px-bc-page overflow-hidden">
+    <section class="w-full px-[24px] tablet:px-bc-page overflow-hidden">
       <div class="grid grid-cols-1 tablet:grid-cols-2 tablet:items-center max-w-bc-wrap mx-auto w-full">
-        <div class="pt-bc-2xl pb-0 tablet:py-[80px] tablet:pr-[80px] flex flex-col gap-bc-xl justify-center">
+        <div class="pt-[48px] pb-0 tablet:py-[80px] tablet:pr-[80px] flex flex-col gap-bc-xl justify-center">
           <h1 v-reveal="{ delay: '0.2s' }" class="font-sans text-[32px] tablet:text-bc-h1 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">
             Barbara Costantini Restauro&nbsp;&nbsp;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.
           </h1>
