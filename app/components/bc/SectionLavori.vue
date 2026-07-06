@@ -70,7 +70,7 @@ function onTouchEnd(e: TouchEvent) {
     <div class="grid grid-cols-1 tablet:grid-cols-2 gap-y-[40px] tablet:gap-y-0 py-[48px] tablet:py-[80px] max-w-bc-wrap mx-auto w-full">
 
       <!-- Testo + CTA: centrato nella colonna sx -->
-      <div class="flex items-center justify-center tablet:pr-[40px] lg:pr-0">
+      <div class="flex items-center justify-center tablet:px-[40px] lg:px-0">
       <div
         v-reveal
         class="flex flex-col gap-bc-xl items-start lg:w-[442px]"
