@@ -4,7 +4,7 @@
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.directive('reveal', {
     getSSRProps() {
-      return {}
+      return { style: 'opacity:0;transform:translateY(28px)' }
     },
     mounted(el: HTMLElement, binding) {
       const delay: string = binding.value?.delay ?? '0s'
