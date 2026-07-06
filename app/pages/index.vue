@@ -11,7 +11,7 @@ useHead({ title: 'Barbara Costantini Restauro' })
           <h1 v-reveal="{ delay: '0.2s' }" class="font-sans text-[32px] lg:text-bc-h1 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">
             Barbara Costantini Restauro&nbsp;&nbsp;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.
           </h1>
-          <NuxtLink v-reveal="{ delay: '0.45s' }" to="/studio" class="bc-ghost">Scopri il nostro studio →</NuxtLink>
+          <div v-reveal="{ delay: '0.45s' }"><NuxtLink to="/studio" class="bc-ghost">Scopri il nostro studio →</NuxtLink></div>
         </div>
         <div v-reveal="{ delay: '0.35s' }" class="aspect-square overflow-hidden my-[32px]">
           <img src="/images/bc-095.jpg" alt="Barbara Costantini restauro" class="w-full h-full object-cover" />
