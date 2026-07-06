@@ -56,7 +56,7 @@ watch(menuOpen, (val) => {
         class="lg:hidden fixed inset-0 z-50 bg-bc-canvas flex flex-col"
       >
         <!-- Header overlay: logo + X -->
-        <div class="flex items-center justify-between px-bc-page py-bc-xl border-b border-bc-black shrink-0">
+        <div class="flex items-center justify-between px-bc-page h-[80px] border-b border-bc-black shrink-0">
           <NuxtLink to="/" class="flex items-center" @click="menuOpen = false">
             <span class="font-sans text-bc-nav font-normal tracking-[0.02em]">
               Barbara Costantini Restauro
