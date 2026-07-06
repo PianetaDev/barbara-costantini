@@ -15,13 +15,10 @@
         </div>
       </div>
 
-      <!-- Divider verticale (solo lg) -->
-      <div class="hidden lg:block self-stretch w-px bg-bc-black shrink-0" />
-
       <!-- Testo + CTA dx -->
       <div
         v-reveal="{ delay: '0.15s' }"
-        class="flex flex-col gap-bc-xl justify-center lg:w-1/2 lg:pl-[105px] py-bc-2xl lg:py-[80px]"
+        class="flex flex-col gap-bc-xl justify-center lg:w-1/2 lg:pl-[40px] py-bc-2xl lg:py-[80px]"
       >
         <div class="flex flex-col gap-bc-xl lg:max-w-[442px]">
           <h2 class="font-garamond text-bc-h2 font-medium text-bc-black tracking-[0.02em]">

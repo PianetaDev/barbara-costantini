@@ -72,10 +72,11 @@ function onTouchEnd(e: TouchEvent) {
                 py-bc-2xl lg:py-[80px] lg:items-center lg:justify-between
                 max-w-bc-wrap mx-auto w-full">
 
-      <!-- Testo + CTA -->
+      <!-- Testo + CTA: centrato nel suo flex:1 come colonna hero sx -->
+      <div class="flex-1 flex lg:items-center lg:justify-center">
       <div
         v-reveal
-        class="flex flex-col gap-bc-xl items-start md:shrink-0 md:w-[240px] lg:max-w-[442px]"
+        class="flex flex-col gap-bc-xl items-start w-full md:w-[240px] lg:w-[442px]"
       >
         <div class="flex flex-col gap-bc-xl">
           <h2 class="font-garamond font-medium text-bc-black tracking-[0.02em]" :class="!props.titoloSize ? 'text-bc-h2' : ''" :style="props.titoloSize ? `font-size:${props.titoloSize}` : ''">{{ props.titolo }}</h2>
@@ -84,6 +85,7 @@ function onTouchEnd(e: TouchEvent) {
           </p>
         </div>
         <NuxtLink to="/lavori" class="bc-btn">{{ props.ctaLabel }}</NuxtLink>
+      </div>
       </div>
 
       <!-- Card desktop: 3 card fisse, no carousel -->
