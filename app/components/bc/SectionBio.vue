@@ -2,24 +2,24 @@
 <template>
   <section class="w-full border-t border-bc-black px-[24px] tablet:px-bc-page overflow-hidden">
     <div class="mx-auto max-w-bc-content w-full
-                flex flex-col tablet:flex-row tablet:items-center tablet:justify-between
+                flex flex-col tablet:flex-row tablet:items-center
                 py-[48px] tablet:py-0
                 gap-y-bc-xl tablet:gap-y-0">
 
-      <!-- Immagine: 443px fissi a desktop -->
-      <div v-reveal class="flex items-center tablet:shrink-0 tablet:py-[80px]">
-        <div class="w-full tablet:w-[443px] aspect-[443/553] bg-bc-black/10 overflow-hidden">
+      <!-- Immagine: flex-1 a tablet, 443px fissi da lg -->
+      <div v-reveal class="flex items-center tablet:flex-1 lg:flex-none lg:shrink-0 tablet:py-[80px]">
+        <div class="w-full lg:w-[443px] aspect-[443/553] bg-bc-black/10 overflow-hidden">
           <slot name="image">
             <img src="" alt="" class="w-full h-full object-cover" />
           </slot>
         </div>
       </div>
 
-      <!-- Divider verticale (da tablet in su) -->
-      <div class="hidden tablet:block self-stretch w-px bg-bc-black shrink-0" />
+      <!-- Divider verticale (da tablet in su) — margine orizzontale a tablet, azzerato a lg -->
+      <div class="hidden tablet:block self-stretch w-px bg-bc-black shrink-0 mx-[32px] lg:mx-0" />
 
-      <!-- Testo: 443px fissi a desktop -->
-      <div v-reveal="{ delay: '0.15s' }" class="flex flex-col gap-[64px] items-start tablet:w-[443px] tablet:shrink-0">
+      <!-- Testo: flex-1 a tablet, 443px fissi da lg -->
+      <div v-reveal="{ delay: '0.15s' }" class="flex flex-col gap-[64px] items-start tablet:flex-1 lg:flex-none lg:w-[443px] lg:shrink-0">
         <div class="flex flex-col gap-bc-md">
           <!-- Nome -->
           <h2 class="font-garamond text-[28px] lg:text-bc-h2 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">
