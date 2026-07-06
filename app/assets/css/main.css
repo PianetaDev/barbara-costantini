@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+vercel-live-feedback, #__vercel-toolbar { display: none !important; }
+
 @layer base {
   html {
     font-family: 'Public Sans', system-ui, sans-serif;
