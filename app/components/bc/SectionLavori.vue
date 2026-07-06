@@ -67,10 +67,10 @@ function onTouchEnd(e: TouchEvent) {
 </script>
 <template>
   <section class="w-full px-bc-page overflow-hidden" :class="{ 'border-t border-bc-black': props.borderTop, 'border-b border-bc-black': props.borderBottom }">
-    <div class="grid grid-cols-1 tablet:grid-cols-2 tablet:gap-x-[40px] py-bc-2xl tablet:py-[80px] max-w-bc-wrap mx-auto w-full">
+    <div class="grid grid-cols-1 tablet:grid-cols-2 py-bc-2xl tablet:py-[80px] max-w-bc-wrap mx-auto w-full">
 
       <!-- Testo + CTA: centrato nella colonna sx -->
-      <div class="flex items-center justify-center">
+      <div class="flex items-center justify-center tablet:pr-[40px] lg:pr-0">
       <div
         v-reveal
         class="flex flex-col gap-bc-xl items-start lg:w-[442px]"

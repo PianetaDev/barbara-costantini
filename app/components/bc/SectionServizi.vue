@@ -1,7 +1,7 @@
 <!-- Figma: 761:3281 — section 3 "I servizi" — full-width, immagine sx + testo dx -->
 <template>
   <section class="w-full px-bc-page overflow-hidden">
-    <div class="grid grid-cols-1 tablet:grid-cols-2 tablet:gap-x-[40px] max-w-bc-wrap mx-auto w-full">
+    <div class="grid grid-cols-1 tablet:grid-cols-2 max-w-bc-wrap mx-auto w-full">
 
       <!-- Immagine sx: riempie la colonna, quadrata -->
       <div
