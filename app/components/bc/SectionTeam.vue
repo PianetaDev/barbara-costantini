@@ -68,7 +68,7 @@ function onTouchEnd(e: TouchEvent) {
   <section class="w-full border-t border-bc-black px-[24px] tablet:px-bc-page overflow-hidden">
 
     <!-- Desktop: 3 colonne con divider verticali -->
-    <div class="hidden lg:flex lg:items-stretch mx-auto max-w-bc-wrap w-full">
+    <div class="hidden lg:flex lg:items-stretch mx-auto max-w-bc-content w-full">
       <template v-for="(m, i) in membri" :key="`d-${i}`">
         <div v-if="i > 0" class="w-px bg-bc-black self-stretch shrink-0 mx-[40px]" />
         <div class="flex flex-col gap-bc-xl flex-1 py-[64px]">
@@ -87,7 +87,7 @@ function onTouchEnd(e: TouchEvent) {
     </div>
 
     <!-- Mobile + Tablet: carousel animato -->
-    <div class="lg:hidden mx-auto max-w-bc-wrap w-full py-bc-2xl">
+    <div class="lg:hidden mx-auto max-w-bc-content w-full py-bc-2xl">
       <div class="flex flex-col gap-bc-md">
         <!-- Previous / Next -->
         <div class="flex justify-end items-center gap-[8px]">
