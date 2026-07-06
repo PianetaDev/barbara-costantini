@@ -67,13 +67,13 @@ function onTouchEnd(e: TouchEvent) {
 </script>
 <template>
   <section class="w-full px-bc-page overflow-hidden" :class="{ 'border-t border-bc-black': props.borderTop, 'border-b border-bc-black': props.borderBottom }">
-    <div class="grid grid-cols-1 lg:grid-cols-2 py-bc-2xl lg:py-[80px] max-w-bc-wrap mx-auto w-full">
+    <div class="grid grid-cols-1 tablet:grid-cols-2 py-bc-2xl tablet:py-[80px] max-w-bc-wrap mx-auto w-full">
 
       <!-- Testo + CTA: centrato nella colonna sx -->
       <div class="flex items-center justify-center">
       <div
         v-reveal
-        class="flex flex-col gap-bc-xl items-start lg:w-[442px]"
+        class="flex flex-col gap-bc-xl items-start tablet:w-[442px]"
       >
         <p class="font-sans font-light text-bc-black tracking-[0.02em]" :class="!props.paragrafoSize ? 'text-bc-body1' : ''" :style="props.paragrafoSize ? `font-size:${props.paragrafoSize}` : ''">
           I lavori dello studio si destreggiano tra carta forbice sasso.... Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -82,7 +82,7 @@ function onTouchEnd(e: TouchEvent) {
       </div>
       </div>
 
-      <!-- Card desktop: 3 card fisse, no carousel -->
+      <!-- Card desktop: 3 card fisse (lg+) -->
       <div class="hidden lg:flex gap-[24px] items-start">
         <NuxtLink
           v-for="(p, i) in progetti"
@@ -106,10 +106,10 @@ function onTouchEnd(e: TouchEvent) {
         </NuxtLink>
       </div>
 
-      <!-- Card mobile/tablet: carousel con swipe touch -->
+      <!-- Card tablet+mobile: carousel (<lg) — frecce visibili solo su tablet -->
       <div class="lg:hidden flex flex-col gap-bc-md flex-1 min-w-0">
-        <!-- Previous / Next sopra, destra -->
-        <div class="flex justify-end items-center gap-[8px]">
+        <!-- Previous / Next: visibili solo su tablet (844px+), nascosti su mobile -->
+        <div class="hidden tablet:flex justify-end items-center gap-[8px]">
           <button
             class="flex items-center justify-center w-[44px] h-[44px] hover:opacity-60 transition-opacity disabled:opacity-25"
             :disabled="startIndex === 0"
