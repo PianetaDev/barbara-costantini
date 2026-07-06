@@ -73,7 +73,7 @@ function onTouchEnd(e: TouchEvent) {
       <div class="flex items-center">
       <div
         v-reveal
-        class="flex flex-col gap-bc-xl items-start w-full lg:w-[430px] lg:pl-[117px]"
+        class="flex flex-col gap-bc-xl items-start lg:w-[442px] lg:pl-[117px]"
       >
         <p class="font-sans font-light text-bc-black tracking-[0.02em]" :class="!props.paragrafoSize ? 'text-bc-body1' : ''" :style="props.paragrafoSize ? `font-size:${props.paragrafoSize}` : ''">
           I lavori dello studio si destreggiano tra carta forbice sasso.... Lorem ipsum dolor sit amet, consectetur adipiscing elit.
