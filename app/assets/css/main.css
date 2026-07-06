@@ -25,7 +25,7 @@
 
   /* Ghost CTA — testo + linea sottostante, no bordo/background */
   .bc-ghost {
-    @apply inline-flex flex-col items-start py-3
+    @apply inline-flex flex-col items-start w-fit py-3
            font-sans text-bc-btn font-normal text-bc-black tracking-[0.02em]
            no-underline;
   }
