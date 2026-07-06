@@ -70,10 +70,10 @@ function onTouchEnd(e: TouchEvent) {
     <div class="grid grid-cols-1 lg:grid-cols-2 py-bc-2xl lg:py-[80px] max-w-bc-wrap mx-auto w-full">
 
       <!-- Testo + CTA: centrato nella colonna sx -->
-      <div class="flex lg:items-center lg:justify-center">
+      <div class="flex items-center">
       <div
         v-reveal
-        class="flex flex-col gap-bc-xl items-start w-full lg:w-[442px]"
+        class="flex flex-col gap-bc-xl items-start w-full lg:pl-[117px] lg:pr-[40px]"
       >
         <p class="font-sans font-light text-bc-black tracking-[0.02em]" :class="!props.paragrafoSize ? 'text-bc-body1' : ''" :style="props.paragrafoSize ? `font-size:${props.paragrafoSize}` : ''">
           I lavori dello studio si destreggiano tra carta forbice sasso.... Lorem ipsum dolor sit amet, consectetur adipiscing elit.
