@@ -75,6 +75,7 @@ watch(menuOpen, (val) => {
             v-for="l in links"
             :key="l.to"
             :to="l.to"
+            exact-active-class="underline"
             class="font-sans font-light tracking-[0.02em] hover:underline"
             style="font-size:28px; line-height:1.5;"
             @click="menuOpen = false"
