@@ -20,7 +20,7 @@
         v-reveal="{ delay: '0.15s' }"
         class="flex flex-col gap-bc-xl justify-center lg:pl-[40px] py-bc-2xl lg:py-[80px]"
       >
-        <p class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] lg:max-w-[442px]">
+        <p class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] lg:max-w-[430px]">
           <slot name="body">I Servizi Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.</slot>
         </p>
         <NuxtLink to="/servizi" class="bc-ghost"><slot name="cta">Scopri i servizi →</slot></NuxtLink>
