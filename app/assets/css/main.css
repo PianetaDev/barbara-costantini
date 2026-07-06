@@ -27,7 +27,7 @@
   .bc-ghost {
     @apply inline-flex flex-col items-start w-fit py-3
            font-sans text-bc-btn font-normal text-bc-black tracking-[0.02em]
-           no-underline;
+           no-underline hover:font-semibold transition-none;
   }
   .bc-ghost::after {
     content: '';

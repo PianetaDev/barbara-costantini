@@ -145,11 +145,11 @@ function onTouchEnd(e: TouchEvent) {
               class="flex-none flex flex-col gap-bc-md items-start group w-[calc(50%-8px)]"
             >
               <div
-                class="relative w-full overflow-hidden bg-bc-black/10 ring-0 group-hover:ring-1 group-hover:ring-bc-black transition-shadow"
+                class="relative w-full overflow-hidden bg-bc-black/10 transition-shadow"
                 :class="p.tipo === 'horizontal' ? 'aspect-[3/2]' : 'aspect-[2/3]'"
               >
                 <img v-if="p.image" :src="p.image" :alt="p.titolo"
-                  class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  class="absolute inset-0 w-full h-full object-cover" />
               </div>
               <div class="flex flex-col gap-[4px]">
                 <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">{{ p.codice }}</p>

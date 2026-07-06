@@ -16,7 +16,7 @@
       </div>
 
       <!-- Testo + CTA dx: centrato nella colonna dx -->
-      <div class="flex items-center justify-center">
+      <div class="flex items-center justify-center tablet:pl-[40px] lg:pl-0">
       <div
         v-reveal="{ delay: '0.15s' }"
         class="flex flex-col gap-bc-xl justify-center lg:w-[442px] py-bc-2xl tablet:py-[80px]"
