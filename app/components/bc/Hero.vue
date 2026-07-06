@@ -4,7 +4,7 @@
   <section class="flex flex-col items-center py-bc-2xl lg:py-[64px] px-bc-page max-w-bc-wrap mx-auto">
     <h1
       v-reveal
-      class="font-sans text-[28px] md:text-[34px] lg:text-bc-h1 font-medium text-center text-bc-black tracking-[0.02em] max-w-[908px] mb-[24px]"
+      class="font-sans text-[28px] md:text-[34px] lg:text-bc-h1 font-normal text-center text-bc-black tracking-[0.02em] max-w-[908px] mb-[24px]"
     >
       <slot name="title">Titolo Lorem Ipsum</slot>
     </h1>

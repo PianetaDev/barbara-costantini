@@ -5,7 +5,7 @@
       <div class="flex items-center h-[80px] max-w-bc-wrap mx-auto">
         <NuxtLink
           to="/lavori"
-          class="font-sans text-bc-nav font-light text-bc-black tracking-[0.02em] hover:font-semibold"
+          class="font-sans text-bc-nav font-light text-bc-black tracking-[0.02em] hover:font-normal"
         >
           Torna indietro
         </NuxtLink>

@@ -101,7 +101,7 @@ function onTouchEnd(e: TouchEvent) {
           <div class="flex flex-col gap-[4px]">
             <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">{{ p.codice }}</p>
             <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">{{ p.committente }}</p>
-            <p class="font-garamond font-medium text-bc-black tracking-[0.02em] group-hover:underline" :class="!props.cardTitoloSize ? 'text-bc-h4' : ''" :style="props.cardTitoloSize ? `font-size:${props.cardTitoloSize}` : ''">{{ p.titolo }}</p>
+            <p class="font-garamond font-normal text-bc-black tracking-[0.02em] group-hover:underline" :class="!props.cardTitoloSize ? 'text-bc-h4' : ''" :style="props.cardTitoloSize ? `font-size:${props.cardTitoloSize}` : ''">{{ p.titolo }}</p>
           </div>
         </NuxtLink>
       </div>
@@ -154,7 +154,7 @@ function onTouchEnd(e: TouchEvent) {
               <div class="flex flex-col gap-[4px]">
                 <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">{{ p.codice }}</p>
                 <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">{{ p.committente }}</p>
-                <p class="font-garamond font-medium text-bc-black tracking-[0.02em] group-hover:underline" :class="!props.cardTitoloSize ? 'text-bc-h4' : ''" :style="props.cardTitoloSize ? `font-size:${props.cardTitoloSize}` : ''">{{ p.titolo }}</p>
+                <p class="font-garamond font-normal text-bc-black tracking-[0.02em] group-hover:underline" :class="!props.cardTitoloSize ? 'text-bc-h4' : ''" :style="props.cardTitoloSize ? `font-size:${props.cardTitoloSize}` : ''">{{ p.titolo }}</p>
               </div>
             </NuxtLink>
           </div>

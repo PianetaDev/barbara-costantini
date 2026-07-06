@@ -9,14 +9,14 @@
     <div class="md:hidden flex flex-col">
       <!-- Testo -->
       <div class="flex flex-col gap-bc-2xl items-start px-[24px] py-[64px]">
-        <h1 v-reveal class="font-garamond text-bc-h1 font-medium text-bc-black tracking-[0.02em] w-full">
+        <h1 v-reveal class="font-garamond text-bc-h1 font-normal text-bc-black tracking-[0.02em] w-full">
           Contatti
         </h1>
         <div v-reveal="{ delay: '0.12s' }" class="flex flex-col gap-bc-md w-full">
-          <a href="mailto:bb.costantini@gmail.com" class="font-garamond font-light text-bc-black tracking-[0.02em] hover:font-medium hover:underline" style="font-size:20px; line-height:1.5;">
+          <a href="mailto:bb.costantini@gmail.com" class="font-garamond font-light text-bc-black tracking-[0.02em] hover:font-normal hover:underline" style="font-size:20px; line-height:1.5;">
             bb.costantini@gmail.com
           </a>
-          <a href="https://instagram.com/barbara_costantini" target="_blank" rel="noopener noreferrer" class="font-garamond font-light text-bc-black tracking-[0.02em] hover:font-medium hover:underline" style="font-size:20px; line-height:1.5;">
+          <a href="https://instagram.com/barbara_costantini" target="_blank" rel="noopener noreferrer" class="font-garamond font-light text-bc-black tracking-[0.02em] hover:font-normal hover:underline" style="font-size:20px; line-height:1.5;">
             @barbara_costantini
           </a>
           <p class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.5;">
@@ -44,14 +44,14 @@
 
           <!-- Colonna sinistra: testo -->
           <div v-reveal class="flex flex-col gap-bc-2xl w-1/2 pr-bc-4xl">
-            <h1 class="font-garamond text-bc-h1 font-medium text-bc-black tracking-[0.02em]">
+            <h1 class="font-garamond text-bc-h1 font-normal text-bc-black tracking-[0.02em]">
               Contatti
             </h1>
             <div class="flex flex-col gap-bc-md">
-              <a href="mailto:bb.costantini@gmail.com" class="font-garamond font-light text-bc-black tracking-[0.02em] hover:font-medium hover:underline" style="font-size:20px; line-height:1.5;">
+              <a href="mailto:bb.costantini@gmail.com" class="font-garamond font-light text-bc-black tracking-[0.02em] hover:font-normal hover:underline" style="font-size:20px; line-height:1.5;">
                 bb.costantini@gmail.com
               </a>
-              <a href="https://instagram.com/barbara_costantini" target="_blank" rel="noopener noreferrer" class="font-garamond font-light text-bc-black tracking-[0.02em] hover:font-medium hover:underline" style="font-size:20px; line-height:1.5;">
+              <a href="https://instagram.com/barbara_costantini" target="_blank" rel="noopener noreferrer" class="font-garamond font-light text-bc-black tracking-[0.02em] hover:font-normal hover:underline" style="font-size:20px; line-height:1.5;">
                 @barbara_costantini
               </a>
               <p class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.5;">

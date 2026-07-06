@@ -20,11 +20,11 @@
       <div class="flex flex-col gap-bc-xl items-start md:flex-1 lg:flex-none lg:w-[442px] md:py-bc-2xl lg:py-0">
         <div class="flex flex-col gap-bc-md">
           <!-- Nome -->
-          <h2 class="font-garamond text-[28px] lg:text-bc-h2 font-medium text-bc-black tracking-[0.02em] leading-[1.5]">
+          <h2 class="font-garamond text-[28px] lg:text-bc-h2 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">
             <slot name="nome">Barbara Costantini</slot>
           </h2>
           <!-- Ruolo -->
-          <p class="font-garamond text-bc-h4 font-medium text-bc-black tracking-[0.02em]">
+          <p class="font-garamond text-bc-h4 font-normal text-bc-black tracking-[0.02em]">
             <slot name="ruolo">Ruolo</slot>
           </p>
         </div>

@@ -9,7 +9,7 @@
         class="flex flex-col gap-bc-xl justify-center lg:w-1/2 py-bc-2xl lg:py-[80px]"
       >
         <div class="flex flex-col gap-bc-xl lg:max-w-[442px]">
-          <h2 class="font-garamond text-[28px] lg:text-bc-h2 font-medium text-bc-black tracking-[0.02em]">
+          <h2 class="font-garamond text-[28px] lg:text-bc-h2 font-normal text-bc-black tracking-[0.02em]">
             <slot name="title">Lo studio</slot>
           </h2>
           <p class="font-garamond text-bc-body1 font-light text-bc-black tracking-[0.02em]">

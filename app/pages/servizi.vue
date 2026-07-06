@@ -129,7 +129,7 @@ function onTouchEnd(e: TouchEvent) {
   <section class="border-b border-bc-black px-bc-page py-[64px] flex flex-col items-center text-center">
     <h1
       v-reveal
-      class="font-sans text-[28px] md:text-[34px] lg:text-bc-h1 font-medium text-bc-black tracking-[0.02em] max-w-[908px] mb-[24px]"
+      class="font-sans text-[28px] md:text-[34px] lg:text-bc-h1 font-normal text-bc-black tracking-[0.02em] max-w-[908px] mb-[24px]"
     >
       I servizi
     </h1>
@@ -175,7 +175,7 @@ function onTouchEnd(e: TouchEvent) {
             class="w-full flex items-center justify-between py-[24px] text-left cursor-pointer"
             @click="toggle(g, i)"
           >
-            <span class="font-garamond font-medium text-bc-black tracking-[0.02em]"
+            <span class="font-garamond font-normal text-bc-black tracking-[0.02em]"
                   style="font-size:20px; line-height:1.5;">{{ s.titolo }}</span>
             <span
               class="shrink-0 w-[40px] h-[40px] flex items-center justify-center transition-transform duration-300"
@@ -214,7 +214,7 @@ function onTouchEnd(e: TouchEvent) {
             <img v-if="p.image" :src="p.image" :alt="p.titolo" class="w-full h-full object-cover" />
           </div>
           <div class="flex flex-col gap-bc-md">
-            <h3 class="font-garamond font-medium text-bc-black tracking-[0.02em]"
+            <h3 class="font-garamond font-normal text-bc-black tracking-[0.02em]"
                 style="font-size:24px; line-height:1.5;">{{ p.titolo }}</h3>
             <p class="font-garamond font-light text-bc-black tracking-[0.02em]"
                style="font-size:16px; line-height:1.5;">{{ p.testo }}</p>
@@ -263,7 +263,7 @@ function onTouchEnd(e: TouchEvent) {
                 <img v-if="p.image" :src="p.image" :alt="p.titolo" class="w-full h-full object-cover" />
               </div>
               <div class="flex flex-col gap-bc-md">
-                <h3 class="font-garamond font-medium text-bc-black tracking-[0.02em]"
+                <h3 class="font-garamond font-normal text-bc-black tracking-[0.02em]"
                     style="font-size:24px; line-height:1.5;">{{ p.titolo }}</h3>
                 <p class="font-garamond font-light text-bc-black tracking-[0.02em]"
                    style="font-size:16px; line-height:1.5;">{{ p.testo }}</p>
@@ -278,7 +278,7 @@ function onTouchEnd(e: TouchEvent) {
 
   <!-- CTA finale -->
   <section class="px-bc-page py-[64px] flex flex-col items-center gap-bc-2xl text-center">
-    <p v-reveal class="font-garamond font-medium text-bc-black tracking-[0.02em]"
+    <p v-reveal class="font-garamond font-normal text-bc-black tracking-[0.02em]"
        style="font-size:20px; line-height:1.5; max-width:442px;">
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis.
     </p>

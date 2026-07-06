@@ -19,7 +19,7 @@ watch(menuOpen, (val) => {
     <div class="flex items-center justify-between h-[80px] max-w-bc-wrap mx-auto">
       <!-- Logo -->
       <NuxtLink to="/" class="flex items-center" @click="menuOpen = false">
-        <span class="font-sans text-bc-nav tracking-[0.02em]" style="font-weight: 700;">
+        <span class="font-sans text-bc-nav font-normal tracking-[0.02em]">
           Barbara Costantini Restauro
         </span>
       </NuxtLink>
@@ -30,8 +30,8 @@ watch(menuOpen, (val) => {
           v-for="l in links"
           :key="l.to"
           :to="l.to"
-          exact-active-class="font-semibold underline"
-          class="font-sans text-bc-nav font-light tracking-[0.02em] py-bc-sm hover:font-semibold hover:underline"
+          exact-active-class="font-normal underline"
+          class="font-sans text-bc-nav font-light tracking-[0.02em] py-bc-sm hover:font-normal hover:underline"
         >
           {{ l.label }}
         </NuxtLink>
@@ -58,7 +58,7 @@ watch(menuOpen, (val) => {
         <!-- Header overlay: logo + X -->
         <div class="flex items-center justify-between px-bc-page py-bc-xl border-b border-bc-black shrink-0">
           <NuxtLink to="/" class="flex items-center" @click="menuOpen = false">
-            <span class="font-sans text-bc-nav tracking-[0.02em]" style="font-weight: 700;">
+            <span class="font-sans text-bc-nav font-normal tracking-[0.02em]">
               Barbara Costantini Restauro
             </span>
           </NuxtLink>
@@ -75,7 +75,7 @@ watch(menuOpen, (val) => {
             v-for="l in links"
             :key="l.to"
             :to="l.to"
-            class="font-sans font-light tracking-[0.02em] hover:font-semibold"
+            class="font-sans font-light tracking-[0.02em] hover:font-normal"
             style="font-size:28px; line-height:1.5;"
             @click="menuOpen = false"
           >

@@ -204,7 +204,7 @@ const heroImgStyle = computed(() => {
       <div class="bc-spacer-l" />
       <div style="display:flex; flex-direction:column; gap:32px;">
         <p class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5;">{{ progetto.metodo.testi[0] }}</p>
-        <p class="font-garamond font-medium text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5;">"{{ progetto.metodo.citazione }}"</p>
+        <p class="font-garamond font-normal text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5;">"{{ progetto.metodo.citazione }}"</p>
         <p v-if="progetto.metodo.testi[1]" class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5;">{{ progetto.metodo.testi[1] }}</p>
       </div>
     </div>
