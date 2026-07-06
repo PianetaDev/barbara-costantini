@@ -27,7 +27,8 @@ export default defineNuxtPlugin((nuxtApp) => {
         },
         { threshold: 0.07, rootMargin: '0px 0px -48px 0px' }
       )
-      observer.observe(el)
+      // double rAF: garantisce che il browser dipinga opacity:0 prima che l'observer scatti
+      requestAnimationFrame(() => requestAnimationFrame(() => observer.observe(el)))
     },
   })
 })
