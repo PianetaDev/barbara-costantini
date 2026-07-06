@@ -13,7 +13,7 @@ useHead({ title: 'Barbara Costantini Restauro' })
           </h1>
           <NuxtLink v-reveal="{ delay: '0.1s' }" to="/studio" class="bc-ghost">Scopri il nostro studio →</NuxtLink>
         </div>
-        <div v-reveal="{ delay: '0.1s' }" class="aspect-square overflow-hidden my-[32px] tablet:my-0">
+        <div v-reveal="{ delay: '0.1s' }" class="aspect-square overflow-hidden my-[32px]">
           <img src="/images/bc-095.jpg" alt="Barbara Costantini restauro" class="w-full h-full object-cover" />
         </div>
       </div>
