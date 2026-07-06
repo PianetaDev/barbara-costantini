@@ -67,16 +67,13 @@ function onTouchEnd(e: TouchEvent) {
 </script>
 <template>
   <section class="w-full px-bc-page overflow-hidden" :class="{ 'border-t border-bc-black': props.borderTop, 'border-b border-bc-black': props.borderBottom }">
-    <div class="flex flex-col md:flex-row md:items-start
-                gap-bc-xl lg:gap-[140px]
-                py-bc-2xl lg:py-[80px] lg:items-center lg:justify-between
-                max-w-bc-wrap mx-auto w-full">
+    <div class="grid grid-cols-1 lg:grid-cols-2 py-bc-2xl lg:py-[80px] max-w-bc-wrap mx-auto w-full">
 
-      <!-- Testo + CTA: centrato nel suo flex:1 come colonna hero sx -->
-      <div class="flex-1 flex lg:items-center lg:justify-center">
+      <!-- Testo + CTA: centrato nella colonna sx -->
+      <div class="flex lg:items-center lg:justify-center">
       <div
         v-reveal
-        class="flex flex-col gap-bc-xl items-start w-full md:w-[240px] lg:w-[442px]"
+        class="flex flex-col gap-bc-xl items-start w-full lg:w-[442px]"
       >
         <p class="font-sans font-light text-bc-black tracking-[0.02em]" :class="!props.paragrafoSize ? 'text-bc-body1' : ''" :style="props.paragrafoSize ? `font-size:${props.paragrafoSize}` : ''">
           I lavori dello studio si destreggiano tra carta forbice sasso.... Lorem ipsum dolor sit amet, consectetur adipiscing elit.
