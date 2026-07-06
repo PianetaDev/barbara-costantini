@@ -25,10 +25,10 @@
             <slot name="title">I servizi</slot>
           </h2>
           <p class="font-garamond text-bc-body1 font-light text-bc-black tracking-[0.02em]">
-            <slot name="body">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis.</slot>
+            <slot name="body">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.</slot>
           </p>
         </div>
-        <NuxtLink to="/servizi" class="bc-btn"><slot name="cta">Scopri i servizi</slot></NuxtLink>
+        <NuxtLink to="/servizi" class="bc-btn"><slot name="cta">Scopri i servizi →</slot></NuxtLink>
       </div>
 
     </div>
