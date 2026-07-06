@@ -2,7 +2,7 @@
 <template>
   <section class="w-full border-t border-bc-black px-[24px] tablet:px-bc-page overflow-hidden">
     <div class="mx-auto max-w-bc-content w-full
-                flex flex-col tablet:flex-row tablet:items-center
+                flex flex-col tablet:flex-row tablet:items-center lg:justify-between
                 py-[48px] tablet:py-0
                 gap-y-bc-xl tablet:gap-y-0">
 
