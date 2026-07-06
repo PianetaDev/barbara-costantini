@@ -78,13 +78,10 @@ function onTouchEnd(e: TouchEvent) {
         v-reveal
         class="flex flex-col gap-bc-xl items-start w-full md:w-[240px] lg:w-[442px]"
       >
-        <div class="flex flex-col gap-bc-xl">
-          <h2 class="font-garamond font-medium text-bc-black tracking-[0.02em]" :class="!props.titoloSize ? 'text-bc-h2' : ''" :style="props.titoloSize ? `font-size:${props.titoloSize}` : ''">{{ props.titolo }}</h2>
-          <p class="font-garamond font-light text-bc-black tracking-[0.02em]" :class="!props.paragrafoSize ? 'text-bc-body1' : ''" :style="props.paragrafoSize ? `font-size:${props.paragrafoSize}` : ''">
-            I lavori dello studio si destreggiano tra carta forbice sasso.... Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          </p>
-        </div>
-        <NuxtLink to="/lavori" class="bc-btn">{{ props.ctaLabel }}</NuxtLink>
+        <p class="font-sans font-normal text-bc-black tracking-[0.02em]" :class="!props.paragrafoSize ? 'text-bc-body1' : ''" :style="props.paragrafoSize ? `font-size:${props.paragrafoSize}` : ''">
+          I lavori dello studio si destreggiano tra carta forbice sasso.... Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        </p>
+        <NuxtLink to="/lavori" class="bc-ghost">{{ props.ctaLabel }}</NuxtLink>
       </div>
       </div>
 

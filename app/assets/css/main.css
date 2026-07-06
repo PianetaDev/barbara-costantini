@@ -12,14 +12,25 @@
 }
 
 @layer components {
-  /* Bottone — border 1px black, padding 8px 16px, Public Sans 18px */
+  /* Bottone filled (usato nelle pagine interne) */
   .bc-btn {
     @apply inline-flex items-center w-fit
            border border-bc-black
            px-bc-md py-bc-xs
-           font-sans text-bc-btn font-light text-bc-black
+           font-sans text-bc-btn font-normal text-bc-black
            tracking-[0.02em]
            hover:bg-bc-black hover:text-bc-canvas
            transition-colors duration-200;
+  }
+
+  /* Ghost CTA — testo + linea sottostante, no bordo/background */
+  .bc-ghost {
+    @apply inline-flex flex-col items-start py-3
+           font-sans text-bc-btn font-normal text-bc-black tracking-[0.02em]
+           no-underline;
+  }
+  .bc-ghost::after {
+    content: '';
+    @apply block h-px w-full bg-bc-black;
   }
 }

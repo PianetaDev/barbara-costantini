@@ -1,6 +1,6 @@
 <!-- Figma: 761:3281 — section 3 "I servizi" — full-width, immagine sx + divider + testo dx -->
 <template>
-  <section class="w-full px-bc-page overflow-hidden">
+  <section class="w-full px-bc-page overflow-hidden border-t border-bc-black">
     <div class="flex flex-col lg:flex-row lg:items-stretch max-w-bc-wrap mx-auto w-full">
 
       <!-- Immagine sx -->
@@ -20,15 +20,10 @@
         v-reveal="{ delay: '0.15s' }"
         class="flex flex-col gap-bc-xl justify-center lg:w-1/2 lg:pl-[40px] py-bc-2xl lg:py-[80px]"
       >
-        <div class="flex flex-col gap-bc-xl lg:max-w-[442px]">
-          <h2 class="font-garamond text-bc-h2 font-medium text-bc-black tracking-[0.02em]">
-            <slot name="title">I servizi</slot>
-          </h2>
-          <p class="font-garamond text-bc-body1 font-light text-bc-black tracking-[0.02em]">
-            <slot name="body">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.</slot>
-          </p>
-        </div>
-        <NuxtLink to="/servizi" class="bc-btn"><slot name="cta">Scopri i servizi →</slot></NuxtLink>
+        <p class="font-sans text-bc-body1 font-normal text-bc-black tracking-[0.02em] lg:max-w-[442px]">
+          <slot name="body">I Servizi Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.</slot>
+        </p>
+        <NuxtLink to="/servizi" class="bc-ghost"><slot name="cta">Scopri i servizi →</slot></NuxtLink>
       </div>
 
     </div>
