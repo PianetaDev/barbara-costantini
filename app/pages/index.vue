@@ -7,7 +7,7 @@ useHead({ title: 'Barbara Costantini Restauro' })
     <!-- Hero: testo sx + foto quadrata dx -->
     <section class="w-full px-bc-page overflow-hidden">
       <div class="grid grid-cols-1 lg:grid-cols-2 max-w-bc-wrap mx-auto w-full">
-        <div class="py-bc-2xl lg:py-[80px] flex flex-col gap-bc-xl justify-center">
+        <div class="py-bc-2xl lg:py-[80px] lg:pr-[80px] flex flex-col gap-bc-xl justify-center">
           <h1 v-reveal class="font-sans text-[32px] lg:text-bc-h1 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">
             Barbara Costantini Restauro&nbsp;&nbsp;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.
           </h1>
