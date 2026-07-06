@@ -31,7 +31,7 @@ watch(menuOpen, (val) => {
           :key="l.to"
           :to="l.to"
           exact-active-class="font-normal underline"
-          class="font-sans text-bc-nav font-light tracking-[0.02em] py-bc-sm hover:font-normal hover:underline"
+          class="font-sans text-bc-nav font-light tracking-[0.02em] py-bc-sm hover:opacity-60 hover:underline transition-opacity duration-200"
         >
           {{ l.label }}
         </NuxtLink>
@@ -75,7 +75,7 @@ watch(menuOpen, (val) => {
             v-for="l in links"
             :key="l.to"
             :to="l.to"
-            class="font-sans font-light tracking-[0.02em] hover:font-normal"
+            class="font-sans font-light tracking-[0.02em] hover:opacity-60 transition-opacity duration-200"
             style="font-size:28px; line-height:1.5;"
             @click="menuOpen = false"
           >
