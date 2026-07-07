@@ -100,6 +100,19 @@ watchEffect(() => { pageTitle.value = progetto.value?.titolo ?? '' })
 
 const imgIndex = ref(0)
 watch(progetto, () => { imgIndex.value = 0 })
+watch(imgIndex, (i) => {
+  nextTick(() => {
+    const scroller = document.querySelector<HTMLElement>('.bc-thumb-scroller')
+    const thumbs = scroller?.querySelectorAll<HTMLElement>('.bc-thumb-btn')
+    const thumb = thumbs?.[i]
+    if (!scroller || !thumb) return
+    const scrollerRect = scroller.getBoundingClientRect()
+    const thumbRect = thumb.getBoundingClientRect()
+    const offset = thumbRect.left - scrollerRect.left + scroller.scrollLeft
+    const center = offset - scrollerRect.width / 2 + thumbRect.width / 2
+    scroller.scrollTo({ left: center, behavior: 'instant' })
+  })
+})
 
 function imgPrev() { if (progetto.value && imgIndex.value > 0) imgIndex.value-- }
 function imgNext() { if (progetto.value && imgIndex.value < progetto.value.immagini.length - 1) imgIndex.value++ }
@@ -117,9 +130,9 @@ function imgNext() { if (progetto.value && imgIndex.value < progetto.value.immag
     </div>
 
     <!-- Navigation thumbnails carosello -->
-    <div class="border-t border-b border-bc-black py-[24px] overflow-x-auto">
-      <div class="flex items-start gap-[32px]">
-      <div class="flex items-center gap-[8px] shrink-0 sticky left-0 bg-bc-canvas pl-bc-page pr-[8px] z-10">
+    <div class="border-t border-b border-bc-black py-[24px] flex items-start">
+      <!-- Frecce — fuori dallo scroll, sempre visibili -->
+      <div class="flex items-center gap-[8px] shrink-0 pl-bc-page pr-[8px]">
         <button
           class="flex items-center justify-center w-[44px] h-[44px] hover:opacity-60 transition-opacity disabled:opacity-25"
           :disabled="imgIndex === 0"
@@ -137,23 +150,25 @@ function imgNext() { if (progetto.value && imgIndex.value < progetto.value.immag
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4L10.59 5.41L16.17 11H4V13H16.17L10.59 18.59L12 20L20 12L12 4Z" fill="currentColor"/></svg>
         </button>
       </div>
-      <div class="flex gap-[24px] items-start pr-bc-page">
-        <button
-          v-for="(img, i) in progetto.immagini"
-          :key="i"
-          class="flex flex-col gap-[5px] items-start shrink-0 cursor-pointer hover:opacity-70 transition-opacity"
-          @click="imgIndex = i"
-        >
-          <div
-            class="overflow-hidden transition-opacity"
-            :style="img.aspetto === 'v' ? 'width:62px; aspect-ratio:2/3; background:rgba(0,0,0,0.25);' : 'width:93px; aspect-ratio:3/2; background:rgba(0,0,0,0.25);'"
-            :class="i === imgIndex ? 'border border-bc-black' : 'opacity-60'"
+      <!-- Thumbnails — scrollano al vivo verso destra -->
+      <div class="bc-thumb-scroller flex-1 overflow-x-auto">
+        <div class="flex gap-[24px] items-start pr-bc-page">
+          <button
+            v-for="(img, i) in progetto.immagini"
+            :key="i"
+            class="bc-thumb-btn flex flex-col gap-[5px] items-start shrink-0 cursor-pointer hover:opacity-70 transition-opacity"
+            @click="imgIndex = i"
           >
-            <img v-if="img.src" :src="img.src" :alt="img.label" class="w-full h-full object-cover" />
-          </div>
-          <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:14px; line-height:1.5;">({{ img.label }})</p>
-        </button>
-      </div>
+            <div
+              class="overflow-hidden transition-opacity"
+              :style="img.aspetto === 'v' ? 'width:62px; aspect-ratio:2/3; background:rgba(0,0,0,0.25);' : 'width:93px; aspect-ratio:3/2; background:rgba(0,0,0,0.25);'"
+              :class="i === imgIndex ? 'border border-bc-black' : 'opacity-60'"
+            >
+              <img v-if="img.src" :src="img.src" :alt="img.label" class="w-full h-full object-cover" />
+            </div>
+            <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:14px; line-height:1.5;">({{ img.label }})</p>
+          </button>
+        </div>
       </div>
     </div>
 
