@@ -146,7 +146,7 @@ function imgNext() { if (progetto.value && imgIndex.value < progetto.value.immag
     </div>
 
     <!-- Navigation thumbnails carosello -->
-    <div class="border-t border-b border-bc-black py-[24px] flex items-center">
+    <div class="border-t border-b border-bc-black py-[24px] flex items-start">
       <!-- Frecce — fuori dallo scroll, sempre visibili -->
       <div class="flex items-center gap-[8px] shrink-0 pl-bc-page pr-[32px] self-stretch bg-bc-canvas">
         <button
