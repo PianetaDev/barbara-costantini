@@ -146,8 +146,8 @@ const heroImgStyle = computed(() => {
 
     <!-- Metadata + intro -->
     <div class="px-bc-page pt-[64px] pb-[64px] bc-grid bc-2col bc-442 bc-meta">
-      <div class="flex flex-col gap-bc-md bc-sidebar">
-        <div v-for="(m, i) in progetto.meta.filter(m => ['Committente', 'Anno'].includes(m.label))" :key="i" class="flex flex-col gap-[8px]">
+      <div class="flex flex-col gap-[12px] bc-sidebar">
+        <div v-for="(m, i) in progetto.meta.filter(m => ['Committente', 'Anno'].includes(m.label))" :key="i" class="flex flex-col gap-[4px]">
           <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.5;">{{ m.label }}:</p>
           <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.5;">{{ m.valore }}</p>
         </div>
