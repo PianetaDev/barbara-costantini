@@ -125,46 +125,51 @@ function onTouchEnd(e: TouchEvent) {
 </script>
 
 <template>
-  <!-- Hero: stessa struttura di home/studio senza immagine -->
-  <section class="border-b border-bc-black px-bc-page py-[64px] flex flex-col items-center text-center">
-    <h1
-      v-reveal
-      class="font-sans text-[28px] md:text-[34px] lg:text-bc-h1 font-normal text-bc-black tracking-[0.02em] max-w-[908px] mb-[24px]"
-    >
-      I servizi
-    </h1>
-    <p
-      v-reveal="{ delay: '0.12s' }"
-      class="font-garamond text-bc-body1 font-light text-bc-black max-w-[440px]"
-    >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.
-    </p>
+  <!-- Hero: split h1 sx + body dx — come pagina Lavori -->
+  <section class="w-full px-[24px] tablet:px-bc-page border-b border-bc-black overflow-hidden">
+    <div class="grid grid-cols-1 tablet:grid-cols-2 max-w-bc-wrap mx-auto w-full
+                py-[48px] tablet:py-[64px] gap-y-[32px] tablet:gap-y-0">
+      <div v-reveal class="flex flex-col justify-start tablet:pr-[80px]">
+        <h1 class="font-sans text-[32px] lg:text-bc-h1 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">
+          I servizi
+        </h1>
+      </div>
+      <div class="flex items-start justify-center tablet:pl-[40px] lg:pl-0">
+        <div v-reveal="{ delay: '0.15s' }" class="lg:w-[442px] tablet:pt-[12px] lg:pt-[18px]">
+          <p class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] leading-[1.5]">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.
+          </p>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <!-- Gruppi accordion -->
+  <!-- Gruppi accordion — layout SectionBio: immagine sx + divider + accordion dx -->
   <section
     v-for="(gruppo, g) in gruppi"
     :key="g"
-    class="border-b border-bc-black px-bc-page overflow-hidden"
+    class="w-full border-b border-bc-black px-[24px] tablet:px-bc-page overflow-hidden"
   >
-    <div class="mx-auto max-w-bc-content
-                flex flex-col md:flex-row md:items-center
-                py-bc-2xl md:py-0
-                gap-bc-xl md:gap-[80px] xl:gap-[140px]">
+    <div class="mx-auto max-w-bc-content w-full
+                flex flex-col tablet:flex-row tablet:items-center lg:justify-between
+                py-[48px] tablet:py-0
+                gap-y-bc-xl tablet:gap-y-0">
 
-      <!-- Immagine sx -->
-      <div v-reveal class="flex items-start md:flex-1 xl:flex-none xl:shrink-0 min-w-0 md:py-[64px]">
-        <div class="w-full xl:w-[442px] aspect-[442/553] bg-bc-black/10 overflow-hidden">
+      <!-- Immagine sx: flex-1 a tablet, 443px fissi da lg -->
+      <div v-reveal class="flex items-center tablet:flex-1 lg:flex-none lg:shrink-0 tablet:py-[80px]">
+        <div class="w-full lg:w-[443px] aspect-[443/553] bg-bc-black/10 overflow-hidden">
           <img :src="gruppo.image" :alt="gruppo.titolo" class="w-full h-full object-cover" />
         </div>
       </div>
 
-      <!-- Titolo + Accordion dx -->
-      <div v-reveal="{ delay: '0.12s' }" class="flex flex-col md:flex-1 xl:flex-none xl:w-[556px] min-w-0 md:py-[64px]">
-        <h2
-          class="font-garamond text-bc-black tracking-[0.02em] mb-[16px]"
-          style="font-size:20px; line-height:1.5; font-weight:700;"
-        >{{ gruppo.titolo }}</h2>
+      <!-- Divider verticale -->
+      <div class="hidden tablet:block self-stretch w-px bg-bc-black shrink-0 mx-[32px] lg:mx-0" />
+
+      <!-- Titolo + Accordion dx: flex-1 a tablet, 556px fissi da lg -->
+      <div v-reveal="{ delay: '0.15s' }" class="flex flex-col tablet:flex-1 lg:flex-none lg:w-[556px] lg:shrink-0 tablet:py-[64px]">
+        <h2 class="font-garamond font-normal text-bc-h4 text-bc-black tracking-[0.02em] mb-[16px]">
+          {{ gruppo.titolo }}
+        </h2>
 
         <div
           v-for="(s, i) in gruppo.servizi"
@@ -175,8 +180,7 @@ function onTouchEnd(e: TouchEvent) {
             class="w-full flex items-center justify-between py-[24px] text-left cursor-pointer"
             @click="toggle(g, i)"
           >
-            <span class="font-garamond font-normal text-bc-black tracking-[0.02em]"
-                  style="font-size:20px; line-height:1.5;">{{ s.titolo }}</span>
+            <span class="font-garamond font-normal text-bc-h4 text-bc-black tracking-[0.02em]">{{ s.titolo }}</span>
             <span
               class="shrink-0 w-[40px] h-[40px] flex items-center justify-center transition-transform duration-300"
               :style="aperto[g] === i ? 'transform:rotate(45deg)' : ''"
@@ -189,8 +193,7 @@ function onTouchEnd(e: TouchEvent) {
           </button>
           <div class="sv-acc-body" :class="aperto[g] === i ? 'sv-acc-open' : ''">
             <div class="sv-acc-inner">
-              <p class="font-garamond font-light text-bc-black tracking-[0.02em]"
-                 style="font-size:20px; line-height:1.5;">{{ s.corpo }}</p>
+              <p class="font-garamond font-light text-bc-body1 text-bc-black tracking-[0.02em]">{{ s.corpo }}</p>
             </div>
           </div>
         </div>
@@ -199,8 +202,8 @@ function onTouchEnd(e: TouchEvent) {
     </div>
   </section>
 
-  <!-- Partner: 3 colonne desktop, carousel mobile/tablet -->
-  <section class="border-b border-bc-black px-bc-page overflow-hidden">
+  <!-- Partner: 3 colonne desktop, carousel mobile/tablet — come SectionTeam -->
+  <section class="w-full border-b border-bc-black px-[24px] tablet:px-bc-page overflow-hidden">
 
     <!-- Desktop: 3 colonne con divider verticali -->
     <div class="hidden lg:flex lg:items-stretch mx-auto max-w-bc-content">
@@ -214,10 +217,8 @@ function onTouchEnd(e: TouchEvent) {
             <img v-if="p.image" :src="p.image" :alt="p.titolo" class="w-full h-full object-cover" />
           </div>
           <div class="flex flex-col gap-bc-md">
-            <h3 class="font-garamond font-normal text-bc-black tracking-[0.02em]"
-                style="font-size:24px; line-height:1.5;">{{ p.titolo }}</h3>
-            <p class="font-garamond font-light text-bc-black tracking-[0.02em]"
-               style="font-size:16px; line-height:1.5;">{{ p.testo }}</p>
+            <h3 class="font-garamond font-normal text-bc-h3 text-bc-black tracking-[0.02em]">{{ p.titolo }}</h3>
+            <p class="font-garamond font-light text-bc-body2 text-bc-black tracking-[0.02em]">{{ p.testo }}</p>
           </div>
         </div>
       </template>
@@ -257,16 +258,15 @@ function onTouchEnd(e: TouchEvent) {
             <div
               v-for="(p, i) in partner"
               :key="i"
-              class="flex-none flex flex-col gap-[32px] w-full md:w-[calc(50%-8px)]"
+              v-reveal="{ delay: `${i * 0.08}s` }"
+              class="flex-none flex flex-col gap-[32px] w-full tablet:w-[calc(50%-8px)]"
             >
               <div class="w-full bg-bc-black/10 overflow-hidden" style="aspect-ratio:327/407;">
                 <img v-if="p.image" :src="p.image" :alt="p.titolo" class="w-full h-full object-cover" />
               </div>
               <div class="flex flex-col gap-bc-md">
-                <h3 class="font-garamond font-normal text-bc-black tracking-[0.02em]"
-                    style="font-size:24px; line-height:1.5;">{{ p.titolo }}</h3>
-                <p class="font-garamond font-light text-bc-black tracking-[0.02em]"
-                   style="font-size:16px; line-height:1.5;">{{ p.testo }}</p>
+                <h3 class="font-garamond font-normal text-bc-h3 text-bc-black tracking-[0.02em]">{{ p.titolo }}</h3>
+                <p class="font-garamond font-light text-bc-body2 text-bc-black tracking-[0.02em]">{{ p.testo }}</p>
               </div>
             </div>
           </div>
@@ -277,12 +277,13 @@ function onTouchEnd(e: TouchEvent) {
   </section>
 
   <!-- CTA finale -->
-  <section class="px-bc-page py-[64px] flex flex-col items-center gap-bc-2xl text-center">
-    <p v-reveal class="font-garamond font-normal text-bc-black tracking-[0.02em]"
-       style="font-size:20px; line-height:1.5; max-width:442px;">
+  <section class="w-full px-[24px] tablet:px-bc-page py-[64px] flex flex-col items-center gap-bc-2xl text-center">
+    <p v-reveal class="font-garamond font-normal text-bc-body1 text-bc-black tracking-[0.02em] max-w-[442px]">
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis.
     </p>
-    <NuxtLink v-reveal="{ delay: '0.1s' }" to="/contatti" class="bc-btn">Contatta lo studio</NuxtLink>
+    <div v-reveal="{ delay: '0.1s' }">
+      <NuxtLink to="/contatti" class="bc-ghost">Contatta lo studio →</NuxtLink>
+    </div>
   </section>
 </template>
 
