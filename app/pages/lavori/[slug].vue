@@ -99,7 +99,7 @@ const heroImgStyle = computed(() => {
     <div class="px-bc-page py-[64px] bc-hero-grid">
       <h1
         class="font-garamond text-bc-black text-center tracking-[0.02em] bc-col2-r1"
-        style="font-size:32px; line-height:1.5; margin-bottom:48px; font-weight:500;"
+        style="font-size:32px; line-height:1.5; margin-bottom:48px; font-weight:400;"
       >{{ progetto.titolo }}</h1>
       <div class="hidden md:flex md:flex-col gap-[8px] bc-col1-r2">
         <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.5;">Progetto:</p>
@@ -178,8 +178,8 @@ const heroImgStyle = computed(() => {
     <div v-for="(s, i) in progetto.sezioni" :key="i" class="px-bc-page pb-[64px] bc-grid bc-2col bc-442">
       <div class="bc-spacer-l" />
       <div>
-        <h2 class="font-garamond text-bc-black text-center tracking-[0.02em]" style="font-size:24px; line-height:1.5; margin-bottom:32px; font-weight:500;">{{ s.titolo }}</h2>
-        <h3 class="font-garamond text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.5; margin-bottom:16px; font-weight:500;">{{ s.sottotitolo }}</h3>
+        <h2 class="font-garamond text-bc-black text-center tracking-[0.02em]" style="font-size:24px; line-height:1.5; margin-bottom:32px; font-weight:400;">{{ s.titolo }}</h2>
+        <h3 class="font-garamond text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.5; margin-bottom:16px; font-weight:400;">{{ s.sottotitolo }}</h3>
         <p v-for="(t, j) in s.testi" :key="j" class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5; margin-bottom:16px;">{{ t }}</p>
       </div>
       <div class="bc-spacer-r" />
@@ -216,7 +216,7 @@ const heroImgStyle = computed(() => {
 
   <!-- 404 -->
   <div v-else class="px-bc-page py-[64px] flex flex-col items-center gap-bc-xl">
-    <p class="font-garamond text-bc-black" style="font-size:32px; font-weight:500;">Progetto non trovato</p>
+    <p class="font-garamond text-bc-black" style="font-size:32px; font-weight:400;">Progetto non trovato</p>
     <NuxtLink to="/lavori" class="bc-btn">Torna ai lavori</NuxtLink>
   </div>
 </template>
