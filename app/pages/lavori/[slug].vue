@@ -52,14 +52,14 @@ function imgNext() { if (progetto.value && imgIndex.value < progetto.value.immag
   <div v-if="progetto">
 
     <!-- Hero -->
-    <div class="flex justify-center px-bc-page my-[32px]">
+    <div v-reveal class="flex justify-center px-bc-page my-[32px]">
       <div class="w-full h-[300px] tablet:h-[450px] overflow-hidden">
         <img v-if="progetto.immagini[imgIndex]?.src" :src="progetto.immagini[imgIndex].src" :alt="progetto.titolo" class="w-full h-full object-contain" />
       </div>
     </div>
 
     <!-- Navigation thumbnails carosello -->
-    <div class="border-t border-b border-bc-black py-[24px] flex items-start">
+    <div v-reveal="{ delay: '0.1s' }" class="border-t border-b border-bc-black py-[24px] flex items-start">
       <!-- Frecce — fuori dallo scroll, sempre visibili -->
       <div class="flex items-start gap-[8px] shrink-0 pl-bc-page bc:pl-[calc((100vw-1440px)/2+32px)] pr-[32px] self-stretch bg-bc-canvas">
         <button
@@ -102,7 +102,7 @@ function imgNext() { if (progetto.value && imgIndex.value < progetto.value.immag
     </div>
 
     <!-- Metadata + intro -->
-    <div class="px-bc-page pt-[64px] pb-[64px]">
+    <div v-reveal="{ delay: '0.15s' }" class="px-bc-page pt-[64px] pb-[64px]">
     <div class="bc-grid bc-2col bc-442 bc-meta max-w-bc-wrap mx-auto">
       <div class="flex flex-col gap-[12px] bc-sidebar">
         <div v-for="(m, i) in progetto.meta.filter(m => ['Committente', 'Anno'].includes(m.label))" :key="i" class="flex flex-col gap-[4px]">
@@ -118,7 +118,7 @@ function imgNext() { if (progetto.value && imgIndex.value < progetto.value.immag
     </div>
 
     <!-- Immagine grande contenuto -->
-    <div class="px-bc-page pb-[64px] bc-grid bc-2col bc-676">
+    <div v-reveal="{ delay: '0.08s' }" class="px-bc-page pb-[64px] bc-grid bc-2col bc-676">
       <div class="bc-spacer-l" />
       <div style="aspect-ratio:676/451; background:rgba(0,0,0,0.1); overflow:hidden;">
         <img v-if="progetto.immaginiContenuto[0]" :src="progetto.immaginiContenuto[0]" :alt="progetto.titolo" style="width:100%; height:100%; object-fit:cover;" />
@@ -127,7 +127,7 @@ function imgNext() { if (progetto.value && imgIndex.value < progetto.value.immag
     </div>
 
     <!-- Sezioni testo -->
-    <div v-for="(s, i) in progetto.sezioni" :key="i" class="px-bc-page pb-[64px] bc-grid bc-2col bc-442">
+    <div v-for="(s, i) in progetto.sezioni" :key="i" v-reveal class="px-bc-page pb-[64px] bc-grid bc-2col bc-442">
       <div class="bc-spacer-l" />
       <div>
         <h2 class="font-garamond text-bc-black tracking-[0.02em]" style="font-size:24px; line-height:1.5; margin-bottom:32px; font-weight:400;">{{ s.titolo }}</h2>
@@ -138,7 +138,7 @@ function imgNext() { if (progetto.value && imgIndex.value < progetto.value.immag
     </div>
 
     <!-- Due immagini affiancate -->
-    <div class="px-bc-page pb-[64px] bc-grid bc-2col bc-676">
+    <div v-reveal class="px-bc-page pb-[64px] bc-grid bc-2col bc-676">
       <div class="bc-spacer-l" />
       <div style="display:flex; gap:24px;">
         <div style="flex:1; min-width:0; aspect-ratio:326/406; background:rgba(0,0,0,0.1); overflow:hidden;">
@@ -152,7 +152,7 @@ function imgNext() { if (progetto.value && imgIndex.value < progetto.value.immag
     </div>
 
     <!-- Testo metodo -->
-    <div class="px-bc-page pb-[64px] bc-grid bc-2col bc-442">
+    <div v-reveal class="px-bc-page pb-[64px] bc-grid bc-2col bc-442">
       <div class="bc-spacer-l" />
       <div style="display:flex; flex-direction:column; gap:32px;">
         <p class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5;">{{ progetto.metodo.testi[0] }}</p>
