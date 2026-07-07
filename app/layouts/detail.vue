@@ -17,10 +17,10 @@ const pageTitle = useState<string>('detail-title', () => '')
             <path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="currentColor"/>
           </svg>
         </NuxtLink>
-        <!-- Titolo centrato rispetto alla pagina -->
+        <!-- Titolo 12px dopo la freccia -->
         <p
           v-if="pageTitle"
-          class="absolute left-1/2 -translate-x-1/2 font-sans font-light text-bc-black tracking-[0.02em] text-[16px] tablet:text-[20px] leading-[1.2] line-clamp-2 max-w-[60%] text-center pointer-events-none"
+          class="ml-[12px] font-sans font-light text-bc-black tracking-[0.02em] text-[16px] tablet:text-[20px] leading-[1.2] line-clamp-2 pointer-events-none"
         >{{ pageTitle }}</p>
       </div>
     </header>
