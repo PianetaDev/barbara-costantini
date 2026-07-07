@@ -250,7 +250,7 @@ function imgNext() { if (progetto.value && imgIndex.value < progetto.value.immag
 @media (min-width: 1024px) { .bc-spacer-r { display: block; } }
 @media (min-width: 1024px) {
   .bc-meta { display: block !important; position: relative; }
-  .bc-sidebar { position: absolute; top: 64px; left: 32px; max-width: calc(50% - 277px); }
+  .bc-sidebar { position: absolute; top: 0; left: 32px; max-width: calc(50% - 277px); }
   .bc-intro { max-width: 442px; margin: 0 auto; }
   .bc-meta .bc-spacer-r { display: none; }
 }
