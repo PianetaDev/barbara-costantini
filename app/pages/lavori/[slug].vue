@@ -96,19 +96,19 @@ const slugParam = computed(() => route.params.slug as string)
 const progetto = computed(() => progetti.find(p => p.slug === slugParam.value) ?? null)
 
 const progettiSuggeriti = computed(() => {
-  const n = progetti.length
-  const cur = progetti.findIndex(p => p.slug === slugParam.value)
-  return [1, 2, 3].map(offset => {
-    const p = progetti[(cur + offset) % n]
-    return {
-      codice: p.id,
-      committente: p.meta.find(m => m.label === 'Committente')?.valore ?? '',
-      titolo: p.titolo,
-      slug: p.slug,
-      image: p.immagini[0]?.src,
-      tipo: (p.immagini[0]?.aspetto === 'v' ? 'vertical' : 'horizontal') as 'vertical' | 'horizontal',
-    }
-  })
+  const cur = slugParam.value
+  const altri = progetti.filter(p => p.slug !== cur)
+  const curIdx = progetti.findIndex(p => p.slug === cur)
+  // prendi i successivi in ordine ciclico, escludendo il corrente
+  const sorted = [...altri.slice(curIdx), ...altri.slice(0, curIdx)]
+  return sorted.slice(0, 3).map(p => ({
+    codice: p.id,
+    committente: p.meta.find(m => m.label === 'Committente')?.valore ?? '',
+    titolo: p.titolo,
+    slug: p.slug,
+    image: p.immagini[0]?.src,
+    tipo: (p.immagini[0]?.aspetto === 'v' ? 'vertical' : 'horizontal') as 'vertical' | 'horizontal',
+  }))
 })
 
 const pageTitle = useState<string>('detail-title', () => '')
@@ -146,9 +146,9 @@ function imgNext() { if (progetto.value && imgIndex.value < progetto.value.immag
     </div>
 
     <!-- Navigation thumbnails carosello -->
-    <div class="border-t border-b border-bc-black py-[24px] flex items-start">
+    <div class="border-t border-b border-bc-black py-[24px] flex items-center">
       <!-- Frecce — fuori dallo scroll, sempre visibili -->
-      <div class="flex items-center gap-[8px] shrink-0 pl-bc-page pr-[8px] self-stretch bg-bc-canvas">
+      <div class="flex items-center gap-[8px] shrink-0 pl-bc-page pr-[32px] self-stretch bg-bc-canvas">
         <button
           class="flex items-center justify-center w-[44px] h-[44px] hover:opacity-60 transition-opacity disabled:opacity-25"
           :disabled="imgIndex === 0"
