@@ -23,16 +23,13 @@ function reject() {
   <Transition name="bc-cookie">
     <div
       v-if="visible"
-      class="fixed bottom-0 left-0 right-0 z-50 bg-bc-canvas border-t border-bc-black
-             px-[24px] tablet:px-bc-page py-[24px]"
+      class="fixed bottom-[24px] right-[24px] z-50 w-[calc(100vw-48px)] tablet:w-[442px]
+             bg-bc-canvas border border-bc-black p-[24px] flex flex-col gap-[24px]"
       role="dialog"
       aria-label="Preferenze cookie"
     >
-      <div class="max-w-bc-wrap mx-auto flex flex-col tablet:flex-row tablet:items-center
-                  gap-[16px] tablet:gap-[40px]">
-
         <!-- Testo -->
-        <p class="font-sans text-bc-body2 font-light text-bc-black tracking-[0.02em] leading-[1.5] flex-1">
+        <p class="font-sans text-bc-body2 font-light text-bc-black tracking-[0.02em] leading-[1.5]">
           Questo sito utilizza cookie tecnici necessari al funzionamento.
           Per maggiori informazioni consulta la
           <NuxtLink to="/cookie-policy" class="underline hover:opacity-60">Cookie Policy</NuxtLink>
@@ -41,7 +38,7 @@ function reject() {
         </p>
 
         <!-- Azioni -->
-        <div class="flex items-center gap-[24px] shrink-0">
+        <div class="flex items-center gap-[24px]">
           <button
             class="font-sans text-bc-btn font-light text-bc-black tracking-[0.02em] underline hover:opacity-60 transition-opacity duration-200"
             @click="reject"
@@ -57,8 +54,6 @@ function reject() {
             Accetta
           </button>
         </div>
-
-      </div>
     </div>
   </Transition>
 </template>
