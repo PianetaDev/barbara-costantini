@@ -117,8 +117,8 @@ function imgNext() { if (progetto.value && imgIndex.value < progetto.value.immag
     </div>
 
     <!-- Navigation thumbnails carosello -->
-    <div class="border-t border-b border-bc-black px-bc-page py-[24px]">
-      <div class="flex items-start gap-[32px] max-w-bc-wrap mx-auto">
+    <div class="border-t border-b border-bc-black py-[24px] overflow-x-auto">
+      <div class="flex items-start gap-[32px] pl-bc-page">
       <div class="flex items-center gap-[8px] shrink-0">
         <button
           class="flex items-center justify-center w-[44px] h-[44px] hover:opacity-60 transition-opacity disabled:opacity-25"
@@ -137,7 +137,7 @@ function imgNext() { if (progetto.value && imgIndex.value < progetto.value.immag
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4L10.59 5.41L16.17 11H4V13H16.17L10.59 18.59L12 20L20 12L12 4Z" fill="currentColor"/></svg>
         </button>
       </div>
-      <div class="flex gap-[24px] items-start overflow-x-auto">
+      <div class="flex gap-[24px] items-start pr-bc-page">
         <button
           v-for="(img, i) in progetto.immagini"
           :key="i"
