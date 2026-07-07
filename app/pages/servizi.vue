@@ -151,22 +151,22 @@ function onTouchEnd(e: TouchEvent) {
     class="w-full border-b border-bc-black px-[24px] tablet:px-bc-page overflow-hidden"
   >
     <div class="mx-auto max-w-bc-content w-full
-                flex flex-col tablet:flex-row tablet:items-center lg:justify-between
+                flex flex-col tablet:flex-row tablet:items-center xl:justify-between
                 py-[48px] tablet:py-0
                 gap-y-bc-xl tablet:gap-y-0">
 
-      <!-- Immagine sx: flex-1 a tablet, 443px fissi da lg -->
-      <div v-reveal class="flex items-center tablet:flex-1 lg:flex-none lg:shrink-0 tablet:py-[80px]">
-        <div class="w-full lg:w-[443px] aspect-[443/553] bg-bc-black/10 overflow-hidden">
+      <!-- Immagine sx: flex-1 fino a xl, 443px fissi da xl -->
+      <div v-reveal class="flex items-center tablet:flex-1 xl:flex-none xl:shrink-0 tablet:py-[80px]">
+        <div class="w-full xl:w-[443px] aspect-[443/553] bg-bc-black/10 overflow-hidden">
           <img :src="gruppo.image" :alt="gruppo.titolo" class="w-full h-full object-cover" />
         </div>
       </div>
 
       <!-- Divider verticale -->
-      <div class="hidden tablet:block self-stretch w-px bg-bc-black shrink-0 mx-[32px] lg:mx-0" />
+      <div class="hidden tablet:block self-stretch w-px bg-bc-black shrink-0 mx-[32px] xl:mx-0" />
 
-      <!-- Titolo + Accordion dx: flex-1 a tablet, 556px fissi da lg -->
-      <div v-reveal="{ delay: '0.15s' }" class="flex flex-col tablet:flex-1 lg:flex-none lg:w-[556px] lg:shrink-0 tablet:py-[64px]">
+      <!-- Titolo + Accordion dx: flex-1 fino a xl, 556px fissi da xl -->
+      <div v-reveal="{ delay: '0.15s' }" class="flex flex-col tablet:flex-1 xl:flex-none xl:w-[556px] xl:shrink-0 tablet:py-[64px]">
         <h2 class="font-garamond font-normal text-bc-h4 text-bc-black tracking-[0.02em] mb-[16px]">
           {{ gruppo.titolo }}
         </h2>
