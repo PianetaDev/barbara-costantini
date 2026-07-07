@@ -16,6 +16,7 @@ export default {
       'md3':    '960px',
       'lg':     '1024px',
       'xl':     '1280px',
+      'bc':     '1440px',
       '2xl':    '1536px',
     },
     extend: {
