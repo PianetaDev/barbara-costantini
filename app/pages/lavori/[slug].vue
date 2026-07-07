@@ -104,11 +104,6 @@ watch(progetto, () => { imgIndex.value = 0 })
 function imgPrev() { if (progetto.value && imgIndex.value > 0) imgIndex.value-- }
 function imgNext() { if (progetto.value && imgIndex.value < progetto.value.immagini.length - 1) imgIndex.value++ }
 
-const heroImgStyle = computed(() => {
-  const img = progetto.value?.immagini[imgIndex.value]
-  if (img?.aspetto === 'v') return 'max-width:300px; aspect-ratio:2/3; background:rgba(0,0,0,0.15);'
-  return 'max-width:677px; aspect-ratio:3/2; background:rgba(0,0,0,0.15);'
-})
 </script>
 
 <template>
@@ -116,8 +111,8 @@ const heroImgStyle = computed(() => {
 
     <!-- Hero -->
     <div class="flex justify-center px-bc-page my-[32px]">
-      <div class="w-full tablet:w-auto overflow-hidden h-[260px] tablet:h-auto" :style="heroImgStyle">
-        <img v-if="progetto.immagini[imgIndex]?.src" :src="progetto.immagini[imgIndex].src" :alt="progetto.titolo" class="w-full h-full object-contain tablet:object-cover" />
+      <div class="w-full h-[450px] overflow-hidden">
+        <img v-if="progetto.immagini[imgIndex]?.src" :src="progetto.immagini[imgIndex].src" :alt="progetto.titolo" class="w-full h-full object-contain" />
       </div>
     </div>
 
