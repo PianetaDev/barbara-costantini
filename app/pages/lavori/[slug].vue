@@ -111,7 +111,7 @@ function imgNext() { if (progetto.value && imgIndex.value < progetto.value.immag
 
     <!-- Hero -->
     <div class="flex justify-center px-bc-page my-[32px]">
-      <div class="w-full h-[450px] overflow-hidden">
+      <div class="w-full h-[300px] tablet:h-[450px] overflow-hidden">
         <img v-if="progetto.immagini[imgIndex]?.src" :src="progetto.immagini[imgIndex].src" :alt="progetto.titolo" class="w-full h-full object-contain" />
       </div>
     </div>
