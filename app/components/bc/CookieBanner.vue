@@ -23,7 +23,7 @@ function reject() {
   <Transition name="bc-cookie">
     <div
       v-if="visible"
-      class="fixed bottom-[24px] right-[24px] z-50 w-[calc(100vw-48px)] tablet:w-[442px]
+      class="fixed bottom-[16px] right-[16px] z-50 w-[calc(100vw-32px)] tablet:bottom-[24px] tablet:right-[24px] tablet:w-[442px]
              bg-bc-canvas border border-bc-black p-[24px] flex flex-col gap-[24px]"
       role="dialog"
       aria-label="Preferenze cookie"
