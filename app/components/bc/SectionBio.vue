@@ -22,7 +22,7 @@
       <div v-reveal="{ delay: '0.15s' }" class="flex flex-col gap-[64px] items-start tablet:flex-1 lg:flex-none lg:w-[443px] lg:shrink-0">
         <div class="flex flex-col gap-bc-md">
           <!-- Nome -->
-          <h2 class="font-garamond text-[28px] lg:text-bc-h2 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">
+          <h2 class="font-garamond text-[26px] lg:text-bc-h2 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">
             <slot name="nome">Barbara Costantini</slot>
           </h2>
           <!-- Ruolo -->

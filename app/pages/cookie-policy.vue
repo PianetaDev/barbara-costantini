@@ -6,7 +6,7 @@ useHead({ title: 'Cookie Policy — Barbara Costantini Restauro' })
   <div class="w-full px-[24px] tablet:px-bc-page py-[64px]">
     <div class="max-w-[720px] mx-auto flex flex-col gap-[48px]">
 
-      <h1 class="font-sans text-[32px] lg:text-bc-h1 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">
+      <h1 class="font-sans text-[28px] lg:text-bc-h1 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">
         Cookie Policy
       </h1>
 

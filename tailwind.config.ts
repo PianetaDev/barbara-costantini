@@ -43,8 +43,8 @@ export default {
         'bc-sub':     ['28px', { lineHeight: '1.5' }],
         'bc-h4':      ['20px', { lineHeight: '1.5', letterSpacing: '0.02em' }],
         'bc-h3':      ['24px', { lineHeight: '1.5', letterSpacing: '0.02em' }],
-        'bc-h2':      ['32px', { lineHeight: '1.5', letterSpacing: '0.02em' }],
-        'bc-h1':      ['36px', { lineHeight: '1.5', letterSpacing: '0.02em' }],
+        'bc-h2':      ['28px', { lineHeight: '1.5', letterSpacing: '0.02em' }],
+        'bc-h1':      ['32px', { lineHeight: '1.5', letterSpacing: '0.02em' }],
       },
       spacing: {
         // Spacing tokens da Figma (--spacing/*)

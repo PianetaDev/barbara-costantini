@@ -7,7 +7,7 @@
         <!-- Testo sx: allineato più internamente (pl cresce da tablet a lg) -->
         <div class="pt-[48px] pb-0 tablet:py-[80px] tablet:pl-[40px] lg:pl-[80px]">
           <div v-reveal class="flex flex-col gap-[32px]">
-            <h1 class="font-sans text-[32px] lg:text-bc-h1 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">
+            <h1 class="font-sans text-[28px] lg:text-bc-h1 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">
               Contatti
             </h1>
             <div v-reveal="{ delay: '0.15s' }" class="flex flex-col gap-[16px]">

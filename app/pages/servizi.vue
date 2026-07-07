@@ -130,7 +130,7 @@ function onTouchEnd(e: TouchEvent) {
     <div class="grid grid-cols-1 tablet:grid-cols-2 max-w-bc-wrap mx-auto w-full
                 py-[48px] tablet:py-[64px] gap-y-[32px] tablet:gap-y-0">
       <div v-reveal class="flex flex-col justify-start tablet:pr-[80px]">
-        <h1 class="font-sans text-[32px] lg:text-bc-h1 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">
+        <h1 class="font-sans text-[28px] lg:text-bc-h1 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">
           I servizi&nbsp;&nbsp;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel.
         </h1>
       </div>
