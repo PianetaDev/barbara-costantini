@@ -100,8 +100,8 @@ const heroImgStyle = computed(() => {
 
     <!-- Hero -->
     <div class="flex justify-center px-bc-page my-[32px]">
-      <div class="w-full overflow-hidden" :style="heroImgStyle">
-        <img v-if="progetto.immagini[imgIndex]?.src" :src="progetto.immagini[imgIndex].src" :alt="progetto.titolo" class="w-full h-full object-cover" />
+      <div class="w-full tablet:w-auto overflow-hidden h-[260px] tablet:h-auto" :style="heroImgStyle">
+        <img v-if="progetto.immagini[imgIndex]?.src" :src="progetto.immagini[imgIndex].src" :alt="progetto.titolo" class="w-full h-full object-contain tablet:object-cover" />
       </div>
     </div>
 
