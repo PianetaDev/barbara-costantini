@@ -79,6 +79,9 @@ const progetti: Progetto[] = [
 const slugParam = computed(() => route.params.slug as string)
 const progetto = computed(() => progetti.find(p => p.slug === slugParam.value) ?? null)
 
+const pageTitle = useState<string>('detail-title', () => '')
+watchEffect(() => { pageTitle.value = progetto.value?.titolo ?? '' })
+
 const imgIndex = ref(0)
 watch(progetto, () => { imgIndex.value = 0 })
 
@@ -96,16 +99,12 @@ const heroImgStyle = computed(() => {
   <div v-if="progetto">
 
     <!-- Hero -->
-    <div class="px-bc-page py-[64px] bc-hero-grid">
+    <div class="px-bc-page pt-[64px] bc-hero-grid">
       <h1
         class="font-garamond text-bc-black text-center tracking-[0.02em] bc-col2-r1"
         style="font-size:32px; line-height:1.5; margin-bottom:48px; font-weight:400;"
       >{{ progetto.titolo }}</h1>
-      <div class="hidden md:flex md:flex-col gap-[8px] bc-col1-r2">
-        <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.5;">Progetto:</p>
-        <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.5;">{{ progetto.id }}</p>
-      </div>
-      <div class="flex justify-center bc-col2-r2">
+      <div class="flex justify-center bc-col2-r2 my-[32px]">
         <div class="w-full overflow-hidden" :style="heroImgStyle">
           <img v-if="progetto.immagini[imgIndex]?.src" :src="progetto.immagini[imgIndex].src" :alt="progetto.titolo" class="w-full h-full object-cover" />
         </div>
