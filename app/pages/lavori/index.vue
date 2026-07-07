@@ -28,8 +28,8 @@ const progetti = [
             I lavori&nbsp;&nbsp;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel.
           </h1>
         </div>
-        <div class="flex items-center justify-center tablet:pl-[40px] lg:pl-0">
-          <div v-reveal="{ delay: '0.15s' }" class="lg:w-[442px] tablet:pt-[18px]">
+        <div class="flex items-start justify-center tablet:pl-[40px] lg:pl-0">
+          <div v-reveal="{ delay: '0.15s' }" class="lg:w-[442px]">
             <p class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] leading-[1.5]">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.
             </p>
