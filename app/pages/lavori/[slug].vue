@@ -61,7 +61,7 @@ function imgNext() { if (progetto.value && imgIndex.value < progetto.value.immag
     <!-- Navigation thumbnails carosello -->
     <div class="border-t border-b border-bc-black py-[24px] flex items-start">
       <!-- Frecce — fuori dallo scroll, sempre visibili -->
-      <div class="flex items-center gap-[8px] shrink-0 pl-bc-page bc:pl-[calc((100vw-1440px)/2+32px)] pr-[32px] self-stretch bg-bc-canvas">
+      <div class="flex items-start gap-[8px] shrink-0 pl-bc-page bc:pl-[calc((100vw-1440px)/2+32px)] pr-[32px] self-stretch bg-bc-canvas">
         <button
           class="flex items-center justify-center w-[44px] h-[44px] hover:opacity-60 transition-opacity disabled:opacity-25"
           :disabled="imgIndex === 0"
