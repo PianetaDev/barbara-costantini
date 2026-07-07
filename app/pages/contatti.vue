@@ -17,12 +17,6 @@
               >
                 bb.costantini@gmail.com
               </a>
-              <p class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] leading-[1.5]">
-                +39 349 6718022
-              </p>
-              <p class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] leading-[1.5]">
-                Largo dell'Olgiata 15 -<br />00123 Roma
-              </p>
               <a
                 href="https://instagram.com/barbara_costantini"
                 target="_blank"
@@ -31,12 +25,18 @@
               >
                 @barbara_costantini
               </a>
+              <p class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] leading-[1.5]">
+                +39 349 6718022
+              </p>
+              <p class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] leading-[1.5]">
+                Largo dell'Olgiata 15 -<br />00123 Roma
+              </p>
             </div>
           </div>
         </div>
 
         <!-- Immagine dx: aspect-square, come home hero -->
-        <div v-reveal="{ delay: '0.35s' }" class="aspect-square overflow-hidden my-[32px] tablet:my-0">
+        <div v-reveal="{ delay: '0.35s' }" class="aspect-square overflow-hidden my-[32px] tablet:my-[64px]">
           <img src="/images/bc-055.jpg" alt="Restauro" class="w-full h-full object-cover" />
         </div>
 
