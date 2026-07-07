@@ -99,11 +99,7 @@ const heroImgStyle = computed(() => {
   <div v-if="progetto">
 
     <!-- Hero -->
-    <div class="px-bc-page pt-[64px] bc-hero-grid">
-      <h1
-        class="font-garamond text-bc-black text-center tracking-[0.02em] bc-col2-r1"
-        style="font-size:32px; line-height:1.5; margin-bottom:48px; font-weight:400;"
-      >{{ progetto.titolo }}</h1>
+    <div class="px-bc-page bc-hero-grid">
       <div class="flex justify-center bc-col2-r2 my-[32px]">
         <div class="w-full overflow-hidden" :style="heroImgStyle">
           <img v-if="progetto.immagini[imgIndex]?.src" :src="progetto.immagini[imgIndex].src" :alt="progetto.titolo" class="w-full h-full object-cover" />
