@@ -122,7 +122,8 @@ const heroImgStyle = computed(() => {
     </div>
 
     <!-- Navigation thumbnails carosello -->
-    <div class="border-t border-b border-bc-black px-bc-page py-[24px] flex items-start gap-[32px]">
+    <div class="border-t border-b border-bc-black px-bc-page py-[24px]">
+      <div class="flex items-start gap-[32px] max-w-bc-wrap mx-auto">
       <div class="flex items-center gap-[8px] shrink-0">
         <button
           class="flex items-center justify-center w-[44px] h-[44px] hover:opacity-60 transition-opacity disabled:opacity-25"
@@ -158,10 +159,12 @@ const heroImgStyle = computed(() => {
           <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:14px; line-height:1.5;">({{ img.label }})</p>
         </button>
       </div>
+      </div>
     </div>
 
     <!-- Metadata + intro -->
-    <div class="px-bc-page pt-[64px] pb-[64px] bc-grid bc-2col bc-442 bc-meta">
+    <div class="px-bc-page pt-[64px] pb-[64px]">
+    <div class="bc-grid bc-2col bc-442 bc-meta max-w-bc-wrap mx-auto">
       <div class="flex flex-col gap-[12px] bc-sidebar">
         <div v-for="(m, i) in progetto.meta.filter(m => ['Committente', 'Anno'].includes(m.label))" :key="i" class="flex flex-col gap-[4px]">
           <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.5;">{{ m.label }}:</p>
@@ -172,6 +175,7 @@ const heroImgStyle = computed(() => {
         <p v-for="(t, i) in progetto.intro" :key="i" class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5;">{{ t }}</p>
       </div>
       <div class="bc-spacer-r" />
+    </div>
     </div>
 
     <!-- Immagine grande contenuto -->
