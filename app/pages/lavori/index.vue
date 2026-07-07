@@ -40,7 +40,7 @@ const progetti = [
     <section class="w-full px-[24px] tablet:px-bc-page pt-[48px] tablet:pt-[64px] pb-[64px] tablet:pb-[80px]">
       <div class="max-w-bc-wrap mx-auto w-full
                   grid grid-cols-2 tablet:grid-cols-3 lg:grid-cols-6
-                  gap-x-[16px] tablet:gap-x-[24px] gap-y-bc-2xl items-end">
+                  gap-x-[16px] tablet:gap-x-[24px] gap-y-bc-2xl items-start">
         <NuxtLink
           v-for="(p, i) in progetti"
           :key="i"
