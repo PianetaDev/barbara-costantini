@@ -20,7 +20,7 @@ const pageTitle = useState<string>('detail-title', () => '')
         <!-- Titolo centrato rispetto alla pagina -->
         <p
           v-if="pageTitle"
-          class="absolute left-1/2 -translate-x-1/2 font-sans font-light text-bc-black tracking-[0.02em] text-[16px] tablet:text-[20px] leading-[1.2] truncate max-w-[60%] text-center pointer-events-none"
+          class="absolute left-1/2 -translate-x-1/2 font-sans font-light text-bc-black tracking-[0.02em] text-[16px] tablet:text-[20px] leading-[1.2] line-clamp-2 max-w-[60%] text-center pointer-events-none"
         >{{ pageTitle }}</p>
       </div>
     </header>
