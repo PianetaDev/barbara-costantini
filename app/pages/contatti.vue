@@ -1,76 +1,45 @@
-<!-- Figma: 590:1479 desktop / 551:3422 mobile — Contatti -->
+<!-- Figma: 791:8385 — Contatti: testo sx + immagine square dx -->
 <template>
-  <div class="relative flex-1 flex flex-col">
+  <div>
+    <section class="w-full px-[24px] tablet:px-bc-page overflow-hidden">
+      <div class="grid grid-cols-1 tablet:grid-cols-2 tablet:items-center max-w-bc-wrap mx-auto w-full">
 
-    <!-- Linea verticale centrale: da tablet in su, copre tutta l'altezza -->
-    <div class="hidden md:block absolute inset-y-0 left-1/2 w-px bg-bc-black" aria-hidden="true" />
-
-    <!-- MOBILE: stack verticale -->
-    <div class="md:hidden flex flex-col">
-      <!-- Testo -->
-      <div class="flex flex-col gap-bc-2xl items-start px-[24px] py-[64px]">
-        <h1 v-reveal class="font-garamond text-bc-h1 font-normal text-bc-black tracking-[0.02em] w-full">
-          Contatti
-        </h1>
-        <div v-reveal="{ delay: '0.12s' }" class="flex flex-col gap-bc-md w-full">
-          <a href="mailto:bb.costantini@gmail.com" class="font-garamond font-light text-bc-black tracking-[0.02em] hover:font-normal hover:underline" style="font-size:20px; line-height:1.5;">
-            bb.costantini@gmail.com
-          </a>
-          <a href="https://instagram.com/barbara_costantini" target="_blank" rel="noopener noreferrer" class="font-garamond font-light text-bc-black tracking-[0.02em] hover:font-normal hover:underline" style="font-size:20px; line-height:1.5;">
-            @barbara_costantini
-          </a>
-          <p class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.5;">
-            +39 349 6718022
-          </p>
-          <p class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.5;">
-            Largo dell'Olgiata 15 -<br />00123 Roma
-          </p>
-        </div>
-      </div>
-      <!-- Linea orizzontale separatrice -->
-      <div class="w-full h-px bg-bc-black" aria-hidden="true" />
-      <!-- Immagine sotto -->
-      <div v-reveal="{ delay: '0.15s' }" class="px-[24px] py-[64px]">
-        <div class="w-full aspect-[342/427] overflow-hidden bg-bc-black/10">
-          <img src="/images/bc-055.jpg" alt="Restauro documenti" class="w-full h-full object-cover" />
-        </div>
-      </div>
-    </div>
-
-    <!-- TABLET + DESKTOP: split layout a 2 colonne -->
-    <section class="hidden md:flex flex-1 w-full px-bc-page items-center">
-      <div class="max-w-[1142px] mx-auto w-full">
-        <div class="flex flex-row items-center gap-bc-4xl py-[64px]">
-
-          <!-- Colonna sinistra: testo -->
-          <div v-reveal class="flex flex-col gap-bc-2xl w-1/2 pr-bc-4xl">
-            <h1 class="font-garamond text-bc-h1 font-normal text-bc-black tracking-[0.02em]">
+        <!-- Testo sx: allineato più internamente (pl cresce da tablet a lg) -->
+        <div class="pt-[48px] pb-0 tablet:py-[80px] tablet:pl-[40px] lg:pl-[80px]">
+          <div v-reveal class="flex flex-col gap-[32px]">
+            <h1 class="font-sans text-[32px] lg:text-bc-h1 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">
               Contatti
             </h1>
-            <div class="flex flex-col gap-bc-md">
-              <a href="mailto:bb.costantini@gmail.com" class="font-garamond font-light text-bc-black tracking-[0.02em] hover:font-normal hover:underline" style="font-size:20px; line-height:1.5;">
+            <div v-reveal="{ delay: '0.15s' }" class="flex flex-col gap-[16px]">
+              <a
+                href="mailto:bb.costantini@gmail.com"
+                class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] leading-[1.5] hover:underline"
+              >
                 bb.costantini@gmail.com
               </a>
-              <a href="https://instagram.com/barbara_costantini" target="_blank" rel="noopener noreferrer" class="font-garamond font-light text-bc-black tracking-[0.02em] hover:font-normal hover:underline" style="font-size:20px; line-height:1.5;">
-                @barbara_costantini
-              </a>
-              <p class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.5;">
+              <p class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] leading-[1.5]">
                 +39 349 6718022
               </p>
-              <p class="font-garamond font-light text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.5;">
+              <p class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] leading-[1.5]">
                 Largo dell'Olgiata 15 -<br />00123 Roma
               </p>
+              <a
+                href="https://instagram.com/barbara_costantini"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] leading-[1.5] hover:underline"
+              >
+                @barbara_costantini
+              </a>
             </div>
           </div>
-
-          <!-- Colonna destra: immagine centrata verticalmente -->
-          <div v-reveal="{ delay: '0.15s' }" class="w-1/2 pl-bc-4xl flex justify-start items-center">
-            <div class="w-full max-w-[443px] aspect-[443/553] overflow-hidden bg-bc-black/10">
-              <img src="/images/bc-055.jpg" alt="Restauro documenti" class="w-full h-full object-cover" />
-            </div>
-          </div>
-
         </div>
+
+        <!-- Immagine dx: aspect-square, come home hero -->
+        <div v-reveal="{ delay: '0.35s' }" class="aspect-square overflow-hidden my-[32px] tablet:my-0">
+          <img src="/images/bc-055.jpg" alt="Restauro" class="w-full h-full object-cover" />
+        </div>
+
       </div>
     </section>
   </div>
