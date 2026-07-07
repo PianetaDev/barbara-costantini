@@ -1,4 +1,4 @@
-<!-- Stesso layout della Gallery ma le card navigano alla pagina dettaglio lavoro -->
+<!-- Figma: 780:5242 — Lavori: hero split h1 sx + body dx, griglia card max-w-bc-wrap -->
 <script setup lang="ts">
 useHead({ title: 'Lavori — Barbara Costantini Restauro' })
 
@@ -19,28 +19,38 @@ const progetti = [
 </script>
 <template>
   <div>
-    <!-- Hero: descrizione centrata -->
-    <section class="w-full px-bc-page py-[64px]">
-      <div class="mx-auto max-w-[908px] flex flex-col items-center text-center">
-        <p v-reveal class="font-sans font-light text-bc-black tracking-[0.02em] max-w-[440px]" style="font-size: 20px;">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.
-        </p>
+    <!-- Hero: h1 sx + body dx — Figma 780:5269 -->
+    <section class="w-full px-[24px] tablet:px-bc-page border-b border-bc-black overflow-hidden">
+      <div class="grid grid-cols-1 tablet:grid-cols-2 max-w-bc-wrap mx-auto w-full
+                  py-[48px] tablet:py-[64px] gap-y-[32px] tablet:gap-y-0">
+        <div v-reveal class="flex flex-col justify-start tablet:pr-[80px]">
+          <h1 class="font-sans text-[32px] lg:text-bc-h1 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">
+            I lavori&nbsp;&nbsp;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel.
+          </h1>
+        </div>
+        <div v-reveal="{ delay: '0.15s' }" class="flex items-start tablet:pt-[18px]">
+          <p class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] leading-[1.5]">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.
+          </p>
+        </div>
       </div>
     </section>
 
-    <!-- Griglia progetti -->
-    <section class="w-full px-bc-page pb-[64px]">
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md2:grid-cols-4 md3:grid-cols-5 lg:grid-cols-6 gap-x-[24px] gap-y-bc-2xl items-start">
+    <!-- Griglia progetti — Figma 780:5243 -->
+    <section class="w-full px-[24px] tablet:px-bc-page pt-[48px] tablet:pt-[64px] pb-[64px] tablet:pb-[80px]">
+      <div class="max-w-bc-wrap mx-auto w-full
+                  grid grid-cols-2 tablet:grid-cols-3 lg:grid-cols-6
+                  gap-x-[16px] tablet:gap-x-[24px] gap-y-bc-2xl items-end">
         <NuxtLink
           v-for="(p, i) in progetti"
           :key="i"
           :to="`/lavori/${p.slug}`"
-          v-reveal="{ delay: `${Math.min(i, 3) * 0.07}s` }"
+          v-reveal="{ delay: `${Math.min(i % 6, 3) * 0.07}s` }"
           class="flex flex-col gap-[16px] group text-left"
         >
           <div
             class="w-full bg-bc-black/10 overflow-hidden ring-0 group-hover:ring-1 group-hover:ring-bc-black transition-shadow"
-            :style="p.tipo === 'vertical' ? 'aspect-ratio:326/406' : 'aspect-ratio:326/217'"
+            :style="p.tipo === 'vertical' ? 'aspect-ratio:209/260' : 'aspect-ratio:209/139'"
           >
             <img
               v-if="p.image"
@@ -52,7 +62,7 @@ const progetti = [
           <div class="flex flex-col gap-[4px]">
             <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.028em]">{{ p.codice }}</p>
             <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.028em]">{{ p.committente }}</p>
-            <p class="font-garamond text-bc-black tracking-[0.02em] group-hover:underline" style="font-size: 20px; font-weight: 500;">{{ p.titolo }}</p>
+            <p class="font-garamond text-bc-h4 font-normal text-bc-black tracking-[0.02em] group-hover:underline">{{ p.titolo }}</p>
           </div>
         </NuxtLink>
       </div>
