@@ -5,5 +5,6 @@
       <slot />
     </main>
     <BcFooter />
+    <BcCookieBanner />
   </div>
 </template>
