@@ -13,6 +13,19 @@ interface Progetto {
   intro: string[]; sezioni: Sezione[]; metodo: Metodo
 }
 
+const INTRO = [
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.",
+  "Pellentesque ornare ullamcorper lorem, sit amet hendrerit purus molestie sed. Pellentesque ac elit eu ex dictum tempor. Mauris euismod orci in mauris vehicula vehicula. Ut elementum mi eu dui tincidunt laoreet.",
+]
+const SEZIONI = [{ titolo: "Titolo Lorem ipsum", sottotitolo: "Titolo Lorem Ipsum", testi: [
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat. Mauris euismod orci in mauris vehicula vehicula.",
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.",
+] }]
+const METODO = { testi: [
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.",
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet.",
+], citazione: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat." }
+
 const progetti: Progetto[] = [
   {
     id: "01", slug: "archivio-regio",
@@ -27,14 +40,13 @@ const progetti: Progetto[] = [
     immagini: [
       { src: "/images/bc-059.jpg", label: "01-01", aspetto: "h" },
       { src: "/images/bc-027.jpg", label: "01-02", aspetto: "v" },
+      { src: "/images/bc-001.jpg", label: "01-03", aspetto: "h" },
+      { src: "/images/bc-004.jpg", label: "01-04", aspetto: "v" },
+      { src: "/images/bc-007.jpg", label: "01-05", aspetto: "h" },
+      { src: "/images/bc-010.jpg", label: "01-06", aspetto: "h" },
     ],
     immaginiContenuto: ["/images/bc-059.jpg", "/images/bc-026.jpg"],
-    intro: [
-      "Il Restauro conservativo dell'Antico Archivio Regio si compone, in riferimento ai documenti in oggetto, di 262 unità archivistiche comprese in un arco temporale che va dal 1381 al 1805.",
-      "Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat. Mauris euismod orci in mauris vehicula vehicula. Pellentesque ornare ullamcorper lorem, sit amet hendrerit purus molestie sed.",
-    ],
-    sezioni: [{ titolo: "Titolo Lorem ipsum", sottotitolo: "Titolo Lorem Ipsum", testi: ["Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat. Mauris euismod orci in mauris vehicula vehicula.", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet."] }],
-    metodo: { testi: ["Metodo Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat.", "Metodo Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis."], citazione: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat." },
+    intro: INTRO, sezioni: SEZIONI, metodo: METODO,
   },
   {
     id: "02", slug: "restauro-testamenti",
@@ -49,11 +61,13 @@ const progetti: Progetto[] = [
     immagini: [
       { src: "/images/bc-060.jpg", label: "02-01", aspetto: "h" },
       { src: "/images/bc-026.jpg", label: "02-02", aspetto: "v" },
+      { src: "/images/bc-013.jpg", label: "02-03", aspetto: "h" },
+      { src: "/images/bc-016.jpg", label: "02-04", aspetto: "v" },
+      { src: "/images/bc-019.jpg", label: "02-05", aspetto: "h" },
+      { src: "/images/bc-022.jpg", label: "02-06", aspetto: "h" },
     ],
     immaginiContenuto: ["/images/bc-040.jpg", "/images/bc-070.jpg"],
-    intro: ["Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis.", "Pellentesque ornare ullamcorper lorem, sit amet hendrerit purus molestie sed. Pellentesque ac elit eu ex dictum tempor."],
-    sezioni: [{ titolo: "Titolo Lorem ipsum", sottotitolo: "Titolo Lorem Ipsum", testi: ["Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."] }],
-    metodo: { testi: ["Metodo Lorem ipsum dolor sit amet, consectetur adipiscing elit.", "Metodo Lorem ipsum dolor sit amet, consectetur adipiscing elit."], citazione: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia." },
+    intro: INTRO, sezioni: SEZIONI, metodo: METODO,
   },
   {
     id: "03", slug: "restauro-eur",
@@ -68,11 +82,13 @@ const progetti: Progetto[] = [
     immagini: [
       { src: "/images/bc-025.jpg", label: "03-01", aspetto: "h" },
       { src: "/images/bc-038.jpg", label: "03-02", aspetto: "v" },
+      { src: "/images/bc-031.jpg", label: "03-03", aspetto: "h" },
+      { src: "/images/bc-034.jpg", label: "03-04", aspetto: "v" },
+      { src: "/images/bc-037.jpg", label: "03-05", aspetto: "h" },
+      { src: "/images/bc-040.jpg", label: "03-06", aspetto: "h" },
     ],
     immaginiContenuto: ["/images/bc-003.jpg", "/images/bc-026.jpg"],
-    intro: ["Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis.", "Pellentesque ornare ullamcorper lorem, sit amet hendrerit purus molestie sed. Pellentesque ac elit eu ex dictum tempor."],
-    sezioni: [{ titolo: "Titolo Lorem ipsum", sottotitolo: "Titolo Lorem Ipsum", testi: ["Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."] }],
-    metodo: { testi: ["Metodo Lorem ipsum dolor sit amet, consectetur adipiscing elit.", "Metodo Lorem ipsum dolor sit amet, consectetur adipiscing elit."], citazione: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia." },
+    intro: INTRO, sezioni: SEZIONI, metodo: METODO,
   },
 ]
 
