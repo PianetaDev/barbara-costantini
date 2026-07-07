@@ -17,16 +17,21 @@ export default defineNuxtPlugin((nuxtApp) => {
         `transform 0.65s ${ease} ${delay}`,
       ].join(', ')
 
+      function reveal() {
+        el.style.opacity = '1'
+        el.style.transform = 'translateY(0)'
+        observer.disconnect()
+        clearTimeout(fallback)
+      }
+
       const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            el.style.opacity = '1'
-            el.style.transform = 'translateY(0)'
-            observer.disconnect()
-          }
-        },
-        { threshold: 0.07, rootMargin: '0px 0px 0px 0px' }
+        ([entry]) => { if (entry.isIntersecting) reveal() },
+        { threshold: 0.01, rootMargin: '0px 0px 100px 0px' }
       )
+
+      // fallback: se dopo 900ms l'observer non ha sparato (hydration mismatch, etc.) rivela comunque
+      const fallback = setTimeout(reveal, 900)
+
       // double rAF: garantisce che il browser dipinga opacity:0 prima che l'observer scatti
       requestAnimationFrame(() => requestAnimationFrame(() => observer.observe(el)))
     },
