@@ -36,7 +36,7 @@
         </div>
 
         <!-- Immagine dx: aspect-square, come home hero -->
-        <div v-reveal="{ delay: '0.35s' }" class="aspect-square overflow-hidden my-[32px] tablet:my-[64px]">
+        <div v-reveal="{ delay: '0.35s' }" class="aspect-square overflow-hidden my-[32px]">
           <img src="/images/bc-055.jpg" alt="Restauro" class="w-full h-full object-cover" />
         </div>
 
