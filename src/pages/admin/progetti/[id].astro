@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import RichTextEditor from '../../../components/admin/RichTextEditor.vue';
+import { createSupabaseServerClient } from '../../../lib/supabase';
+
+const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
+const { data: progetto } = await supabase.from('bc_projects').select('*').eq('id', Astro.params.id).single();
+if (!progetto) return Astro.redirect('/admin/progetti');
+---
+<BaseLayout title={`Modifica: ${progetto.titolo}`}>
+  <section class="px-bc-page py-bc-2xl max-w-bc-content mx-auto">
+    <h1 class="text-bc-h1">{progetto.titolo}</h1>
+    <form id="progetto-form" class="flex flex-col gap-bc-md mt-bc-md" data-id={progetto.id}>
+      <label>Titolo <input name="titolo" value={progetto.titolo} class="border border-bc-black px-bc-md py-bc-xs w-full" /></label>
+      <label>Committente <input name="committente" value={progetto.committente ?? ''} class="border border-bc-black px-bc-md py-bc-xs w-full" /></label>
+      <label>Introduzione</label>
+      <RichTextEditor client:load name="intro" modelValue={progetto.intro ?? ''} />
+      <button type="submit" class="bc-btn">Salva</button>
+    </form>
+    <p id="progetto-success" class="text-bc-black mt-bc-sm hidden">Salvato.</p>
+    <p id="progetto-error" class="text-red-600 mt-bc-sm hidden"></p>
+  </section>
+  <script>
+    const form = document.getElementById('progetto-form') as HTMLFormElement;
+    const errorEl = document.getElementById('progetto-error')!;
+    const successEl = document.getElementById('progetto-success')!;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorEl.classList.add('hidden');
+      successEl.classList.add('hidden');
+      const id = form.dataset.id;
+      const formData = new FormData(form);
+      // formData.get('intro') legge l'<input type="hidden" name="intro"> renderizzato
+      // da RichTextEditor.vue (vedi commento nel componente): è un vero discendente
+      // di questo <form>, quindi il suo valore corrente arriva qui esattamente come
+      // per "titolo"/"committente" — nessun collegamento aggiuntivo necessario.
+      const payload = {
+        titolo: formData.get('titolo'),
+        committente: formData.get('committente'),
+        intro: formData.get('intro'),
+      };
+      const res = await fetch(`/api/admin/progetti/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        successEl.classList.remove('hidden');
+      } else {
+        const { error } = await res.json();
+        errorEl.textContent = typeof error === 'string' ? error : JSON.stringify(error);
+        errorEl.classList.remove('hidden');
+      }
+    });
+  </script>
+</BaseLayout>

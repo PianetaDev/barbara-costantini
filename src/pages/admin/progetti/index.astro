@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { createSupabaseServerClient } from '../../../lib/supabase';
+
+const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
+const { data: progetti } = await supabase.from('bc_projects').select('id, slug, titolo, committente').order('ordine');
+---
+<BaseLayout title="Progetti">
+  <section class="px-bc-page py-bc-2xl">
+    <h1 class="text-bc-h1">Progetti</h1>
+    <ul class="mt-bc-md">
+      {progetti?.map((p) => (
+        <li><a href={`/admin/progetti/${p.id}`} class="bc-ghost">{p.titolo} — {p.committente}</a></li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>
