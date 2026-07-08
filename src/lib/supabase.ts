@@ -30,3 +30,28 @@ export function createSupabaseServerClient(cookies: AstroCookies, request: Reque
     },
   });
 }
+
+/**
+ * Scambia un `code` di recovery (query string PKCE, es.
+ * `/admin/imposta-password?code=...`) per una sessione, usando il client passato da
+ * chi chiama (deve essere lo stesso creato con createSupabaseServerClient sui cookie
+ * della richiesta corrente — vedi src/pages/admin/imposta-password.astro). Riceve il
+ * client già costruito, invece di crearlo internamente, così è testabile passando un
+ * fake senza dover mockare l'intero modulo.
+ *
+ * Ritorna `null` in caso di successo, o un messaggio d'errore leggibile altrimenti.
+ * Non lascia propagare eccezioni impreviste (es. errori di rete): senza questo
+ * try/catch la pagina risponderebbe con un 500 generico invece di un messaggio
+ * comprensibile per chi sta resettando la password.
+ */
+export async function exchangeRecoveryCode(
+  supabase: { auth: { exchangeCodeForSession: (code: string) => Promise<{ error: { message: string } | null }> } },
+  code: string
+): Promise<string | null> {
+  try {
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    return error?.message ?? null;
+  } catch {
+    return 'Impossibile completare il reset: si è verificato un errore imprevisto. Riprova o richiedi un nuovo link.';
+  }
+}

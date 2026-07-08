@@ -49,3 +49,32 @@ Tutte le tabelle usano il prefisso `bc_` e vivono nello stesso schema `public` d
 progetto condiviso — nessuna sovrapposizione di nomi con le tabelle di altri
 siti/prodotti (bussola, alba, apotheke, forge, ecc.) verificata al momento della prima
 migrazione.
+
+## Auth (config non-migrazione)
+
+Alcune impostazioni di Supabase Auth **non passano da una migrazione SQL** (sono
+config del progetto, non schema di database) e quindi non sono tracciate da nessuna
+parte in `supabase/migrations/`. La più rilevante per Barbara Costantini è la
+whitelist "Redirect URLs" (campo `uri_allow_list` in `GET/PATCH
+/v1/projects/{ref}/config/auth` via Supabase Management API — non esposta da nessun
+comando della CLI `supabase`).
+
+Il progetto condiviso `pianeta-xp` aveva `site_url = https://pianeta.green` e una
+whitelist con solo i domini di Alba/xp.pianeta.studio/pianeta.green: qualunque
+`redirectTo` passato da questo repo (es. `resetPasswordForEmail`) veniva
+**silenziosamente sostituito** con `site_url`, rompendo il flusso di reset password
+(vedi commit "fix: risolve reset-password rotto — mismatch PKCE server/client e
+redirect URL non whitelisted"). Aggiunte via Management API (solo append, nessuna
+entry esistente di Alba rimossa — verificato con GET prima/dopo):
+
+- `https://barbara-costantini.vercel.app/**` — URL di produzione reale (`vercel
+  project ls --scope pianetastudios-projects`)
+- `https://barbara-costantini-pianetastudios-projects.vercel.app/**` — alias usato
+  in `astro.config.mjs` (`site`)
+- `http://localhost:4321/**` — sviluppo locale
+
+**Se il dominio di produzione cambia** (dominio custom, rename del progetto Vercel,
+ecc.), questa whitelist va aggiornata a mano con lo stesso procedimento (Management
+API, solo append) — altrimenti il reset password torna silenziosamente rotto senza
+errori evidenti in nessun log applicativo, perché a Supabase non risulta niente da
+segnalare: sostituisce e basta.
