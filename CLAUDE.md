@@ -2,18 +2,23 @@
 
 Guida per Francesca (e chiunque apra questa cartella). Leggi prima di fare qualsiasi cosa.
 
+> **Migrazione Nuxt → Astro (Parte 1) completata.** Questo file era fermo allo stack Nuxt
+> iniziale; aggiornato per riflettere lo stack reale attuale. I contenuti sono ancora
+> placeholder Lorem ipsum — il CMS (Sanity) arriva in una Parte 2 separata, non è ancora
+> integrato.
+
 ---
 
 ## Stack
 
 | Cosa | Valore |
 |------|--------|
-| Framework | Nuxt 4 compat (`future.compatibilityVersion: 4`) |
-| CSS | Tailwind v3 via `@nuxtjs/tailwindcss` + token `bc-*` |
-| Font | EB Garamond (display) + Public Sans (UI) — Google Fonts |
-| CMS | Sanity (`@nuxtjs/sanity`) — Foss configura il progetto |
-| Deploy | Vercel — ogni push su `main` fa deploy automatico |
-| Package manager | npm |
+| Framework | Astro 7 (`output: 'server'`) + isole Vue 3 dove serve interattività |
+| CSS | Tailwind v4 CSS-first (`@tailwindcss/vite`) — token `bc-*` in `src/styles/global.css` |
+| Font | Public Sans (self-hosted, `public/fonts/`) — EB Garamond rimosso, non più usato |
+| CMS | Non ancora integrato. Contenuti hardcoded in `src/data/progetti.ts` (Parte 2: Sanity) |
+| Deploy | Vercel — push su `main` fa deploy automatico |
+| Package manager | pnpm |
 
 ---
 
@@ -22,9 +27,8 @@ Guida per Francesca (e chiunque apra questa cartella). Leggi prima di fare quals
 ```bash
 git clone https://github.com/PianetaDev/barbara-costantini
 cd barbara-costantini
-npm install
-cp .env.example .env   # chiedi a Max le credenziali Sanity
-npm run dev            # → http://localhost:3000
+pnpm install
+pnpm dev            # → http://localhost:4321
 ```
 
 ---
@@ -32,74 +36,76 @@ npm run dev            # → http://localhost:3000
 ## Struttura directory
 
 ```
-app/
-├── components/bc/    ← componenti del sito (prefisso Bc, auto-importati)
-├── pages/            ← pagine — ogni file = una route
-├── layouts/          ← default.vue (Nav + slot + Footer)
-├── assets/css/       ← main.css (Tailwind base + .bc-btn)
-public/               ← file statici (logo.svg, favicon, immagini)
-tailwind.config.ts    ← token bc-* (colori, font, spacing)
-nuxt.config.ts        ← config principale
-.env.example          ← variabili d'ambiente necessarie
+src/
+├── pages/            ← pagine — ogni file = una route (index, studio, servizi, lavori/, contatti, cookie/privacy-policy)
+├── components/        ← componenti reali: Nav.vue, Footer.astro, SectionBio.astro,
+│                         SectionServizi.astro, SectionLavori.astro, SectionTeam.astro,
+│                         CookieBanner.vue, CaroselloImmagini.vue (nomi propri, import
+│                         espliciti — niente più auto-import né prefisso Bc*)
+├── layouts/           ← BaseLayout.astro
+├── data/               ← progetti.ts (dati reali dei 12 progetti, testi ancora Lorem ipsum)
+├── utils/              ← imagenes.ts
+├── styles/             ← global.css (Tailwind v4 @theme — token bc-*, @font-face)
+└── assets/images/      ← immagini sorgente ottimizzate da Astro Image/Sharp in build
+public/                 ← file statici (logo.svg, favicon, fonts/*.woff2)
+tests/                  ← vitest (pnpm test)
+astro.config.mjs        ← config principale (adapter Vercel, integrazioni vue/sitemap)
+.env.example            ← variabili d'ambiente necessarie
 ```
 
----
-
-## Pagine da completare
-
-| Pagina | File | Frame Figma | Stato |
-|--------|------|-------------|-------|
-| Homepage | `pages/index.vue` | 590:1395 | ✅ scaffold |
-| Lo Studio | `pages/studio.vue` | 590:1429 | ✅ scaffold |
-| Lavori | `pages/lavori/index.vue` | 590:1457 | da fare |
-| Dettaglio lavoro | `pages/lavori/[slug].vue` | 590:1494 | da fare |
-| Gallery | `pages/gallery.vue` | 590:1571 | ✅ scaffold |
-| Contatti | `pages/contatti.vue` | 590:1479 | da fare |
-| Servizi | `pages/servizi.vue` | — | da fare |
+Non esistono più `app/`, `nuxt.config.ts` o `tailwind.config.ts` — rimossi nel cutover a Astro.
 
 ---
 
-## Componenti esistenti (`app/components/bc/`)
+## Pagine
 
-Tutti auto-importati come `<BcNome />`, nessun import manuale necessario.
+| Pagina | File | Stato |
+|--------|------|-------|
+| Homepage | `src/pages/index.astro` | ✅ |
+| Lo Studio | `src/pages/studio.astro` | ✅ |
+| Lavori | `src/pages/lavori/index.astro` | ✅ |
+| Dettaglio lavoro | `src/pages/lavori/[slug].astro` | ✅ (SSG via `getStaticPaths`, 12 progetti reali) |
+| Servizi | `src/pages/servizi.astro` | ✅ |
+| Contatti | `src/pages/contatti.astro` | ✅ |
+| Cookie/Privacy policy | `src/pages/cookie-policy.astro`, `src/pages/privacy-policy.astro` | ✅ |
 
-| Componente | Frame Figma | Descrizione |
-|-----------|-------------|-------------|
-| `BcNav` | 590:1428 | Header con logo + nav desktop + hamburger mobile |
-| `BcHero` | 590:1413 | Hero con slot: title, image, subtext |
-| `BcSectionStudio` | 590:1405 | Testo sx + divider + immagine dx |
-| `BcSectionServizi` | 590:1417 | Immagine sx + divider + testo dx |
-| `BcSectionLavori` | 590:1396 | Testo + carousel card progetti |
-| `BcSectionGallery` | 590:1571 | Griglia 4 colonne con card mix V/H |
-| `BcSectionBio` | 590:1429 | Bio singola persona: foto + nome/ruolo/testo |
-| `BcSectionTeam` | — | Team 3 persone con carousel mobile |
-| `BcFooter` | 590:1427 | Footer con info legali + link |
+`Gallery` (frame Figma 590:1571) non è mai stata portata: componente orfano dell'originale Nuxt (`SectionGallery`), mai collegato a una route.
+
+---
+
+## Componenti esistenti (`src/components/`)
+
+Import espliciti per ogni pagina/layout, nessun auto-import (a differenza del vecchio Nuxt).
+
+| Componente | Tipo | Descrizione |
+|-----------|------|-------------|
+| `Nav.vue` | isola Vue | Header con logo + nav desktop + hamburger mobile (stato interattivo) |
+| `Footer.astro` | statico | Footer con info legali + link |
+| `SectionBio.astro` | statico | Bio singola persona: foto + nome/ruolo/testo |
+| `SectionServizi.astro` | statico | Immagine sx + divider + testo dx |
+| `SectionLavori.astro` | statico | Testo + carousel card progetti |
+| `SectionTeam.astro` | statico | Team con carousel mobile |
+| `CookieBanner.vue` | isola Vue | Banner cookie (stato localStorage) |
+| `CaroselloImmagini.vue` | isola Vue | Hero + thumbnails galleria dettaglio lavoro |
 
 ---
 
 ## Design tokens
 
-Definiti in `tailwind.config.ts`. Usa sempre le classi `bc-*`.
+Definiti **CSS-first** in `src/styles/global.css` dentro un blocco `@theme` (Tailwind v4) — **non** in un file `tailwind.config.ts` (rimosso, non più letto dal progetto). Usa sempre le classi `bc-*`.
 
 **Colori:**
 - `bg-bc-canvas` / `text-bc-canvas` → `#F7F6EF` (sfondo)
 - `bg-bc-black` / `text-bc-black` / `border-bc-black` → `#000000`
 
 **Font:**
-- `font-garamond` → EB Garamond (titoli, body, bottoni)
-- `font-sans` → Public Sans (nav, label, meta)
+- `font-sans` / `font-garamond` (alias storico, stesso font) → Public Sans
 
-**Scala tipografica:**
-- `text-bc-h1` → 56px semibold (hero)
-- `text-bc-h2` → 38px semibold (titoli sezione)
-- `text-bc-h4` → 24px semibold (card title)
-- `text-bc-body1` → 22px regular (corpo testo)
-- `text-bc-nav` → 16px regular (navigazione)
-- `text-bc-label2` → 14px light (meta, codici)
+**Scala tipografica:** `text-bc-h1` · `text-bc-h2` · `text-bc-h3` · `text-bc-h4` · `text-bc-sub` · `text-bc-body1` · `text-bc-body2` · `text-bc-nav` · `text-bc-btn` · `text-bc-label1` · `text-bc-label2` — valori esatti in `src/styles/global.css`.
 
-**Spacing:** `bc-xs` (8px) · `bc-md` (16px) · `bc-xl` (32px) · `bc-2xl` (48px) · `bc-4xl` (80px)
+**Spacing:** `bc-2xs` (4px) · `bc-xs` (8px) · `bc-sm` (12px) · `bc-md` (16px) · `bc-xl` (32px) · `bc-2xl` (48px) · `bc-4xl` (80px)
 
-**Bottone:** `class="bc-btn"` — border nero, hover fill nero/testo bianco
+**Bottone:** `class="bc-btn"` — border nero, hover fill nero/testo bianco (definito in `@layer components` in `global.css`)
 
 ---
 
@@ -112,10 +118,10 @@ Definiti in `tailwind.config.ts`. Usa sempre le classi `bc-*`.
 
 ### Per ogni componente o pagina
 1. In Figma, seleziona il frame del componente che vuoi implementare
-2. In Claude Code, scrivi:  
-   *"Implementa [nome componente] basandoti sul frame Figma selezionato. Usa Vue 3 SFC, classi bc-*, nessun import manuale."*
+2. In Claude Code, scrivi:
+   *"Implementa [nome componente] basandoti sul frame Figma selezionato. Componente Astro se statico, isola Vue solo se serve interattività client. Classi bc-*, import espliciti."*
 3. Claude legge le specifiche direttamente da Figma tramite MCP
-4. Verifica con `npm run dev`
+4. Verifica con `pnpm dev`
 5. `git push` → Vercel deploya in automatico
 
 ### Riferimento frame Figma
@@ -123,22 +129,17 @@ Il file è su Figma: cerca `26P16 Barbara Costantini` nel tuo team Pianeta.
 
 ---
 
-## CMS Sanity
+## CMS (Parte 2 — non ancora attivo)
 
-Foss configura il progetto Sanity per Barbara. Passi:
+I contenuti sono attualmente hardcoded in `src/data/progetti.ts` (testi placeholder Lorem ipsum, dati reali per struttura/immagini/meta dei 12 progetti). L'integrazione Sanity è pianificata come Parte 2, PR separata. Quando verrà attivata:
 
-1. Vai su [sanity.io](https://sanity.io) → crea progetto `barbara-costantini`
+1. Crea progetto `barbara-costantini` su [sanity.io](https://sanity.io)
 2. Copia il `projectId` nel `.env`:
    ```
    SANITY_PROJECT_ID=tuoid
    SANITY_DATASET=production
    ```
 3. Aggiungi le stesse variabili su Vercel (Settings → Environment Variables)
-4. Lo schema Sanity va in `sanity/` nella root (da creare)
-
-**Tipi di contenuto previsti:**
-- `progetto` — titolo, committente, anno, immagini, descrizione, slug
-- `pagina` — (opzionale) testi editabili per Studio/Bio
 
 ---
 
@@ -158,12 +159,12 @@ Branch: lavora su `main` direttamente (progetto piccolo) o crea `feat/nome-pagin
 
 | Problema | Soluzione |
 |----------|-----------|
-| `npm: command not found` | Installa Node da nodejs.org |
+| `pnpm: command not found` | Installa Node da nodejs.org, poi `corepack enable` (o `npm i -g pnpm`) |
 | Figma MCP non risponde | Riavvia Claude Code con Figma Desktop aperto in Dev Mode |
-| Sanity warning nel build | Normale se `.env` non ha `SANITY_PROJECT_ID` — non blocca il build |
-| Componente non trovato | Prefisso `Bc` — es. `<BcNav />` non `<Nav />` |
-| Errore classi Tailwind | Controlla che la classe esista in `tailwind.config.ts` |
+| Componente non trovato | Serve import esplicito — controlla `src/components/`, niente più prefisso `Bc` |
+| Errore classi Tailwind | Controlla che il token esista nel blocco `@theme` in `src/styles/global.css` |
+| `pnpm run build` fallisce | È il comando reale usato da Vercel (`vercel.json` → `buildCommand`) — riproducilo in locale con `rm -rf node_modules dist .vercel/output && pnpm install && pnpm run build` |
 
 ---
 
-*Aggiornato: 16 giugno 2026 · Owner: Max (info@pianeta.studio)*
+*Aggiornato: 8 luglio 2026 · Owner: Max (info@pianeta.studio)*
