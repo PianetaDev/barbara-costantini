@@ -1,0 +1,65 @@
+---
+// src/pages/admin/login.astro
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Accedi">
+  <section class="px-bc-page py-bc-4xl max-w-md mx-auto">
+    <h1 class="text-bc-h1">Accedi</h1>
+    <form id="login-form" class="flex flex-col gap-bc-md mt-bc-xl">
+      <input type="email" name="email" placeholder="Email" required class="border border-bc-black px-bc-md py-bc-xs" />
+      <input type="password" name="password" placeholder="Password" required class="border border-bc-black px-bc-md py-bc-xs" />
+      <button type="submit" class="bc-btn">Accedi</button>
+      <button type="button" id="forgot-password" class="text-left underline text-sm">Password dimenticata?</button>
+      <p id="login-error" class="text-red-600 hidden"></p>
+      <p id="login-info" class="hidden"></p>
+    </form>
+  </section>
+  <script>
+    const form = document.getElementById('login-form') as HTMLFormElement;
+    const errorEl = document.getElementById('login-error')!;
+    const infoEl = document.getElementById('login-info')!;
+    const forgotBtn = document.getElementById('forgot-password') as HTMLButtonElement;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorEl.classList.add('hidden');
+      const formData = new FormData(form);
+      const res = await fetch('/api/admin/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: formData.get('email'), password: formData.get('password') }),
+      });
+      if (res.ok) {
+        window.location.href = '/admin/progetti';
+      } else {
+        const { error } = await res.json();
+        errorEl.textContent = error;
+        errorEl.classList.remove('hidden');
+      }
+    });
+
+    forgotBtn.addEventListener('click', async () => {
+      errorEl.classList.add('hidden');
+      infoEl.classList.add('hidden');
+      const email = (form.elements.namedItem('email') as HTMLInputElement)?.value;
+      if (!email) {
+        errorEl.textContent = 'Inserisci la tua email qui sopra, poi clicca di nuovo su "Password dimenticata?".';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+      const res = await fetch('/api/admin/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) {
+        infoEl.textContent = 'Ti abbiamo inviato una email con le istruzioni per impostare una nuova password.';
+        infoEl.classList.remove('hidden');
+      } else {
+        const { error } = await res.json();
+        errorEl.textContent = error;
+        errorEl.classList.remove('hidden');
+      }
+    });
+  </script>
+</BaseLayout>
