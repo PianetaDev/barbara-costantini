@@ -6,6 +6,9 @@
 // opzionali con gli stessi default del componente Vue, dato che l'unico
 // utilizzo reale (studio.vue) passa solo l'immagine bc-030.jpg via slot
 // #image e lascia nome/ruolo/bio di default.
+import { Image } from 'astro:assets';
+import { risolviImmagine } from '../utils/imagenes';
+
 interface Props {
   imageSrc?: string;
   imageAlt?: string;
@@ -30,7 +33,7 @@ const {
     <!-- Immagine: flex-1 a tablet, 443px fissi da lg -->
     <div class="flex items-center tablet:flex-1 lg:flex-none lg:shrink-0 tablet:py-[80px]">
       <div class="w-full lg:w-[443px] aspect-[443/553] bg-bc-black/10 overflow-hidden">
-        <img src={imageSrc} alt={imageAlt} class="w-full h-full object-cover" />
+        {imageSrc && <Image src={risolviImmagine(imageSrc)} alt={imageAlt} width={900} format="webp" quality={80} class="w-full h-full object-cover" />}
       </div>
     </div>
 

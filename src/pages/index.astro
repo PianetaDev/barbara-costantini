@@ -1,10 +1,12 @@
 ---
 // src/pages/index.astro
 // Porta 1:1 da app/pages/index.vue.
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionLavori from '../components/SectionLavori.astro';
 import SectionServizi from '../components/SectionServizi.astro';
 import { PROGETTI } from '../data/progetti';
+import { risolviImmagine } from '../utils/imagenes';
 
 // Sulla home BcSectionLavori.vue veniva usato senza prop `progetti` (v. app/pages/index.vue),
 // affidandosi ai suoi 3 progetti di default hardcoded (codice "01"/"02"/"03" = id progetto,
@@ -30,7 +32,7 @@ const progettiHome = PROGETTI.slice(0, 3).map((p) => ({
         <div><a href="/studio" class="bc-ghost">Scopri il nostro studio →</a></div>
       </div>
       <div class="aspect-square overflow-hidden my-[32px]">
-        <img src="/images/bc-095.jpg" alt="Barbara Costantini restauro" class="w-full h-full object-cover" />
+        <Image src={risolviImmagine('/images/bc-095.jpg')} alt="Barbara Costantini restauro" width={1000} format="webp" quality={80} class="w-full h-full object-cover" />
       </div>
     </div>
   </section>

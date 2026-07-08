@@ -2,8 +2,10 @@
 // src/pages/lavori/index.astro
 // Figma: 780:5242 — Lavori: hero split h1 sx + body dx, griglia card max-w-bc-wrap
 // Porta 1:1 da app/pages/lavori/index.vue. v-reveal rimosso pulito (task #47).
+import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { PROGETTI } from '../../data/progetti';
+import { risolviImmagine } from '../../utils/imagenes';
 
 const progetti = PROGETTI.map((p) => ({
   codice: `PRJ${p.id}`,
@@ -49,9 +51,12 @@ const progetti = PROGETTI.map((p) => ({
             style={p.tipo === 'vertical' ? 'aspect-ratio:209/260' : 'aspect-ratio:209/139'}
           >
             {p.image && (
-              <img
-                src={p.image}
+              <Image
+                src={risolviImmagine(p.image)}
                 alt={p.titolo}
+                width={500}
+                format="webp"
+                quality={80}
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
             )}

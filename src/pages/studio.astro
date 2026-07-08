@@ -1,9 +1,11 @@
 ---
 // src/pages/studio.astro
 // Porta 1:1 da app/pages/studio.vue.
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionBio from '../components/SectionBio.astro';
 import SectionTeam from '../components/SectionTeam.astro';
+import { risolviImmagine } from '../utils/imagenes';
 
 const membri = [
   { nome: 'Nome Cognome 1', ruolo: 'Ruolo', bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat. Mauris euismod orci in mauris vehicula vehicula.', image: '/images/bc-066.jpg' },
@@ -21,7 +23,7 @@ const membri = [
         </h1>
       </div>
       <div class="aspect-square overflow-hidden my-[32px]">
-        <img src="/images/bc-097.jpg" alt="Lo studio di restauro" class="w-full h-full object-cover" />
+        <Image src={risolviImmagine('/images/bc-097.jpg')} alt="Lo studio di restauro" width={1000} format="webp" quality={80} class="w-full h-full object-cover" />
       </div>
     </div>
   </section>

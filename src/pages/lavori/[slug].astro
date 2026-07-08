@@ -7,10 +7,12 @@
 // NOTA: `progetto` è ricavato da Astro.params.slug (non solo da Astro.props) così la
 // pagina funziona sia nella build statica reale (getStaticPaths + props) sia quando
 // viene renderizzata via Astro Container passando solo `params` (vedi tests/lavori.test.ts).
+import { Image, getImage } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SectionLavori from '../../components/SectionLavori.astro';
 import CaroselloImmagini from '../../components/CaroselloImmagini.vue';
 import { PROGETTI, type Progetto } from '../../data/progetti';
+import { risolviImmagine } from '../../utils/imagenes';
 
 // output: 'server' (vedi astro.config.mjs) rende tutte le pagine SSR di default:
 // per avere le 12 pagine di dettaglio prerenderizzate come HTML statico in build
@@ -41,12 +43,33 @@ const progettiSuggeriti = progetto
       }));
     })()
   : [];
+
+// CaroselloImmagini.vue è un'isola Vue (client:load): il componente <Image> di
+// astro:assets è compilato solo dal compilatore .astro e non è utilizzabile nel
+// template di un .vue. Per ottenere comunque l'ottimizzazione sharp (resize +
+// webp) qui in frontmatter (contesto server, eseguito a build time perché la
+// pagina è prerender) processiamo le immagini con getImage() e passiamo al
+// componente Vue direttamente gli URL già ottimizzati, invece dei path grezzi
+// verso /images/bc-NNN.jpg.
+const immaginiCarosello = progetto
+  ? await Promise.all(
+      progetto.immagini.map(async (img) => {
+        const ottimizzata = await getImage({
+          src: risolviImmagine(img.src),
+          width: img.aspetto === 'v' ? 700 : 1000,
+          format: 'webp',
+          quality: 80,
+        });
+        return { ...img, src: ottimizzata.src };
+      }),
+    )
+  : [];
 ---
 <BaseLayout title={progetto ? progetto.titolo : 'Progetto non trovato'}>
   {progetto ? (
     <div>
       <!-- Hero + navigation thumbnails carosello: isola Vue (stato immagine attiva) -->
-      <CaroselloImmagini client:load immagini={progetto.immagini} titolo={progetto.titolo} />
+      <CaroselloImmagini client:load immagini={immaginiCarosello} titolo={progetto.titolo} />
 
       <!-- Metadata + intro -->
       <div class="px-bc-page pt-[64px] pb-[64px]">
@@ -73,7 +96,7 @@ const progettiSuggeriti = progetto
         <div class="bc-spacer-l" />
         <div style="aspect-ratio:676/451; background:rgba(0,0,0,0.1); overflow:hidden;">
           {progetto.immaginiContenuto[0] && (
-            <img src={progetto.immaginiContenuto[0]} alt={progetto.titolo} style="width:100%; height:100%; object-fit:cover;" />
+            <Image src={risolviImmagine(progetto.immaginiContenuto[0])} alt={progetto.titolo} width={1200} format="webp" quality={80} style="width:100%; height:100%; object-fit:cover;" />
           )}
         </div>
         <div class="bc-spacer-r" />
@@ -100,12 +123,12 @@ const progettiSuggeriti = progetto
         <div style="display:flex; gap:24px;">
           <div style="flex:1; min-width:0; aspect-ratio:326/406; background:rgba(0,0,0,0.1); overflow:hidden;">
             {progetto.immaginiContenuto[0] && (
-              <img src={progetto.immaginiContenuto[0]} alt={progetto.titolo} style="width:100%; height:100%; object-fit:cover;" />
+              <Image src={risolviImmagine(progetto.immaginiContenuto[0])} alt={progetto.titolo} width={700} format="webp" quality={80} style="width:100%; height:100%; object-fit:cover;" />
             )}
           </div>
           <div style="flex:1; min-width:0; aspect-ratio:326/406; background:rgba(0,0,0,0.1); overflow:hidden;">
             {progetto.immaginiContenuto[1] && (
-              <img src={progetto.immaginiContenuto[1]} alt={progetto.titolo} style="width:100%; height:100%; object-fit:cover;" />
+              <Image src={risolviImmagine(progetto.immaginiContenuto[1])} alt={progetto.titolo} width={700} format="webp" quality={80} style="width:100%; height:100%; object-fit:cover;" />
             )}
           </div>
         </div>

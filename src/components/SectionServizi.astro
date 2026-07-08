@@ -6,6 +6,9 @@
 // qui li rendiamo prop opzionali con gli stessi default del componente Vue,
 // dato che in questo task l'unico utilizzo reale è da index.vue (che passa
 // solo l'immagine bc-002.jpg via slot #image e lascia body/cta di default).
+import { Image } from 'astro:assets';
+import { risolviImmagine } from '../utils/imagenes';
+
 interface Props {
   imageSrc?: string;
   imageAlt?: string;
@@ -27,7 +30,7 @@ const {
     <!-- Immagine sx: riempie la colonna, quadrata -->
     <div class="flex items-center tablet:py-[32px]">
       <div class="w-full aspect-square bg-bc-black/10 overflow-hidden">
-        <img src={imageSrc} alt={imageAlt} class="w-full h-full object-cover" />
+        <Image src={risolviImmagine(imageSrc)} alt={imageAlt} width={900} format="webp" quality={80} class="w-full h-full object-cover" />
       </div>
     </div>
 

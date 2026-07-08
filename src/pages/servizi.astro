@@ -13,7 +13,9 @@
 // startIndex/offset, touch, pulsanti prev/next) su mobile/tablet. Qui, come
 // già fatto per SectionTeam (Task 5), il carousel è sostituito da scroll
 // orizzontale nativo con overflow-x-auto + scroll-snap CSS, senza isola Vue.
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { risolviImmagine } from '../utils/imagenes';
 
 interface Servizio {
   titolo: string;
@@ -118,7 +120,7 @@ const partner = [
         <!-- Immagine sx: flex-1 fino a xl, 443px fissi da xl -->
         <div class="flex items-center tablet:flex-1 xl:flex-none xl:shrink-0 tablet:py-[80px]">
           <div class="w-full xl:w-[443px] aspect-[443/553] bg-bc-black/10 overflow-hidden">
-            <img src={gruppo.image} alt={gruppo.titolo} class="w-full h-full object-cover" />
+            <Image src={risolviImmagine(gruppo.image)} alt={gruppo.titolo} width={900} format="webp" quality={80} class="w-full h-full object-cover" />
           </div>
         </div>
 
@@ -163,7 +165,7 @@ const partner = [
           {i > 0 && <div class="w-px bg-bc-black self-stretch shrink-0 mx-[40px]" />}
           <div class="flex flex-col gap-[32px] flex-1 py-[64px]">
             <div class="w-full bg-bc-black/10 overflow-hidden" style="aspect-ratio:327/407;">
-              {p.image && <img src={p.image} alt={p.titolo} class="w-full h-full object-cover" />}
+              {p.image && <Image src={risolviImmagine(p.image)} alt={p.titolo} width={700} format="webp" quality={80} class="w-full h-full object-cover" />}
             </div>
             <div class="flex flex-col gap-bc-md">
               <h3 class="font-sans font-normal text-bc-h3 text-bc-black tracking-[0.02em]">{p.titolo}</h3>
@@ -180,7 +182,7 @@ const partner = [
         {partner.map((p) => (
           <div class="flex-none snap-start flex flex-col gap-[32px] w-[85%] tablet:w-[calc(50%-8px)]">
             <div class="w-full bg-bc-black/10 overflow-hidden" style="aspect-ratio:327/407;">
-              {p.image && <img src={p.image} alt={p.titolo} class="w-full h-full object-cover" />}
+              {p.image && <Image src={risolviImmagine(p.image)} alt={p.titolo} width={700} format="webp" quality={80} class="w-full h-full object-cover" />}
             </div>
             <div class="flex flex-col gap-bc-md">
               <h3 class="font-sans font-normal text-bc-h3 text-bc-black tracking-[0.02em]">{p.titolo}</h3>
