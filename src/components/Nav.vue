@@ -89,8 +89,8 @@ watch(menuOpen, (val) => {
             :key="l.to"
             :href="l.to"
             :class="[
-              'font-sans tracking-[0.02em] hover:underline',
-              props.currentPath === l.to ? 'underline' : 'font-light',
+              'font-sans font-light tracking-[0.02em] hover:underline',
+              props.currentPath === l.to ? 'underline' : '',
             ]"
             style="font-size:28px; line-height:1.5;"
             @click="menuOpen = false"
