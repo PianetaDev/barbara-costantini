@@ -18,4 +18,19 @@ describe('servizi', () => {
     expect(html).toContain('Fotografia');
     expect(html).toContain('Diagnostica');
   });
+
+  it('usa <details> nativo per l\'accordion, con il primo servizio di ogni gruppo aperto di default', async () => {
+    const renderers = await loadRenderers([getContainerRenderer()]);
+    const container = await AstroContainer.create({ renderers });
+    const html = await container.renderToString(Servizi);
+
+    // 4 gruppi × 4 servizi = 16 <details> totali per l'accordion.
+    const detailsTags = html.match(/<details\b/g) ?? [];
+    expect(detailsTags.length).toBe(16);
+
+    // Il primo servizio di ciascuno dei 4 gruppi è aperto di default
+    // (equivalente all'originale: aperto.value = { 0: 0, 1: 0, 2: 0, 3: 0 }).
+    const openDetails = html.match(/<details\b[^>]*\bopen\b[^>]*>/g) ?? [];
+    expect(openDetails.length).toBe(4);
+  });
 });

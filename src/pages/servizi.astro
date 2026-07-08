@@ -3,9 +3,12 @@
 // Figma: 590:2491 — Servizi
 // Porta 1:1 da app/pages/servizi.vue. v-reveal rimosso pulito (task #47).
 // Accordion: l'originale gestiva uno stato "aperto/chiuso" per servizio con
-// animazione grid-template-rows via classe .sv-acc-open. Qui sostituito da
-// <details>/<summary> HTML nativo (zero JS), con la stessa transizione CSS
-// sull'apertura (vedi <style> in fondo).
+// animazione grid-template-rows via classe .sv-acc-open, con stato iniziale
+// aperto[g] = 0 per ciascun gruppo (il PRIMO servizio di ogni gruppo è aperto
+// di default al caricamento). Qui sostituito da <details>/<summary> HTML
+// nativo (zero JS): il primo <details> di ogni gruppo ha l'attributo `open`
+// (idx === 0) per riprodurre lo stesso stato iniziale, con la stessa
+// transizione CSS sull'apertura (vedi <style> in fondo).
 // Partner: l'originale ha 3 colonne su desktop e un carousel JS (stato
 // startIndex/offset, touch, pulsanti prev/next) su mobile/tablet. Qui, come
 // già fatto per SectionTeam (Task 5), il carousel è sostituito da scroll
@@ -128,8 +131,8 @@ const partner = [
             {gruppo.titolo}
           </h2>
 
-          {gruppo.servizi.map((s) => (
-            <details class="sv-acc group border-b border-bc-black">
+          {gruppo.servizi.map((s, idx) => (
+            <details class="sv-acc group border-b border-bc-black" open={idx === 0}>
               <summary class="w-full flex items-center justify-between py-[16px] text-left cursor-pointer list-none">
                 <span class="font-sans font-normal text-bc-h4 text-bc-black tracking-[0.02em]">{s.titolo}</span>
                 <span class="sv-acc-icon shrink-0 w-[40px] h-[40px] flex items-center justify-center transition-transform duration-300">
