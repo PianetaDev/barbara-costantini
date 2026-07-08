@@ -2,13 +2,25 @@
 // src/pages/lavori/index.astro
 // Figma: 780:5242 — Lavori: hero split h1 sx + body dx, griglia card max-w-bc-wrap
 // Porta 1:1 da app/pages/lavori/index.vue. v-reveal rimosso pulito (task #47).
+// Task 17: i progetti arrivano da Supabase (bc_projects) via getProgetti(), non più
+// dall'array statico src/data/progetti.ts.
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { PROGETTI } from '../../data/progetti';
+import { getProgetti } from '../../lib/supabase-public';
 import { risolviImmagine } from '../../utils/imagenes';
 
-const progetti = PROGETTI.map((p) => ({
-  codice: `PRJ${p.id}`,
+// output: 'server' (astro.config.mjs) rende già questa pagina SSR di default;
+// l'export esplicito documenta che NON va mai prerenderizzata, dato che i dati
+// arrivano da Supabase ad ogni richiesta e non sono noti a build-time.
+export const prerender = false;
+
+const progettiDb = await getProgetti();
+// bc_projects.id è uno uuid generato da Supabase (gen_random_uuid()), non più il
+// codice progressivo "01".."12" del vecchio array statico: ricostruiamo lo stesso
+// formato di visualizzazione ("PRJ01"...) dalla colonna `ordine` (0-based, stesso
+// ordine di inserimento del seed — vedi scripts/seed-bc-cms.mjs).
+const progetti = progettiDb.map((p) => ({
+  codice: `PRJ${String(p.ordine + 1).padStart(2, '0')}`,
   committente: p.committente,
   titolo: p.titolo,
   slug: p.slug,
