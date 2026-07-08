@@ -8,15 +8,24 @@ import CookieBanner from '../components/CookieBanner.vue';
 interface Props {
   title: string;
   description?: string;
+  /** Se true, {title} viene usato così com'è nel tag <title>, senza concatenare
+   *  " — Barbara Costantini Restauro". Serve alle pagine il cui <title> originale
+   *  (useHead di Nuxt) non seguiva quel pattern, es. la home ("Barbara Costantini
+   *  Restauro" da solo, non "Home — Barbara Costantini Restauro"). */
+  titleIsFull?: boolean;
 }
-const { title, description = "Barbara Costantini Restauro — restauro conservativo di opere d'arte e beni culturali." } = Astro.props;
+const {
+  title,
+  description = "Barbara Costantini Restauro — restauro conservativo di opere d'arte e beni culturali.",
+  titleIsFull = false,
+} = Astro.props;
 ---
 <!doctype html>
 <html lang="it">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title} — Barbara Costantini Restauro</title>
+    <title>{titleIsFull ? title : `${title} — Barbara Costantini Restauro`}</title>
     <meta name="description" content={description} />
     <link rel="icon" href="/logo.svg" />
   </head>

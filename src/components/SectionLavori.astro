@@ -7,7 +7,18 @@
 // tutti i 12 progetti reali) arriva nel Task 6 tramite `src/data/progetti.ts`.
 // Per questo task l'interfaccia Progetto è quella richiesta (slug/titolo/immagini),
 // quindi le card mostrano solo titolo + prima immagine — senza codice/committente,
-// che non fanno parte di questa forma dati e torneranno con il collegamento reale.
+// che non fanno parte di questa forma dati.
+//
+// ATTENZIONE per chi implementa il Task 6: non basta cambiare l'import/i dati.
+// Quando `codice`/`committente` saranno disponibili (vedi Progetto in
+// app/components/bc/SectionLavori.vue), va ANCHE riportato nel markup delle
+// card (sia blocco desktop che blocco tablet/mobile qui sotto) il paragrafo
+// codice + il paragrafo committente prima del titolo — 2 <p> extra per card,
+// come nell'originale Vue (righe ~101-105 e ~154-157):
+//   <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">{p.codice}</p>
+//   <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">{p.committente}</p>
+// prima di <p>{p.titolo}</p>. Non è sufficiente estendere l'interfaccia Progetto:
+// senza questo intervento sul template quei due campi resterebbero invisibili.
 //
 // Il carousel <lg dell'originale (stato JS: startIndex/offset, touch, pulsanti
 // prev/next) è sostituito da uno scroll orizzontale con overflow-x-auto +
