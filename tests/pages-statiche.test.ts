@@ -18,13 +18,14 @@ describe('pagine statiche', () => {
     const renderers = await loadRenderers([getContainerRenderer()]);
     const container = await AstroContainer.create({ renderers });
     const html = await container.renderToString(Privacy);
-    expect(html.length).toBeGreaterThan(500);
+    expect(html).toContain('CSTBBR83M45H501C');
+    expect(html).toContain('14529501000');
   });
 
-  it('cookie-policy.astro renderizza', async () => {
+  it('cookie-policy.astro renderizza la tabella dei cookie tecnici', async () => {
     const renderers = await loadRenderers([getContainerRenderer()]);
     const container = await AstroContainer.create({ renderers });
     const html = await container.renderToString(Cookie);
-    expect(html.length).toBeGreaterThan(300);
+    expect(html).toContain('bc_cookie_consent');
   });
 });
