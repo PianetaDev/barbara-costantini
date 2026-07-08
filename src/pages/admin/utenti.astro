@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { createSupabaseServerClient } from '../../lib/supabase';
+import { checkIsSuperadmin } from '../../lib/admin-roles';
+
+// Astro.locals.user è garantito dal middleware per ogni rotta /admin/* protetta
+// (vedi src/middleware.ts) — questa pagina non è tra i PUBLIC_ADMIN_PATHS.
+const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
+const isSuperadmin = await checkIsSuperadmin(supabase, Astro.locals.user!.id);
+if (!isSuperadmin) {
+  // NOTA: /admin/progetti arriva col Task 13 e non esiste ancora in questo branch —
+  // finché non esiste, questo redirect produce un 404 invece di mostrare la pagina
+  // progetti. È comunque un comportamento accettabile per ora: l'importante è che un
+  // non-superadmin non veda MAI la pagina utenti. Verificare/rimuovere questa nota
+  // quando il Task 13 introduce /admin/progetti.
+  return Astro.redirect('/admin/progetti');
+}
+const { data: utenti } = await supabase.from('bc_admin_users').select('email, role, invited_at');
+---
+<BaseLayout title="Utenti">
+  <section class="px-bc-page py-bc-2xl">
+    <h1 class="text-bc-h1">Utenti</h1>
+    <table class="w-full mt-bc-md">
+      <thead><tr><th>Email</th><th>Ruolo</th><th>Invitato il</th></tr></thead>
+      <tbody>
+        {utenti?.map((u) => (
+          <tr><td>{u.email}</td><td>{u.role}</td><td>{new Date(u.invited_at).toLocaleDateString('it-IT')}</td></tr>
+        ))}
+      </tbody>
+    </table>
+
+    <form id="invite-form" class="flex gap-bc-sm mt-bc-xl">
+      <input type="email" name="email" placeholder="Email nuovo utente" required class="border border-bc-black px-bc-md py-bc-xs" />
+      <select name="role" class="border border-bc-black px-bc-md py-bc-xs">
+        <option value="editor">Editor</option>
+        <option value="superadmin">Superadmin</option>
+      </select>
+      <button type="submit" class="bc-btn">Invita</button>
+    </form>
+  </section>
+  <script>
+    document.getElementById('invite-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target as HTMLFormElement;
+      const formData = new FormData(form);
+      const res = await fetch('/api/admin/utenti/invite', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: formData.get('email'), role: formData.get('role') }),
+      });
+      if (res.ok) window.location.reload();
+      else alert('Errore invio invito');
+    });
+  </script>
+</BaseLayout>
