@@ -1,0 +1,42 @@
+---
+// src/pages/index.astro
+// Porta 1:1 da app/pages/index.vue.
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionLavori from '../components/SectionLavori.astro';
+import SectionServizi from '../components/SectionServizi.astro';
+import { PROGETTI } from '../data/progetti';
+import { risolviImmagine } from '../utils/imagenes';
+
+// Sulla home BcSectionLavori.vue veniva usato senza prop `progetti` (v. app/pages/index.vue),
+// affidandosi ai suoi 3 progetti di default hardcoded (codice "01"/"02"/"03" = id progetto,
+// non "PRJ01" — quel prefisso è usato solo nella pagina di listing /lavori). Qui passiamo
+// gli stessi identici primi 3 progetti reali, ma dalla fonte dati condivisa.
+const progettiHome = PROGETTI.slice(0, 3).map((p) => ({
+  slug: p.slug,
+  titolo: p.titolo,
+  codice: p.id,
+  committente: p.committente,
+  tipo: p.tipo,
+  immagini: p.immagini,
+}));
+---
+<BaseLayout title="Barbara Costantini Restauro" titleIsFull>
+  <!-- Hero: testo sx + foto quadrata dx -->
+  <section class="w-full px-[24px] tablet:px-bc-page overflow-hidden">
+    <div class="grid grid-cols-1 tablet:grid-cols-2 tablet:items-center max-w-bc-wrap mx-auto w-full">
+      <div class="pt-[48px] pb-0 tablet:py-[80px] tablet:pr-[80px] flex flex-col gap-bc-xl justify-center">
+        <h1 class="font-sans text-[28px] lg:text-bc-h1 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">
+          Barbara Costantini Restauro&nbsp;&nbsp;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.
+        </h1>
+        <div><a href="/studio" class="bc-ghost">Scopri il nostro studio →</a></div>
+      </div>
+      <div class="aspect-square overflow-hidden my-[32px]">
+        <Image src={risolviImmagine('/images/bc-095.jpg')} alt="Barbara Costantini restauro" width={1000} format="webp" quality={80} class="w-full h-full object-cover" />
+      </div>
+    </div>
+  </section>
+
+  <SectionLavori progetti={progettiHome} borderTop />
+  <SectionServizi imageSrc="/images/bc-002.jpg" imageAlt="I servizi" />
+</BaseLayout>

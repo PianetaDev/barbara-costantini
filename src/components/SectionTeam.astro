@@ -1,0 +1,73 @@
+---
+// src/components/SectionTeam.astro
+// Figma: 590:1429 — section 2 "Team" — 3 card full-width
+// Porta da app/components/bc/SectionTeam.vue.
+// Desktop (lg+): 3 colonne con divider verticali, come l'originale.
+// Mobile/tablet (<lg): l'originale usa un carousel Vue con stato JS
+// (startIndex/offset, onTouchStart/End, pulsanti prev/next). Qui è sostituito
+// da uno scroll orizzontale nativo con overflow-x-auto + scroll-snap CSS,
+// senza isola JS (v. istruzioni Task 5).
+import { Image } from 'astro:assets';
+import { risolviImmagine } from '../utils/imagenes';
+
+interface Membro {
+  nome: string;
+  ruolo: string;
+  bio: string;
+  image?: string;
+}
+interface Props {
+  membri?: Membro[];
+}
+const {
+  membri = [
+    { nome: 'Nome Cognome 1', ruolo: 'Ruolo', bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat. Mauris euismod orci in mauris vehicula vehicula.' },
+    { nome: 'Nome Cognome 2', ruolo: 'Ruolo', bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat. Mauris euismod orci in mauris vehicula vehicula.' },
+    { nome: 'Nome Cognome 3', ruolo: 'Ruolo', bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat. Mauris euismod orci in mauris vehicula vehicula.' },
+  ],
+} = Astro.props;
+---
+<section class="w-full border-t border-bc-black px-[24px] tablet:px-bc-page overflow-hidden">
+
+  <!-- Desktop: 3 colonne con divider verticali -->
+  <div class="hidden lg:flex lg:items-stretch mx-auto max-w-bc-content w-full">
+    {membri.map((m, i) => (
+      <>
+        {i > 0 && <div class="w-px bg-bc-black self-stretch shrink-0 mx-[40px]" />}
+        <div class="flex flex-col gap-bc-xl flex-1 py-[64px]">
+          <div class="w-full bg-bc-black/10 overflow-hidden" style="aspect-ratio: 327/407;">
+            {m.image && <Image src={risolviImmagine(m.image)} alt={m.nome} width={700} format="webp" quality={80} class="w-full h-full object-cover" />}
+          </div>
+          <div class="flex flex-col gap-bc-md">
+            <div class="flex flex-col gap-[12px]">
+              <h3 class="font-sans text-bc-h3 font-normal text-bc-black tracking-[0.02em]">{m.nome}</h3>
+              <p class="font-sans text-bc-h4 font-normal text-bc-black tracking-[0.02em]">{m.ruolo}</p>
+            </div>
+            <p class="font-sans text-bc-body2 font-light text-bc-black tracking-[0.02em]">{m.bio}</p>
+          </div>
+        </div>
+      </>
+    ))}
+  </div>
+
+  <!-- Mobile + Tablet: scroll orizzontale con snap (sostituisce il carousel JS) -->
+  <div class="lg:hidden mx-auto max-w-bc-content w-full py-bc-2xl">
+    <div class="flex gap-[16px] overflow-x-auto snap-x snap-mandatory pb-bc-xs">
+      {membri.map((m) => (
+        <div class="flex-none snap-start flex flex-col gap-bc-xl w-[85%] md:w-[calc(50%-8px)]">
+          <div class="w-full bg-bc-black/10 overflow-hidden" style="aspect-ratio: 327/407;">
+            {m.image && <Image src={risolviImmagine(m.image)} alt={m.nome} width={700} format="webp" quality={80} class="w-full h-full object-cover" />}
+          </div>
+          <div class="flex flex-col gap-bc-md">
+            <div class="flex flex-col gap-[12px]">
+              <h3 class="font-sans text-bc-h3 font-normal text-bc-black tracking-[0.02em]">{m.nome}</h3>
+              <p class="font-sans text-bc-h4 font-normal text-bc-black tracking-[0.02em]">{m.ruolo}</p>
+            </div>
+            <p class="font-sans text-bc-body2 font-light text-bc-black tracking-[0.02em]">{m.bio}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+</section>

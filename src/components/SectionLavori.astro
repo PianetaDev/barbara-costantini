@@ -1,0 +1,164 @@
+---
+// src/components/SectionLavori.astro
+// Figma: 590:1396 — section 2 "I lavori" — border-bottom, card mix vertical/horizontal
+// Porta da app/components/bc/SectionLavori.vue.
+//
+// Task 6: `codice`/`committente` sono ora reali (src/data/progetti.ts) — mostrati
+// come 2 <p> extra prima del titolo in entrambi i blocchi (desktop e tablet/mobile),
+// come nell'originale Vue (righe ~101-105 e ~154-157).
+//
+// paragrafoSize/cardTitoloSize: opzionali, riprendono le size override usate
+// dall'originale quando il componente è riusato con testo più piccolo (vedi
+// app/pages/lavori/[slug].vue, blocco "Sfoglia altri lavori": paragrafo-size="20px"
+// card-titolo-size="20px"). Se non passate, restano le classi text-bc-* di default.
+//
+// Il carousel <lg dell'originale (stato JS: startIndex/offset, touch, pulsanti
+// prev/next) è sostituito da uno scroll orizzontale con overflow-x-auto +
+// scroll-snap CSS, senza isola JS.
+import { Image } from 'astro:assets';
+import { risolviImmagine } from '../utils/imagenes';
+
+interface Immagine {
+  src: string;
+  label: string;
+  aspetto?: 'h' | 'v';
+}
+interface Progetto {
+  slug: string;
+  titolo: string;
+  codice?: string;
+  committente?: string;
+  tipo?: 'horizontal' | 'vertical';
+  immagini: Immagine[];
+}
+
+// L'aspect ratio della card va calcolato dal campo a livello di progetto `tipo`
+// (come nell'originale app/components/bc/SectionLavori.vue), NON dall'orientamento
+// della prima immagine (`immagini[0].aspetto`): per la maggior parte dei progetti
+// coincidono, ma non è garantito (es. "restauro-testamenti": tipo "vertical" ma
+// immagini[0].aspetto "h"). Fallback su immagini[0]?.aspetto solo se `tipo` non
+// viene passato, per retrocompatibilità.
+function isOrizzontale(p: Progetto): boolean {
+  if (p.tipo) return p.tipo === 'horizontal';
+  return p.immagini[0]?.aspetto === 'h';
+}
+interface Props {
+  progetti: Progetto[];
+  ctaLabel?: string;
+  borderTop?: boolean;
+  borderBottom?: boolean;
+  paragrafoSize?: string;
+  cardTitoloSize?: string;
+}
+const {
+  progetti,
+  ctaLabel = 'Esplora i lavori →',
+  borderTop = false,
+  borderBottom = true,
+  paragrafoSize,
+  cardTitoloSize,
+} = Astro.props;
+---
+<section
+  class:list={[
+    'w-full px-[24px] tablet:px-bc-page overflow-hidden',
+    { 'border-t border-bc-black': borderTop, 'border-b border-bc-black': borderBottom },
+  ]}
+>
+  <div class="grid grid-cols-1 tablet:grid-cols-2 gap-y-[40px] tablet:gap-y-0 py-[48px] tablet:py-[80px] max-w-bc-wrap mx-auto w-full">
+
+    <!-- Testo + CTA: centrato nella colonna sx -->
+    <div class="flex items-center justify-center tablet:px-[40px] lg:px-0">
+      <div class="flex flex-col gap-bc-xl items-start lg:w-[442px]">
+        <p
+          class:list={['font-sans font-light text-bc-black tracking-[0.02em]', !paragrafoSize && 'text-bc-body1']}
+          style={paragrafoSize ? `font-size:${paragrafoSize}` : undefined}
+        >
+          I lavori dello studio si destreggiano tra carta forbice sasso.... Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        </p>
+        <a href="/lavori" class="bc-ghost">{ctaLabel}</a>
+      </div>
+    </div>
+
+    <!-- Card desktop: fisse (lg+) -->
+    <div class="hidden lg:flex gap-[24px] items-start">
+      {progetti.map((p) => (
+        <a
+          href={`/lavori/${p.slug}`}
+          class="flex-1 min-w-0 flex flex-col gap-bc-md items-start group"
+        >
+          <div
+            class:list={[
+              'relative w-full overflow-hidden bg-bc-black/10 ring-0 group-hover:ring-1 group-hover:ring-bc-black transition-shadow',
+              isOrizzontale(p) ? 'aspect-[3/2]' : 'aspect-[4/5]',
+            ]}
+          >
+            {p.immagini[0] && (
+              <Image
+                src={risolviImmagine(p.immagini[0].src)}
+                alt={p.titolo}
+                width={900}
+                format="webp"
+                quality={80}
+                class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+            )}
+          </div>
+          <div class="flex flex-col gap-[4px]">
+            {p.codice && <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">{p.codice}</p>}
+            {p.committente && <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">{p.committente}</p>}
+            <p
+              class:list={['font-sans font-normal text-bc-black tracking-[0.02em] group-hover:underline', !cardTitoloSize && 'text-bc-h4']}
+              style={cardTitoloSize ? `font-size:${cardTitoloSize}` : undefined}
+            >
+              {p.titolo}
+            </p>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <!-- Card tablet+mobile: scroll orizzontale con snap (sostituisce il carousel JS) -->
+    <div class="lg:hidden flex flex-col gap-bc-md flex-1 min-w-0">
+      <div class="overflow-x-auto">
+        <div class="flex gap-[16px] items-start snap-x snap-mandatory">
+          {progetti.map((p) => (
+            <a
+              href={`/lavori/${p.slug}`}
+              class="flex-none snap-start flex flex-col gap-bc-md items-start group w-[calc(50%-8px)]"
+            >
+              <div
+                class:list={[
+                  'relative w-full overflow-hidden bg-bc-black/10',
+                  isOrizzontale(p) ? 'aspect-[3/2]' : 'aspect-[2/3]',
+                ]}
+              >
+                {p.immagini[0] && (
+                  <Image
+                    src={risolviImmagine(p.immagini[0].src)}
+                    alt={p.titolo}
+                    width={600}
+                    format="webp"
+                    quality={80}
+                    class="absolute inset-0 w-full h-full object-cover"
+                  />
+                )}
+              </div>
+              <div class="flex flex-col gap-[4px]">
+                {p.codice && <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">{p.codice}</p>}
+                {p.committente && <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">{p.committente}</p>}
+                <p
+                  class:list={['font-sans font-normal text-bc-black tracking-[0.02em] group-hover:underline', !cardTitoloSize && 'text-bc-h4']}
+                  style={cardTitoloSize ? `font-size:${cardTitoloSize}` : undefined}
+                >
+                  {p.titolo}
+                </p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,62 @@
+---
+// src/components/SectionBio.astro
+// Figma: 817:528 — section 1 bio: immagine 443px sx + divider + testo 443px dx
+// Porta 1:1 da app/components/bc/SectionBio.vue.
+// L'originale usa <slot> per immagine/nome/ruolo/bio; qui diventano prop
+// opzionali con gli stessi default del componente Vue, dato che l'unico
+// utilizzo reale (studio.vue) passa solo l'immagine bc-030.jpg via slot
+// #image e lascia nome/ruolo/bio di default.
+import { Image } from 'astro:assets';
+import { risolviImmagine } from '../utils/imagenes';
+
+interface Props {
+  imageSrc?: string;
+  imageAlt?: string;
+  nome?: string;
+  ruolo?: string;
+  bio?: string;
+}
+const {
+  imageSrc = '',
+  imageAlt = '',
+  nome = 'Barbara Costantini',
+  ruolo = 'Ruolo',
+  bio = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat. Mauris euismod orci in mauris vehicula vehicula.',
+} = Astro.props;
+---
+<section class="w-full border-t border-bc-black px-[24px] tablet:px-bc-page overflow-hidden">
+  <div class="mx-auto max-w-bc-content w-full
+              flex flex-col tablet:flex-row tablet:items-center lg:justify-between
+              py-[48px] tablet:py-0
+              gap-y-bc-xl tablet:gap-y-0">
+
+    <!-- Immagine: flex-1 a tablet, 443px fissi da lg -->
+    <div class="flex items-center tablet:flex-1 lg:flex-none lg:shrink-0 tablet:py-[80px]">
+      <div class="w-full lg:w-[443px] aspect-[443/553] bg-bc-black/10 overflow-hidden">
+        {imageSrc && <Image src={risolviImmagine(imageSrc)} alt={imageAlt} width={900} format="webp" quality={80} class="w-full h-full object-cover" />}
+      </div>
+    </div>
+
+    <!-- Divider verticale (da tablet in su) -->
+    <div class="hidden tablet:block self-stretch w-px bg-bc-black shrink-0 mx-[32px] lg:mx-0" />
+
+    <!-- Testo: flex-1 a tablet, 443px fissi da lg -->
+    <div class="flex flex-col gap-[64px] items-start tablet:flex-1 lg:flex-none lg:w-[443px] lg:shrink-0">
+      <div class="flex flex-col gap-bc-md">
+        <!-- Nome -->
+        <h2 class="font-sans text-[26px] lg:text-bc-h2 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">
+          {nome}
+        </h2>
+        <!-- Ruolo -->
+        <p class="font-sans text-bc-h4 font-normal text-bc-black tracking-[0.02em]">
+          {ruolo}
+        </p>
+      </div>
+      <!-- Bio -->
+      <p class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em]">
+        {bio}
+      </p>
+    </div>
+
+  </div>
+</section>
