@@ -1,0 +1,117 @@
+---
+// src/components/SectionLavori.astro
+// Figma: 590:1396 — section 2 "I lavori" — border-bottom, card mix vertical/horizontal
+// Porta da app/components/bc/SectionLavori.vue.
+//
+// NOTA sulla forma dei dati: la vera sorgente `progetti` (con codice/committente,
+// tutti i 12 progetti reali) arriva nel Task 6 tramite `src/data/progetti.ts`.
+// Per questo task l'interfaccia Progetto è quella richiesta (slug/titolo/immagini),
+// quindi le card mostrano solo titolo + prima immagine — senza codice/committente,
+// che non fanno parte di questa forma dati e torneranno con il collegamento reale.
+//
+// Il carousel <lg dell'originale (stato JS: startIndex/offset, touch, pulsanti
+// prev/next) è sostituito da uno scroll orizzontale con overflow-x-auto +
+// scroll-snap CSS, senza isola JS.
+interface Immagine {
+  src: string;
+  label: string;
+  aspetto?: 'h' | 'v';
+}
+interface Progetto {
+  slug: string;
+  titolo: string;
+  immagini: Immagine[];
+}
+interface Props {
+  progetti: Progetto[];
+  ctaLabel?: string;
+  borderTop?: boolean;
+  borderBottom?: boolean;
+}
+const {
+  progetti,
+  ctaLabel = 'Esplora i lavori →',
+  borderTop = false,
+  borderBottom = true,
+} = Astro.props;
+---
+<section
+  class:list={[
+    'w-full px-[24px] tablet:px-bc-page overflow-hidden',
+    { 'border-t border-bc-black': borderTop, 'border-b border-bc-black': borderBottom },
+  ]}
+>
+  <div class="grid grid-cols-1 tablet:grid-cols-2 gap-y-[40px] tablet:gap-y-0 py-[48px] tablet:py-[80px] max-w-bc-wrap mx-auto w-full">
+
+    <!-- Testo + CTA: centrato nella colonna sx -->
+    <div class="flex items-center justify-center tablet:px-[40px] lg:px-0">
+      <div class="flex flex-col gap-bc-xl items-start lg:w-[442px]">
+        <p class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em]">
+          I lavori dello studio si destreggiano tra carta forbice sasso.... Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        </p>
+        <a href="/lavori" class="bc-ghost">{ctaLabel}</a>
+      </div>
+    </div>
+
+    <!-- Card desktop: fisse (lg+) -->
+    <div class="hidden lg:flex gap-[24px] items-start">
+      {progetti.map((p) => (
+        <a
+          href={`/lavori/${p.slug}`}
+          class="flex-1 min-w-0 flex flex-col gap-bc-md items-start group"
+        >
+          <div
+            class:list={[
+              'relative w-full overflow-hidden bg-bc-black/10 ring-0 group-hover:ring-1 group-hover:ring-bc-black transition-shadow',
+              p.immagini[0]?.aspetto === 'h' ? 'aspect-[3/2]' : 'aspect-[4/5]',
+            ]}
+          >
+            {p.immagini[0] && (
+              <img
+                src={p.immagini[0].src}
+                alt={p.titolo}
+                class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+            )}
+          </div>
+          <p class="font-sans text-bc-h4 font-normal text-bc-black tracking-[0.02em] group-hover:underline">
+            {p.titolo}
+          </p>
+        </a>
+      ))}
+    </div>
+
+    <!-- Card tablet+mobile: scroll orizzontale con snap (sostituisce il carousel JS) -->
+    <div class="lg:hidden flex flex-col gap-bc-md flex-1 min-w-0">
+      <div class="overflow-x-auto">
+        <div class="flex gap-[16px] items-start snap-x snap-mandatory">
+          {progetti.map((p) => (
+            <a
+              href={`/lavori/${p.slug}`}
+              class="flex-none snap-start flex flex-col gap-bc-md items-start group w-[calc(50%-8px)]"
+            >
+              <div
+                class:list={[
+                  'relative w-full overflow-hidden bg-bc-black/10',
+                  p.immagini[0]?.aspetto === 'h' ? 'aspect-[3/2]' : 'aspect-[2/3]',
+                ]}
+              >
+                {p.immagini[0] && (
+                  <img
+                    src={p.immagini[0].src}
+                    alt={p.titolo}
+                    class="absolute inset-0 w-full h-full object-cover"
+                  />
+                )}
+              </div>
+              <p class="font-sans text-bc-h4 font-normal text-bc-black tracking-[0.02em] group-hover:underline">
+                {p.titolo}
+              </p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
