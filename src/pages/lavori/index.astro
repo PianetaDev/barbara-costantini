@@ -14,7 +14,16 @@ import { risolviImmagine } from '../../utils/imagenes';
 // arrivano da Supabase ad ogni richiesta e non sono noti a build-time.
 export const prerender = false;
 
-const progettiDb = await getProgetti();
+// Fix code review Task 17: senza try/catch, un errore Supabase (rete, downtime,
+// rate limit) qui produceva un 500 grezzo per qualunque visitatore pubblico.
+// Fallback minimo: griglia vuota — la pagina si renderizza comunque invece di
+// crashare (nessun banner/messaggio dedicato, non richiesto per questo fix).
+let progettiDb: Awaited<ReturnType<typeof getProgetti>> = [];
+try {
+  progettiDb = await getProgetti();
+} catch {
+  progettiDb = [];
+}
 // bc_projects.id è uno uuid generato da Supabase (gen_random_uuid()), non più il
 // codice progressivo "01".."12" del vecchio array statico: ricostruiamo lo stesso
 // formato di visualizzazione ("PRJ01"...) dalla colonna `ordine` (0-based, stesso

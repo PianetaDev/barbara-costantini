@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { loadRenderers } from 'astro:container';
 import { getContainerRenderer } from '@astrojs/vue/container-renderer';
@@ -10,12 +10,21 @@ const MEMBRI_MOCK = vi.hoisted(() => [
   { id: 'uuid-a', nome: 'Membro Uno Mock', ruolo: 'Restauratrice', bio: 'Bio membro uno.', foto_url: null, ordine: 0 },
   { id: 'uuid-b', nome: 'Membro Due Mock', ruolo: 'Restauratore', bio: 'Bio membro due.', foto_url: null, ordine: 1 },
 ]);
+// vi.fn() (non una semplice funzione async) così il test del path d'errore può
+// sovrascrivere il comportamento di default con mockRejectedValueOnce — fix code
+// review Task 17, stesso pattern di tests/lavori.test.ts.
+const { mockGetTeamMembers } = vi.hoisted(() => ({ mockGetTeamMembers: vi.fn() }));
 vi.mock('../src/lib/supabase-public', () => ({
-  getTeamMembers: async () => MEMBRI_MOCK,
+  getTeamMembers: mockGetTeamMembers,
 }));
 
 import Home from '../src/pages/index.astro';
 import Studio from '../src/pages/studio.astro';
+
+beforeEach(() => {
+  mockGetTeamMembers.mockReset();
+  mockGetTeamMembers.mockImplementation(async () => MEMBRI_MOCK);
+});
 
 describe('home e studio', () => {
   it('index.astro renderizza hero + sezioni', async () => {
@@ -61,5 +70,16 @@ describe('home e studio', () => {
     const html = await container.renderToString(Studio);
     expect(html).toMatch(/<h1[^>]*>\s*Lo studio/);
     expect(html).toMatch(/<title>Lo Studio — Barbara Costantini Restauro<\/title>/);
+  });
+
+  it('studio.astro non crasha se Supabase fallisce (blip di rete): si renderizza senza team invece di un 500', async () => {
+    mockGetTeamMembers.mockRejectedValueOnce(new Error('fetch failed'));
+    const renderers = await loadRenderers([getContainerRenderer()]);
+    const container = await AstroContainer.create({ renderers });
+    const html = await container.renderToString(Studio);
+    expect(html).toMatch(/<h1[^>]*>\s*Lo studio/);
+    for (const m of MEMBRI_MOCK) {
+      expect(html).not.toContain(m.nome);
+    }
   });
 });

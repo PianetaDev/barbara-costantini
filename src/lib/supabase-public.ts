@@ -9,6 +9,15 @@
 // `using (true)` (vedi supabase/migrations/20260708100000_bc_cms_schema.sql, righe
 // 43 e 62), quindi la anon key può leggerle senza autenticazione: non serve nessuna
 // modifica alle policy per questo modulo.
+//
+// NOTA rischio (code review Task 17, punto 4 — non risolto qui, solo documentato):
+// queste funzioni interrogano Supabase in modo sincrono ad ogni richiesta, senza
+// alcun caching/ISR/timeout esplicito. Un blip di rete o un rallentamento di
+// Supabase si traduce 1:1 in una risposta lenta (o, se fallisce, in un errore che i
+// chiamanti devono gestire — vedi src/pages/lavori/index.astro, src/pages/studio.astro,
+// src/pages/lavori/[slug].astro) per ogni visitatore di /lavori, /lavori/[slug] e
+// /studio. Nessun retry né circuit breaker. Da tenere in considerazione nella PR del
+// prossimo task (caching/ISR), fuori scope qui.
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_ANON_KEY);
@@ -70,6 +79,12 @@ export async function getProgetti(): Promise<Progetto[]> {
   if (error) throw error;
   return data ?? [];
 }
+
+// Codice errore PostgREST per ".single() con 0 (o >1) righe" — è così che si
+// distingue "slug inesistente" da un errore Supabase generico (rete, downtime,
+// rate limit). Esportato così il chiamante (src/pages/lavori/[slug].astro) non
+// deve reinventare/duplicare questa stringa magica.
+export const ERRORE_RIGA_NON_TROVATA = 'PGRST116';
 
 export async function getProgetto(slug: string): Promise<Progetto> {
   const { data, error } = await supabase.from('bc_projects').select('*').eq('slug', slug).single();

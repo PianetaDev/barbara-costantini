@@ -3,7 +3,7 @@
 // Le pagine ora leggono da src/lib/supabase-public.ts: qui mockiamo quel modulo così
 // il test non dipende da un Supabase reale, e verifica esplicitamente che i dati
 // arrivino da lì (non più dall'array statico PROGETTI).
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { loadRenderers } from 'astro:container';
 import { getContainerRenderer } from '@astrojs/vue/container-renderer';
@@ -46,17 +46,43 @@ const RIGHE_MOCK = vi.hoisted(() => [
   },
 ]);
 
+// Errore Supabase "0 righe" (.single() senza match) — stesso oggetto che
+// restituirebbe davvero @supabase/postgrest-js: { message, code: 'PGRST116', ... }.
+// Un errore Supabase generico (rete/downtime) invece NON ha questo code, e va
+// distinto (vedi test più sotto e src/pages/lavori/[slug].astro).
+const erroreRigaNonTrovata = vi.hoisted(() => () =>
+  Object.assign(new Error('JSON object requested, multiple (or no) rows returned'), {
+    code: 'PGRST116',
+  }));
+
+// vi.fn() (non semplici funzioni async) così i singoli test possono sovrascrivere
+// il comportamento di default con mockRejectedValueOnce/mockImplementationOnce per
+// simulare un errore Supabase — stesso pattern di tests/admin-pagine.test.ts.
+const { mockGetProgetti, mockGetProgetto } = vi.hoisted(() => ({
+  mockGetProgetti: vi.fn(),
+  mockGetProgetto: vi.fn(),
+}));
+
 vi.mock('../src/lib/supabase-public', () => ({
-  getProgetti: async () => RIGHE_MOCK,
-  getProgetto: async (slug: string) => {
-    const riga = RIGHE_MOCK.find((r) => r.slug === slug);
-    if (!riga) throw new Error(`progetto non trovato: ${slug}`);
-    return riga;
-  },
+  ERRORE_RIGA_NON_TROVATA: 'PGRST116',
+  getProgetti: mockGetProgetti,
+  getProgetto: mockGetProgetto,
 }));
 
 import LavoriIndex from '../src/pages/lavori/index.astro';
 import LavoriSlug from '../src/pages/lavori/[slug].astro';
+import Pagina404 from '../src/pages/404.astro';
+
+beforeEach(() => {
+  mockGetProgetti.mockReset();
+  mockGetProgetto.mockReset();
+  mockGetProgetti.mockImplementation(async () => RIGHE_MOCK);
+  mockGetProgetto.mockImplementation(async (slug: string) => {
+    const riga = RIGHE_MOCK.find((r) => r.slug === slug);
+    if (!riga) throw erroreRigaNonTrovata();
+    return riga;
+  });
+});
 
 describe('lavori (da Supabase)', () => {
   it('index legge i progetti da Supabase (getProgetti), non dall\'array statico', async () => {
@@ -70,6 +96,17 @@ describe('lavori (da Supabase)', () => {
     }
   });
 
+  it('index non crasha se Supabase fallisce (blip di rete): si renderizza con lista vuota invece di un 500', async () => {
+    mockGetProgetti.mockRejectedValueOnce(new Error('fetch failed'));
+    const renderers = await loadRenderers([getContainerRenderer()]);
+    const container = await AstroContainer.create({ renderers });
+    const html = await container.renderToString(LavoriIndex);
+    expect(html).toContain('I lavori');
+    for (const r of RIGHE_MOCK) {
+      expect(html).not.toContain(r.slug);
+    }
+  });
+
   it('[slug] legge il singolo progetto da Supabase (getProgetto)', async () => {
     const renderers = await loadRenderers([getContainerRenderer()]);
     const container = await AstroContainer.create({ renderers });
@@ -79,13 +116,28 @@ describe('lavori (da Supabase)', () => {
     expect(html).not.toContain('Progetto non trovato');
   });
 
-  it('uno slug inesistente non fa crashare la pagina SSR: redirect a /lavori invece di un errore non gestito', async () => {
+  it('uno slug inesistente (PGRST116) risponde con un vero 404, non un redirect/soft-404', async () => {
     const renderers = await loadRenderers([getContainerRenderer()]);
     const container = await AstroContainer.create({ renderers });
+    // Registra /404 nel container così Astro.rewrite('/404') dentro [slug].astro
+    // trova una route da risolvere (vedi commento su insertPageRoute nei sorgenti
+    // di astro/container).
+    container.insertPageRoute('/404', Pagina404);
     const response = await container.renderToResponse(LavoriSlug, {
       params: { slug: 'slug-inesistente-xyz' },
     });
-    expect(response.status).toBe(302);
-    expect(response.headers.get('location')).toBe('/lavori');
+    expect(response.status).toBe(404);
+    const html = await response.text();
+    expect(html).toContain('Progetto non trovato');
+  });
+
+  it('un errore Supabase generico (non "riga non trovata") su [slug] NON viene trattato come 404', async () => {
+    mockGetProgetto.mockRejectedValueOnce(new Error('fetch failed'));
+    const renderers = await loadRenderers([getContainerRenderer()]);
+    const container = await AstroContainer.create({ renderers });
+    container.insertPageRoute('/404', Pagina404);
+    await expect(
+      container.renderToResponse(LavoriSlug, { params: { slug: 'progetto-uno' } }),
+    ).rejects.toThrow('fetch failed');
   });
 });

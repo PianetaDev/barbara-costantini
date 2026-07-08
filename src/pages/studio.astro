@@ -12,7 +12,16 @@ import { risolviImmagine } from '../utils/imagenes';
 
 export const prerender = false;
 
-const membriDb = await getTeamMembers();
+// Fix code review Task 17: senza try/catch, un errore Supabase (rete, downtime,
+// rate limit) qui produceva un 500 grezzo per qualunque visitatore pubblico.
+// Fallback minimo: nessun membro — SectionTeam renderizza comunque (vedi nota
+// sotto), niente banner/messaggio dedicato, non richiesto per questo fix.
+let membriDb: Awaited<ReturnType<typeof getTeamMembers>> = [];
+try {
+  membriDb = await getTeamMembers();
+} catch {
+  membriDb = [];
+}
 const membri = membriDb.map((m) => ({
   nome: m.nome,
   ruolo: m.ruolo ?? '',

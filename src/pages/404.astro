@@ -1,0 +1,18 @@
+---
+// src/pages/404.astro
+// Fix code review Task 17: pagina 404 reale, usata da src/pages/lavori/[slug].astro
+// via Astro.rewrite('/404') quando lo slug richiesto non corrisponde a nessuna riga
+// in bc_projects (errore Supabase PGRST116, "0 righe"). Nessun'altra route del sito
+// aveva finora una 404 dedicata (l'unico caso dinamico era proprio [slug].astro, che
+// prima faceva un redirect 302 verso /lavori — un soft-404 scorretto per SEO/crawler:
+// dice "il contenuto è altrove" invece di "non esiste").
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+Astro.response.status = 404;
+---
+<BaseLayout title="Progetto non trovato">
+  <div class="px-bc-page py-[64px] flex flex-col items-center gap-bc-xl">
+    <p class="font-sans text-bc-black" style="font-size:32px; font-weight:400;">Progetto non trovato</p>
+    <a href="/lavori" class="bc-btn">Torna ai lavori</a>
+  </div>
+</BaseLayout>

@@ -23,31 +23,52 @@ import { Image, getImage } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SectionLavori from '../../components/SectionLavori.astro';
 import CaroselloImmagini from '../../components/CaroselloImmagini.vue';
-import { getProgetto, getProgetti } from '../../lib/supabase-public';
+import { getProgetto, getProgetti, ERRORE_RIGA_NON_TROVATA } from '../../lib/supabase-public';
 import { risolviImmagine } from '../../utils/imagenes';
 
 export const prerender = false;
 
 const { slug } = Astro.params;
 
-// getProgetto usa `.single()`: se lo slug non corrisponde a nessuna riga (o per
-// qualunque altro errore Supabase), lancia — a differenza della versione statica
-// (12 slug noti e validi via getStaticPaths), qui chiunque può visitare un URL con
-// uno slug inesistente, quindi va gestito senza far crashare l'SSR. Stesso pattern
-// già in uso per "record non trovato" nelle pagine admin (vedi
-// src/pages/admin/team/[id].astro, src/pages/admin/progetti/[id].astro).
+// getProgetto usa `.single()`: se lo slug non corrisponde a nessuna riga, Supabase
+// lancia un errore con code === ERRORE_RIGA_NON_TROVATA ("PGRST116") — a differenza
+// della versione statica (12 slug noti e validi via getStaticPaths), qui chiunque
+// può visitare un URL con uno slug inesistente, quindi va gestito senza far
+// crashare l'SSR.
+//
+// Fix code review Task 17: la versione precedente intercettava QUALSIASI errore
+// (non solo "riga non trovata") e faceva un redirect 302 verso /lavori per tutti,
+// cioè: (a) un soft-404 scorretto per SEO/crawler ("il contenuto è altrove" invece
+// di "non esiste"), e (b) un vero errore Supabase transitorio (rete, downtime) su
+// uno slug che ESISTE veniva silenziosamente scambiato per "non trovato" invece di
+// propagarsi come errore reale. Ora si distingue esplicitamente il codice PGRST116
+// (vero 404, via Astro.rewrite verso src/pages/404.astro) da qualunque altro errore
+// (rilanciato: Astro lo gestisce come 500, non fingiamo che il progetto non esista).
 let progetto;
 try {
   progetto = slug ? await getProgetto(slug) : undefined;
-} catch {
-  progetto = undefined;
+} catch (err) {
+  const code = (err as { code?: string } | null)?.code;
+  if (code === ERRORE_RIGA_NON_TROVATA) {
+    return Astro.rewrite('/404');
+  }
+  throw err;
 }
 if (!progetto) {
-  return Astro.redirect('/lavori');
+  return Astro.rewrite('/404');
 }
 
 const progettiSuggeriti = await (async () => {
-  const tutti = await getProgetti();
+  // Stesso principio del Fix 1 (index.astro/studio.astro): il progetto principale
+  // è già caricato con successo a questo punto, un errore Supabase solo su questa
+  // seconda query (i "suggerimenti") non deve far crashare l'intera pagina di
+  // dettaglio — fallback a nessun suggerimento invece di un 500.
+  let tutti: Awaited<ReturnType<typeof getProgetti>> = [];
+  try {
+    tutti = await getProgetti();
+  } catch {
+    return [];
+  }
   const altri = tutti.filter((p) => p.slug !== progetto.slug);
   const curIdx = tutti.findIndex((p) => p.slug === progetto.slug);
   // prendi i successivi in ordine ciclico, escludendo il corrente
