@@ -78,3 +78,34 @@ ecc.), questa whitelist va aggiornata a mano con lo stesso procedimento (Managem
 API, solo append) — altrimenti il reset password torna silenziosamente rotto senza
 errori evidenti in nessun log applicativo, perché a Supabase non risulta niente da
 segnalare: sostituisce e basta.
+
+## Storage (config non-migrazione)
+
+Come per Auth sopra, la creazione di un bucket Storage **non passa da una migrazione
+SQL** e non è tracciata da nessuna parte in `supabase/migrations/` (le policy RLS su
+`storage.objects` sì, quelle sono migrazioni normali — vedi
+`20260709020000_bc_team_storage_policy.sql`).
+
+Il bucket `barbara-costantini-team` (foto profilo membri team, Task 14) è stato
+creato **manualmente**, con uno script Node una tantum che chiama
+`supabase.storage.createBucket('barbara-costantini-team', { public: true, ... })`
+via `@supabase/supabase-js` con la `service_role` key — non con
+`supabase storage buckets create`, perché la CLI installata in questo repo (v2.90.0)
+non supporta quel comando: il gruppo `supabase storage` offre solo `cp`/`ls`/`mv`/`rm`
+per oggetti già esistenti, nessuna gestione dei bucket stessi. (Verificato con
+`supabase storage buckets create --help`: il comando non esiste, l'help ricade su
+quello generico di `supabase storage`.)
+
+Configurazione del bucket:
+
+- nome: `barbara-costantini-team`
+- `public: true` (necessario perché le foto team sono servite pubblicamente sul sito,
+  via `getPublicUrl()` — vedi `src/pages/api/admin/upload-image.ts`)
+
+**Se l'ambiente Supabase viene ricreato da zero** (nuovo progetto, disaster recovery,
+ecc.), questo bucket va ricreato manualmente con lo stesso nome e lo stesso flag
+`public: true` **prima di deployare** — altrimenti l'upload immagine fallisce con un
+errore RLS violation (se le migrazioni sono già state applicate, quindi la policy su
+`storage.objects` esiste ma punta a un bucket inesistente) o bucket-not-found (se le
+migrazioni non sono ancora state applicate), in entrambi i casi senza un segnale
+chiaro della causa reale (bucket mancante) in nessun log applicativo.
