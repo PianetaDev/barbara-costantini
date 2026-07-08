@@ -1,5 +1,6 @@
 // src/lib/supabase.ts
 import { createServerClient, parseCookieHeader } from '@supabase/ssr';
+import { createClient } from '@supabase/supabase-js';
 import type { AstroCookies } from 'astro';
 
 /**
@@ -29,6 +30,18 @@ export function createSupabaseServerClient(cookies: AstroCookies, request: Reque
       },
     },
   });
+}
+
+/**
+ * Crea un client Supabase con `service_role`, che bypassa la RLS e sblocca le API
+ * `auth.admin.*` (es. `inviteUserByEmail`, `deleteUser`) — operazioni non disponibili
+ * con l'anon key usata da createSupabaseServerClient. Non va mai esposto al browser:
+ * usare solo in endpoint server-side (`src/pages/api/**`), mai in codice che finisce
+ * nel bundle client. A differenza del client sopra, non è legato ai cookie della
+ * richiesta: non rappresenta l'utente che chiama, ma un accesso amministrativo.
+ */
+export function createSupabaseAdminClient() {
+  return createClient(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_SERVICE_ROLE_KEY);
 }
 
 /**

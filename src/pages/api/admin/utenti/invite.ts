@@ -1,7 +1,6 @@
 // src/pages/api/admin/utenti/invite.ts
 import type { APIRoute } from 'astro';
-import { createClient } from '@supabase/supabase-js';
-import { createSupabaseServerClient } from '../../../../lib/supabase';
+import { createSupabaseServerClient, createSupabaseAdminClient } from '../../../../lib/supabase';
 import { checkIsSuperadmin } from '../../../../lib/admin-roles';
 import { parseJsonBody } from '../../../../lib/parse-json-body';
 
@@ -26,11 +25,13 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   // Client separato con service_role: inviteUserByEmail (auth.admin.*) richiede privilegi
   // admin, non disponibili con l'anon key del client sopra (usato solo per verificare
   // chi chiama). Non va mai esposto al browser: usato solo qui, lato server.
-  const adminClient = createClient(
-    import.meta.env.SUPABASE_URL,
-    import.meta.env.SUPABASE_SERVICE_ROLE_KEY
-  );
-  const { data: invited, error: inviteError } = await adminClient.auth.admin.inviteUserByEmail(email);
+  const adminClient = createSupabaseAdminClient();
+  // redirectTo esplicito: senza, Supabase manda l'invitato al site_url di default del
+  // progetto condiviso invece che a /admin/imposta-password, dove completa l'onboarding
+  // impostando la password — stesso bug (e stesso fix) di reset-password.ts.
+  const { data: invited, error: inviteError } = await adminClient.auth.admin.inviteUserByEmail(email, {
+    redirectTo: `${new URL(request.url).origin}/admin/imposta-password`,
+  });
   if (inviteError) {
     return new Response(JSON.stringify({ error: inviteError.message }), { status: 400 });
   }

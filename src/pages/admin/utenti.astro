@@ -20,11 +20,21 @@ const { data: utenti } = await supabase.from('bc_admin_users').select('email, ro
 <BaseLayout title="Utenti">
   <section class="px-bc-page py-bc-2xl">
     <h1 class="text-bc-h1">Utenti</h1>
-    <table class="w-full mt-bc-md">
-      <thead><tr><th>Email</th><th>Ruolo</th><th>Invitato il</th></tr></thead>
+    <table class="w-full mt-bc-md border border-bc-black border-collapse">
+      <thead>
+        <tr>
+          <th class="border-b border-bc-black px-bc-md py-bc-xs text-left">Email</th>
+          <th class="border-b border-bc-black px-bc-md py-bc-xs text-left">Ruolo</th>
+          <th class="border-b border-bc-black px-bc-md py-bc-xs text-left">Invitato il</th>
+        </tr>
+      </thead>
       <tbody>
         {utenti?.map((u) => (
-          <tr><td>{u.email}</td><td>{u.role}</td><td>{new Date(u.invited_at).toLocaleDateString('it-IT')}</td></tr>
+          <tr>
+            <td class="border-b border-bc-black px-bc-md py-bc-xs">{u.email}</td>
+            <td class="border-b border-bc-black px-bc-md py-bc-xs">{u.role}</td>
+            <td class="border-b border-bc-black px-bc-md py-bc-xs">{new Date(u.invited_at).toLocaleDateString('it-IT')}</td>
+          </tr>
         ))}
       </tbody>
     </table>
@@ -37,19 +47,28 @@ const { data: utenti } = await supabase.from('bc_admin_users').select('email, ro
       </select>
       <button type="submit" class="bc-btn">Invita</button>
     </form>
+    <p id="invite-error" class="text-red-600 mt-bc-sm hidden"></p>
   </section>
   <script>
-    document.getElementById('invite-form')?.addEventListener('submit', async (e) => {
+    const form = document.getElementById('invite-form') as HTMLFormElement;
+    const errorEl = document.getElementById('invite-error')!;
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const form = e.target as HTMLFormElement;
+      errorEl.classList.add('hidden');
       const formData = new FormData(form);
       const res = await fetch('/api/admin/utenti/invite', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: formData.get('email'), role: formData.get('role') }),
       });
-      if (res.ok) window.location.reload();
-      else alert('Errore invio invito');
+      if (res.ok) {
+        window.location.reload();
+      } else {
+        const { error } = await res.json();
+        errorEl.textContent = error;
+        errorEl.classList.remove('hidden');
+      }
     });
   </script>
 </BaseLayout>
