@@ -1,17 +1,44 @@
 ---
 // src/pages/studio.astro
 // Porta 1:1 da app/pages/studio.vue.
+// Task 17: il team arriva da Supabase (bc_team_members) via getTeamMembers(), non
+// più dall'array `membri` hardcoded (Task 5).
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionBio from '../components/SectionBio.astro';
 import SectionTeam from '../components/SectionTeam.astro';
+import { getTeamMembers } from '../lib/supabase-public';
 import { risolviImmagine } from '../utils/imagenes';
 
-const membri = [
-  { nome: 'Nome Cognome 1', ruolo: 'Ruolo', bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat. Mauris euismod orci in mauris vehicula vehicula.', image: '/images/bc-066.jpg' },
-  { nome: 'Nome Cognome 2', ruolo: 'Ruolo', bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat. Mauris euismod orci in mauris vehicula vehicula.', image: '/images/bc-066.jpg' },
-  { nome: 'Nome Cognome 3', ruolo: 'Ruolo', bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat. Mauris euismod orci in mauris vehicula vehicula.', image: '/images/bc-066.jpg' },
-];
+export const prerender = false;
+
+// Fix code review Task 17: senza try/catch, un errore Supabase (rete, downtime,
+// rate limit) qui produceva un 500 grezzo per qualunque visitatore pubblico.
+// Fallback minimo: nessun membro — SectionTeam renderizza comunque (vedi nota
+// sotto), niente banner/messaggio dedicato, non richiesto per questo fix.
+let membriDb: Awaited<ReturnType<typeof getTeamMembers>> = [];
+try {
+  membriDb = await getTeamMembers();
+} catch {
+  membriDb = [];
+}
+const membri = membriDb.map((m) => ({
+  nome: m.nome,
+  ruolo: m.ruolo ?? '',
+  bio: m.bio ?? '',
+  // SectionTeam passa `image` a risolviImmagine(), che risolve solo path locali
+  // noti tipo "/images/bc-NNN.jpg" (vedi src/utils/imagenes.ts) — nessuno dei 3
+  // membri seedati (scripts/seed-bc-cms.mjs) ha ancora una foto (foto_url è null
+  // per tutti). Se in futuro il CRUD team (Task 14) valorizza foto_url con un URL
+  // remoto di Supabase Storage, quel valore non è risolvibile da risolviImmagine():
+  // qui lo scartiamo esplicitamente invece di lasciarlo passare e far esplodere la
+  // pagina pubblica in SSR per tutti i visitatori.
+  image: m.foto_url && m.foto_url.startsWith('/images/') ? m.foto_url : undefined,
+}));
+// Non assumiamo che ci sia sempre almeno un membro: con `membri` un array vuoto
+// (nessuna riga in bc_team_members), SectionTeam renderizza semplicemente una
+// sezione senza card, senza crashare (il default placeholder del componente si
+// attiva solo se la prop è del tutto omessa, non per un array vuoto esplicito).
 ---
 <BaseLayout title="Lo Studio">
   <!-- Hero: stessa struttura della home — testo sx + foto quadrata dx -->

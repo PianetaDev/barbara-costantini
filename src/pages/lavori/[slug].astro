@@ -1,141 +1,189 @@
 ---
 // src/pages/lavori/[slug].astro
 // Dettaglio lavoro accessibile da Lavori-Bis: layout full, no "prossimo progetto",
-// BcSectionLavori al fondo. Porta da app/pages/lavori/[slug].vue. SSG via getStaticPaths.
+// BcSectionLavori al fondo. Porta da app/pages/lavori/[slug].vue.
 // v-reveal rimosso pulito (task #47). font-garamond -> font-sans.
 //
-// NOTA: `progetto` è ricavato da Astro.params.slug (non solo da Astro.props) così la
-// pagina funziona sia nella build statica reale (getStaticPaths + props) sia quando
-// viene renderizzata via Astro Container passando solo `params` (vedi tests/lavori.test.ts).
+// Task 17: il progetto arriva da Supabase (bc_projects) via getProgetto(slug), non
+// più dall'array statico src/data/progetti.ts. Con questo, `getStaticPaths` non ha
+// più senso (gli slug non sono noti a build-time — un admin può aggiungerne di
+// nuovi via CRUD, Task 11): la pagina diventa dinamica/SSR, come già di default per
+// output: 'server' (astro.config.mjs).
+//
+// NOTA sulla forma dei dati: la riga restituita da Supabase NON ha più `meta`
+// (Committente/Anno annidati in un array) né `immaginiContenuto` — quest'ultimo
+// campo non è mai esistito nello schema bc_projects (vedi
+// supabase/migrations/20260708100000_bc_cms_schema.sql) né nel CRUD admin (vedi
+// src/lib/validation/progetto.ts) né nello script di seed (scripts/seed-bc-cms.mjs):
+// è un gap di modellazione dati preesistente ai Task 10/11/16, non introdotto qui.
+// Le due sezioni che lo usavano ("immagine grande contenuto" e "due immagini
+// affiancate") restano nel markup con lo stesso placeholder di sfondo, ma senza
+// foto finché quel campo non verrà aggiunto allo schema in un task futuro.
 import { Image, getImage } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SectionLavori from '../../components/SectionLavori.astro';
 import CaroselloImmagini from '../../components/CaroselloImmagini.vue';
-import { PROGETTI, type Progetto } from '../../data/progetti';
+import { getProgetto, getProgetti, ERRORE_RIGA_NON_TROVATA } from '../../lib/supabase-public';
 import { risolviImmagine } from '../../utils/imagenes';
 
-// output: 'server' (vedi astro.config.mjs) rende tutte le pagine SSR di default:
-// per avere le 12 pagine di dettaglio prerenderizzate come HTML statico in build
-// (SSG, come da Step 5 del task) va dichiarato esplicitamente qui.
-export const prerender = true;
-
-export function getStaticPaths() {
-  return PROGETTI.map((p) => ({ params: { slug: p.slug }, props: { progetto: p } }));
-}
+export const prerender = false;
 
 const { slug } = Astro.params;
-const progetto: Progetto | undefined = (Astro.props as { progetto?: Progetto })?.progetto
-  ?? PROGETTI.find((p) => p.slug === slug);
 
-const progettiSuggeriti = progetto
-  ? (() => {
-      const altri = PROGETTI.filter((p) => p.slug !== progetto.slug);
-      const curIdx = PROGETTI.findIndex((p) => p.slug === progetto.slug);
-      // prendi i successivi in ordine ciclico, escludendo il corrente
-      const sorted = [...altri.slice(curIdx), ...altri.slice(0, curIdx)];
-      return sorted.slice(0, 3).map((p) => ({
-        slug: p.slug,
-        titolo: p.titolo,
-        codice: p.id,
-        committente: p.meta.find((m) => m.label === 'Committente')?.valore ?? '',
-        tipo: p.tipo,
-        immagini: p.immagini,
-      }));
-    })()
-  : [];
+// getProgetto usa `.single()`: se lo slug non corrisponde a nessuna riga, Supabase
+// lancia un errore con code === ERRORE_RIGA_NON_TROVATA ("PGRST116") — a differenza
+// della versione statica (12 slug noti e validi via getStaticPaths), qui chiunque
+// può visitare un URL con uno slug inesistente, quindi va gestito senza far
+// crashare l'SSR.
+//
+// Fix code review Task 17: la versione precedente intercettava QUALSIASI errore
+// (non solo "riga non trovata") e faceva un redirect 302 verso /lavori per tutti,
+// cioè: (a) un soft-404 scorretto per SEO/crawler ("il contenuto è altrove" invece
+// di "non esiste"), e (b) un vero errore Supabase transitorio (rete, downtime) su
+// uno slug che ESISTE veniva silenziosamente scambiato per "non trovato" invece di
+// propagarsi come errore reale. Ora si distingue esplicitamente il codice PGRST116
+// (vero 404, via Astro.rewrite verso src/pages/404.astro) da qualunque altro errore
+// (rilanciato: Astro lo gestisce come 500, non fingiamo che il progetto non esista).
+let progetto;
+try {
+  progetto = slug ? await getProgetto(slug) : undefined;
+} catch (err) {
+  const code = (err as { code?: string } | null)?.code;
+  if (code === ERRORE_RIGA_NON_TROVATA) {
+    return Astro.rewrite('/404');
+  }
+  throw err;
+}
+if (!progetto) {
+  return Astro.rewrite('/404');
+}
+
+const progettiSuggeriti = await (async () => {
+  // Stesso principio del Fix 1 (index.astro/studio.astro): il progetto principale
+  // è già caricato con successo a questo punto, un errore Supabase solo su questa
+  // seconda query (i "suggerimenti") non deve far crashare l'intera pagina di
+  // dettaglio — fallback a nessun suggerimento invece di un 500.
+  let tutti: Awaited<ReturnType<typeof getProgetti>> = [];
+  try {
+    tutti = await getProgetti();
+  } catch {
+    return [];
+  }
+  const altri = tutti.filter((p) => p.slug !== progetto.slug);
+  const curIdx = tutti.findIndex((p) => p.slug === progetto.slug);
+  // prendi i successivi in ordine ciclico, escludendo il corrente
+  const sorted = [...altri.slice(curIdx), ...altri.slice(0, curIdx)];
+  return sorted.slice(0, 3).map((p) => ({
+    slug: p.slug,
+    titolo: p.titolo,
+    codice: String(p.ordine + 1).padStart(2, '0'),
+    committente: p.committente ?? '',
+    tipo: p.tipo,
+    immagini: p.immagini,
+  }));
+})();
 
 // CaroselloImmagini.vue è un'isola Vue (client:load): il componente <Image> di
 // astro:assets è compilato solo dal compilatore .astro e non è utilizzabile nel
 // template di un .vue. Per ottenere comunque l'ottimizzazione sharp (resize +
-// webp) qui in frontmatter (contesto server, eseguito a build time perché la
-// pagina è prerender) processiamo le immagini con getImage() e passiamo al
-// componente Vue direttamente gli URL già ottimizzati, invece dei path grezzi
-// verso /images/bc-NNN.jpg.
-const immaginiCarosello = progetto
-  ? await Promise.all(
-      progetto.immagini.map(async (img) => {
-        const ottimizzata = await getImage({
-          src: risolviImmagine(img.src),
-          width: img.aspetto === 'v' ? 700 : 1000,
-          format: 'webp',
-          quality: 80,
-        });
-        return { ...img, src: ottimizzata.src };
-      }),
-    )
-  : [];
+// webp) qui in frontmatter (eseguito ad ogni richiesta ora che la pagina è SSR)
+// processiamo le immagini con getImage() e passiamo al componente Vue direttamente
+// gli URL già ottimizzati, invece dei path grezzi verso /images/bc-NNN.jpg.
+const immaginiCarosello = await Promise.all(
+  progetto.immagini.map(async (img) => {
+    const ottimizzata = await getImage({
+      src: risolviImmagine(img.src),
+      width: img.aspetto === 'v' ? 700 : 1000,
+      format: 'webp',
+      quality: 80,
+    });
+    return { ...img, src: ottimizzata.src };
+  }),
+);
+
+// Committente/Anno erano annidati in `progetto.meta` nell'array statico; nella riga
+// Supabase sono colonne dirette. `anno` può essere null (mai valorizzato dal seed
+// dei 12 progetti reali, vedi scripts/seed-bc-cms.mjs) — filtrato via se assente.
+const metaVoci = [
+  { label: 'Committente', valore: progetto.committente },
+  { label: 'Anno', valore: progetto.anno },
+].filter((m): m is { label: string; valore: string } => Boolean(m.valore));
+
+// `intro` era un array di paragrafi nello statico; nella riga Supabase è una
+// stringa unica (i paragrafi sono uniti con "\n\n" dal seed) — si riseparano qui.
+const introParagrafi = progetto.intro ? progetto.intro.split('\n\n') : [];
 ---
-<BaseLayout title={progetto ? progetto.titolo : 'Progetto non trovato'}>
-  {progetto ? (
-    <div>
-      <!-- Hero + navigation thumbnails carosello: isola Vue (stato immagine attiva) -->
-      <CaroselloImmagini client:load immagini={immaginiCarosello} titolo={progetto.titolo} />
+<BaseLayout title={progetto.titolo}>
+  <div>
+    <!-- Hero + navigation thumbnails carosello: isola Vue (stato immagine attiva) -->
+    <CaroselloImmagini client:load immagini={immaginiCarosello} titolo={progetto.titolo} />
 
-      <!-- Metadata + intro -->
-      <div class="px-bc-page pt-[64px] pb-[64px]">
-        <div class="bc-grid bc-2col bc-442 bc-meta max-w-bc-wrap mx-auto">
-          <div class="flex flex-col gap-[12px] bc-sidebar">
-            {progetto.meta.filter((m) => ['Committente', 'Anno'].includes(m.label)).map((m) => (
-              <div class="flex flex-col gap-[4px]">
-                <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.5;">{m.label}:</p>
-                <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.5;">{m.valore}</p>
-              </div>
-            ))}
-          </div>
-          <div class="flex flex-col gap-bc-md bc-intro">
-            {progetto.intro.map((t) => (
-              <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5;">{t}</p>
-            ))}
-          </div>
-          <div class="bc-spacer-r" />
+    <!-- Metadata + intro -->
+    <div class="px-bc-page pt-[64px] pb-[64px]">
+      <div class="bc-grid bc-2col bc-442 bc-meta max-w-bc-wrap mx-auto">
+        <div class="flex flex-col gap-[12px] bc-sidebar">
+          {metaVoci.map((m) => (
+            <div class="flex flex-col gap-[4px]">
+              <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.5;">{m.label}:</p>
+              <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:16px; line-height:1.5;">{m.valore}</p>
+            </div>
+          ))}
         </div>
+        <div class="flex flex-col gap-bc-md bc-intro">
+          {introParagrafi.map((t) => (
+            <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5;">{t}</p>
+          ))}
+        </div>
+        <div class="bc-spacer-r" />
       </div>
+    </div>
 
-      <!-- Immagine grande contenuto -->
-      <div class="px-bc-page pb-[64px] bc-grid bc-2col bc-676">
+    <!-- Immagine grande contenuto -->
+    <div class="px-bc-page pb-[64px] bc-grid bc-2col bc-676">
+      <div class="bc-spacer-l" />
+      <div style="aspect-ratio:676/451; background:rgba(0,0,0,0.1); overflow:hidden;">
+        {progetto.immaginiContenuto?.[0] && (
+          <Image src={risolviImmagine(progetto.immaginiContenuto[0])} alt={progetto.titolo} width={1200} format="webp" quality={80} style="width:100%; height:100%; object-fit:cover;" />
+        )}
+      </div>
+      <div class="bc-spacer-r" />
+    </div>
+
+    <!-- Sezioni testo -->
+    {progetto.sezioni.map((s) => (
+      <div class="px-bc-page pb-[64px] bc-grid bc-2col bc-442">
         <div class="bc-spacer-l" />
-        <div style="aspect-ratio:676/451; background:rgba(0,0,0,0.1); overflow:hidden;">
-          {progetto.immaginiContenuto[0] && (
-            <Image src={risolviImmagine(progetto.immaginiContenuto[0])} alt={progetto.titolo} width={1200} format="webp" quality={80} style="width:100%; height:100%; object-fit:cover;" />
+        <div>
+          <h2 class="font-sans text-bc-black tracking-[0.02em]" style="font-size:24px; line-height:1.5; margin-bottom:32px; font-weight:400;">{s.titolo}</h2>
+          <h3 class="font-sans text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.5; margin-bottom:16px; font-weight:400;">{s.sottotitolo}</h3>
+          {s.testi.map((t) => (
+            <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5; margin-bottom:16px;">{t}</p>
+          ))}
+        </div>
+        <div class="bc-spacer-r" />
+      </div>
+    ))}
+
+    <!-- Due immagini affiancate -->
+    <div class="px-bc-page pb-[64px] bc-grid bc-2col bc-676">
+      <div class="bc-spacer-l" />
+      <div style="display:flex; gap:24px;">
+        <div style="flex:1; min-width:0; aspect-ratio:326/406; background:rgba(0,0,0,0.1); overflow:hidden;">
+          {progetto.immaginiContenuto?.[0] && (
+            <Image src={risolviImmagine(progetto.immaginiContenuto[0])} alt={progetto.titolo} width={700} format="webp" quality={80} style="width:100%; height:100%; object-fit:cover;" />
           )}
         </div>
-        <div class="bc-spacer-r" />
-      </div>
-
-      <!-- Sezioni testo -->
-      {progetto.sezioni.map((s) => (
-        <div class="px-bc-page pb-[64px] bc-grid bc-2col bc-442">
-          <div class="bc-spacer-l" />
-          <div>
-            <h2 class="font-sans text-bc-black tracking-[0.02em]" style="font-size:24px; line-height:1.5; margin-bottom:32px; font-weight:400;">{s.titolo}</h2>
-            <h3 class="font-sans text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.5; margin-bottom:16px; font-weight:400;">{s.sottotitolo}</h3>
-            {s.testi.map((t) => (
-              <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5; margin-bottom:16px;">{t}</p>
-            ))}
-          </div>
-          <div class="bc-spacer-r" />
+        <div style="flex:1; min-width:0; aspect-ratio:326/406; background:rgba(0,0,0,0.1); overflow:hidden;">
+          {progetto.immaginiContenuto?.[1] && (
+            <Image src={risolviImmagine(progetto.immaginiContenuto[1])} alt={progetto.titolo} width={700} format="webp" quality={80} style="width:100%; height:100%; object-fit:cover;" />
+          )}
         </div>
-      ))}
-
-      <!-- Due immagini affiancate -->
-      <div class="px-bc-page pb-[64px] bc-grid bc-2col bc-676">
-        <div class="bc-spacer-l" />
-        <div style="display:flex; gap:24px;">
-          <div style="flex:1; min-width:0; aspect-ratio:326/406; background:rgba(0,0,0,0.1); overflow:hidden;">
-            {progetto.immaginiContenuto[0] && (
-              <Image src={risolviImmagine(progetto.immaginiContenuto[0])} alt={progetto.titolo} width={700} format="webp" quality={80} style="width:100%; height:100%; object-fit:cover;" />
-            )}
-          </div>
-          <div style="flex:1; min-width:0; aspect-ratio:326/406; background:rgba(0,0,0,0.1); overflow:hidden;">
-            {progetto.immaginiContenuto[1] && (
-              <Image src={risolviImmagine(progetto.immaginiContenuto[1])} alt={progetto.titolo} width={700} format="webp" quality={80} style="width:100%; height:100%; object-fit:cover;" />
-            )}
-          </div>
-        </div>
-        <div class="bc-spacer-r" />
       </div>
+      <div class="bc-spacer-r" />
+    </div>
 
-      <!-- Testo metodo -->
+    <!-- Testo metodo -->
+    {progetto.metodo && (
       <div class="px-bc-page pb-[64px] bc-grid bc-2col bc-442">
         <div class="bc-spacer-l" />
         <div style="display:flex; flex-direction:column; gap:32px;">
@@ -146,24 +194,18 @@ const immaginiCarosello = progetto
           )}
         </div>
       </div>
+    )}
 
-      <!-- Sfoglia altri lavori -->
-      <SectionLavori
-        progetti={progettiSuggeriti}
-        ctaLabel="Vedi tutti"
-        paragrafoSize="20px"
-        cardTitoloSize="20px"
-        borderTop
-        borderBottom={false}
-      />
-    </div>
-  ) : (
-    // 404
-    <div class="px-bc-page py-[64px] flex flex-col items-center gap-bc-xl">
-      <p class="font-sans text-bc-black" style="font-size:32px; font-weight:400;">Progetto non trovato</p>
-      <a href="/lavori" class="bc-btn">Torna ai lavori</a>
-    </div>
-  )}
+    <!-- Sfoglia altri lavori -->
+    <SectionLavori
+      progetti={progettiSuggeriti}
+      ctaLabel="Vedi tutti"
+      paragrafoSize="20px"
+      cardTitoloSize="20px"
+      borderTop
+      borderBottom={false}
+    />
+  </div>
 </BaseLayout>
 
 <style>

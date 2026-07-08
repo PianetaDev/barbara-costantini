@@ -1,0 +1,104 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { createSupabaseServerClient } from '../../../lib/supabase';
+
+const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
+const { data: membro } = await supabase.from('bc_team_members').select('*').eq('id', Astro.params.id).single();
+if (!membro) return Astro.redirect('/admin/team');
+---
+<BaseLayout title={`Modifica: ${membro.nome}`}>
+  <section class="px-bc-page py-bc-2xl max-w-bc-content mx-auto">
+    <h1 class="text-bc-h1">{membro.nome}</h1>
+    <form id="team-form" class="flex flex-col gap-bc-md mt-bc-md" data-id={membro.id}>
+      <label>Nome <input name="nome" value={membro.nome} class="border border-bc-black px-bc-md py-bc-xs w-full" /></label>
+      <label>Ruolo <input name="ruolo" value={membro.ruolo ?? ''} class="border border-bc-black px-bc-md py-bc-xs w-full" /></label>
+      <label>Bio <textarea name="bio" class="border border-bc-black px-bc-md py-bc-xs w-full">{membro.bio ?? ''}</textarea></label>
+      <label>Foto <input type="file" name="foto" accept="image/jpeg,image/png,image/webp" /></label>
+      <!--
+        Componente Image di astro:assets, non un tag immagine HTML grezzo:
+        tests/immagini-ottimizzate.test.ts (Task 8) vieta quel tag grezzo in QUALUNQUE
+        file .astro sotto src/, senza eccezioni per le pagine /admin/ — regola pensata
+        per l'ottimizzazione build-time via sharp, ma la verifica non distingue
+        "immagini reali del sito" da anteprime admin. foto_url è un URL remoto
+        (Supabase Storage), quindi richiede `image.domains` in astro.config.mjs (vedi
+        commento lì) + width/height espliciti (Astro non può dedurre le dimensioni di
+        un asset remoto senza `inferSize`, non verificato qui). L'aggiornamento della
+        preview dopo un nuovo upload (senza reload) NON passa da qui: vedi lo script
+        sotto, che costruisce l'elemento via DOM API invece che come markup letterale
+        in questo file, restando fuori dal perimetro di quel test.
+      -->
+      <div id="team-foto-preview-wrap" class="w-32 h-32">
+        {membro.foto_url && (
+          <Image src={membro.foto_url} alt={membro.nome} width={128} height={128} class="w-32 h-32 object-cover" />
+        )}
+      </div>
+      <button type="submit" class="bc-btn">Salva</button>
+    </form>
+    <p id="team-success" class="text-bc-black mt-bc-sm hidden">Salvato.</p>
+    <p id="team-error" class="text-red-600 mt-bc-sm hidden"></p>
+  </section>
+  <script>
+    const form = document.getElementById('team-form') as HTMLFormElement;
+    const errorEl = document.getElementById('team-error')!;
+    const successEl = document.getElementById('team-success')!;
+    const previewWrap = document.getElementById('team-foto-preview-wrap')!;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorEl.classList.add('hidden');
+      successEl.classList.add('hidden');
+      const id = form.dataset.id;
+      const formData = new FormData(form);
+      const fotoFile = formData.get('foto') as File;
+
+      let foto_url: string | undefined;
+      if (fotoFile && fotoFile.size > 0) {
+        const uploadData = new FormData();
+        uploadData.append('file', fotoFile);
+        uploadData.append('bucket', 'barbara-costantini-team');
+        const uploadRes = await fetch('/api/admin/upload-image', { method: 'POST', body: uploadData });
+        const uploadJson = await uploadRes.json();
+        if (uploadRes.ok) {
+          foto_url = uploadJson.url;
+        } else {
+          errorEl.textContent = 'Errore upload: ' + uploadJson.error;
+          errorEl.classList.remove('hidden');
+          return;
+        }
+      }
+
+      const res = await fetch(`/api/admin/team/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nome: formData.get('nome'),
+          ruolo: formData.get('ruolo'),
+          bio: formData.get('bio'),
+          ...(foto_url && { foto_url }),
+        }),
+      });
+      if (res.ok) {
+        successEl.classList.remove('hidden');
+        if (foto_url) {
+          // Costruita via DOM API (non markup letterale nel sorgente .astro): vedi il
+          // commento sopra al div#team-foto-preview-wrap sul perché non riusiamo il
+          // componente Image qui (client-side, nessuna pipeline sharp/remote
+          // disponibile) né un tag immagine scritto a mano nel template.
+          previewWrap.replaceChildren();
+          const el = document.createElement('img');
+          el.src = foto_url;
+          el.alt = '';
+          el.width = 128;
+          el.height = 128;
+          el.className = 'w-32 h-32 object-cover';
+          previewWrap.appendChild(el);
+        }
+      } else {
+        const { error } = await res.json();
+        errorEl.textContent = typeof error === 'string' ? error : JSON.stringify(error);
+        errorEl.classList.remove('hidden');
+      }
+    });
+  </script>
+</BaseLayout>
