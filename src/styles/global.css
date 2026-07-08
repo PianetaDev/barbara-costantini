@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+/*
+ * NOTA per i task 5-7 (porting componenti Nuxt): il vecchio markup usa la
+ * classe `font-garamond` (alias storico, punta comunque a Public Sans).
+ * In questa sintassi v4 non esiste più `font-garamond` come utility —
+ * traducila in `font-sans` (o `font-display`, sono lo stesso font family)
+ * quando porti i componenti, altrimenti l'elemento degrada silenziosamente
+ * al sans-serif di default del browser invece di Public Sans.
+ */
+
 @theme {
   /* Breakpoint custom (variante es: tablet:, bc:) */
   --breakpoint-tablet: 844px;
@@ -59,11 +68,10 @@
   --spacing-bc-2xl: 48px;
   --spacing-bc-4xl: 80px;
   --spacing-bc-page: 32px;
-}
 
-:root {
-  --bc-content: 1140px;
-  --bc-wrap: 1440px;
+  /* Container/max-width custom (namespace corretto per max-w-* in v4: --container-*) */
+  --container-bc-content: 1140px;
+  --container-bc-wrap: 1440px;
 }
 
 @font-face {
@@ -91,8 +99,7 @@
 @layer base {
   html {
     font-family: 'Public Sans', system-ui, sans-serif;
-    background-color: #F7F6EF;
-    color: #000000;
+    @apply bg-bc-canvas text-bc-black;
   }
   h1, h2, h3 { font-family: 'Public Sans', system-ui, sans-serif; }
 }
