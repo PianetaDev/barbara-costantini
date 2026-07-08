@@ -3,10 +3,13 @@ import { defineMiddleware } from 'astro:middleware';
 import { createSupabaseServerClient } from './lib/supabase';
 
 // Rotte sotto /admin/* raggiungibili senza una sessione valida: la pagina di login
-// stessa, e la pagina di impostazione password dopo un reset (il token di recovery
-// vive nel fragment dell'URL, che il browser non invia mai al server — quindi al
-// momento della richiesta server-side non esiste ancora nessuna sessione da
-// verificare; è il client-side script della pagina a stabilirla).
+// stessa, e la pagina di impostazione password dopo un reset. Quest'ultima arriva
+// con `?code=...` in query string (PKCE flow, non un fragment come si potrebbe
+// pensare — il codice viaggia fino al server) ma al momento della richiesta non
+// esiste ancora nessuna sessione: è il frontmatter della pagina stessa (non questo
+// middleware) a scambiare il code per una sessione via `exchangeCodeForSession`,
+// che scrive i cookie di sessione solo DOPO essere stata raggiunta. Se questa rotta
+// fosse protetta qui, il redirect scatterebbe prima che lo scambio possa avvenire.
 const PUBLIC_ADMIN_PATHS = ['/admin/login', '/admin/imposta-password'];
 
 export const onRequest = defineMiddleware(async (context, next) => {
