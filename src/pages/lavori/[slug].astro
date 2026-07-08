@@ -36,6 +36,7 @@ const progettiSuggeriti = progetto
         titolo: p.titolo,
         codice: p.id,
         committente: p.meta.find((m) => m.label === 'Committente')?.valore ?? '',
+        tipo: p.tipo,
         immagini: p.immagini,
       }));
     })()

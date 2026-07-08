@@ -25,7 +25,19 @@ interface Progetto {
   titolo: string;
   codice?: string;
   committente?: string;
+  tipo?: 'horizontal' | 'vertical';
   immagini: Immagine[];
+}
+
+// L'aspect ratio della card va calcolato dal campo a livello di progetto `tipo`
+// (come nell'originale app/components/bc/SectionLavori.vue), NON dall'orientamento
+// della prima immagine (`immagini[0].aspetto`): per la maggior parte dei progetti
+// coincidono, ma non è garantito (es. "restauro-testamenti": tipo "vertical" ma
+// immagini[0].aspetto "h"). Fallback su immagini[0]?.aspetto solo se `tipo` non
+// viene passato, per retrocompatibilità.
+function isOrizzontale(p: Progetto): boolean {
+  if (p.tipo) return p.tipo === 'horizontal';
+  return p.immagini[0]?.aspetto === 'h';
 }
 interface Props {
   progetti: Progetto[];
@@ -75,7 +87,7 @@ const {
           <div
             class:list={[
               'relative w-full overflow-hidden bg-bc-black/10 ring-0 group-hover:ring-1 group-hover:ring-bc-black transition-shadow',
-              p.immagini[0]?.aspetto === 'h' ? 'aspect-[3/2]' : 'aspect-[4/5]',
+              isOrizzontale(p) ? 'aspect-[3/2]' : 'aspect-[4/5]',
             ]}
           >
             {p.immagini[0] && (
@@ -112,7 +124,7 @@ const {
               <div
                 class:list={[
                   'relative w-full overflow-hidden bg-bc-black/10',
-                  p.immagini[0]?.aspetto === 'h' ? 'aspect-[3/2]' : 'aspect-[2/3]',
+                  isOrizzontale(p) ? 'aspect-[3/2]' : 'aspect-[2/3]',
                 ]}
               >
                 {p.immagini[0] && (
