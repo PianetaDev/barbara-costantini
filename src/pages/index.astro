@@ -4,14 +4,19 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionLavori from '../components/SectionLavori.astro';
 import SectionServizi from '../components/SectionServizi.astro';
+import { PROGETTI } from '../data/progetti';
 
-// TODO(Task 6): sostituire con `import { PROGETTI } from '../data/progetti';`
-// quando il Task 6 crea il file dati reale con tutti i 12 progetti.
-const progettiPlaceholder = [
-  { slug: 'placeholder-1', titolo: 'Progetto placeholder 1', immagini: [{ src: '/images/bc-001.jpg', label: '01' }] },
-  { slug: 'placeholder-2', titolo: 'Progetto placeholder 2', immagini: [{ src: '/images/bc-004.jpg', label: '01' }] },
-  { slug: 'placeholder-3', titolo: 'Progetto placeholder 3', immagini: [{ src: '/images/bc-007.jpg', label: '01' }] },
-];
+// Sulla home BcSectionLavori.vue veniva usato senza prop `progetti` (v. app/pages/index.vue),
+// affidandosi ai suoi 3 progetti di default hardcoded (codice "01"/"02"/"03" = id progetto,
+// non "PRJ01" — quel prefisso è usato solo nella pagina di listing /lavori). Qui passiamo
+// gli stessi identici primi 3 progetti reali, ma dalla fonte dati condivisa.
+const progettiHome = PROGETTI.slice(0, 3).map((p) => ({
+  slug: p.slug,
+  titolo: p.titolo,
+  codice: p.id,
+  committente: p.committente,
+  immagini: p.immagini,
+}));
 ---
 <BaseLayout title="Barbara Costantini Restauro" titleIsFull>
   <!-- Hero: testo sx + foto quadrata dx -->
@@ -29,6 +34,6 @@ const progettiPlaceholder = [
     </div>
   </section>
 
-  <SectionLavori progetti={progettiPlaceholder} borderTop />
+  <SectionLavori progetti={progettiHome} borderTop />
   <SectionServizi imageSrc="/images/bc-002.jpg" imageAlt="I servizi" />
 </BaseLayout>
