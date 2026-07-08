@@ -1,3 +1,24 @@
+<!--
+  PATTERN DI RIFERIMENTO — isola Vue collegata a un form Astro senza genitore Vue.
+
+  Questo componente stabilisce il pattern da riusare per i prossimi CRUD (Team, pagine
+  di contenuto, ecc.): un'isola Astro/Vue (`client:load`/`client:idle`) montata dentro
+  un <form> scritto in .astro puro non ha modo di far arrivare il proprio stato al
+  submit handler via v-model/emit (Astro non inoltra gli emit Vue come eventi DOM — vedi
+  commento più sotto). La soluzione è far sì che l'isola stessa renderizzi un
+  <input type="hidden" :name :value> dentro il proprio template: essendo un discendente
+  reale del <form> (Astro monta le isole in light DOM, non Shadow DOM), il suo valore
+  arriva a `new FormData(form)` come qualunque altro campo nativo, senza bisogno di
+  eventi globali o convenzioni ad hoc.
+
+  Generalizzazione per campi non-stringa (es. `sezioni`/`immagini`, che sono
+  array/oggetti): l'hidden input HTML può contenere solo testo, quindi va serializzato
+  con `JSON.stringify(valore)` come `:value`, e il lato server (endpoint API o comunque
+  chi legge `formData.get(...)`) deve fare `JSON.parse(...)` prima di validare con Zod.
+  Questo componente non ne ha bisogno perché `intro` è già una stringa (HTML), ma un
+  futuro editor per `sezioni`/`immagini` che segua lo stesso pattern dovrà aggiungere
+  quel passaggio di (de)serializzazione.
+-->
 <template>
   <div>
     <div class="flex gap-bc-2xs mb-bc-2xs">

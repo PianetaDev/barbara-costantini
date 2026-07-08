@@ -33,9 +33,17 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
     return new Response(JSON.stringify({ error: z.flattenError(parsed.error) }), { status: 400 });
   }
 
-  const { error } = await supabase.from('bc_projects').update(parsed.data).eq('id', params.id);
+  // .select('id'): senza, `update().eq('id', ...)` non imposta `error` quando la eq
+  // non matcha nessuna riga (0 righe modificate non è un errore per Postgres/PostgREST)
+  // — un PATCH verso un id inesistente/già cancellato tornerebbe comunque 200 senza
+  // aver scritto nulla. Con .select('id') possiamo distinguere i due casi guardando
+  // se l'array di righe aggiornate è vuoto.
+  const { data, error } = await supabase.from('bc_projects').update(parsed.data).eq('id', params.id).select('id');
   if (error) {
     return new Response(JSON.stringify({ error: error.message }), { status: 400 });
+  }
+  if (!data || data.length === 0) {
+    return new Response(JSON.stringify({ error: 'Progetto non trovato' }), { status: 404 });
   }
   return new Response(JSON.stringify({ ok: true }), { status: 200 });
 };
