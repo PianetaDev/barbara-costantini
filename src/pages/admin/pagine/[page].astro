@@ -1,0 +1,76 @@
+---
+// src/pages/admin/pagine/[page].astro
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { createSupabaseServerClient } from '../../../lib/supabase';
+import { pageContentSchema } from '../../../lib/validation/page-content';
+
+// Riusa l'array della whitelist Zod invece di duplicarlo qui a mano (DRY con
+// src/lib/validation/page-content.ts, unica fonte di verità sulle pagine ammesse).
+const PAGINE_VALIDE = pageContentSchema.shape.page.options;
+const pageParam = Astro.params.page;
+const isPaginaValida = (PAGINE_VALIDE as readonly string[]).includes(pageParam ?? '');
+
+const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
+const { data: pagina } = isPaginaValida
+  ? await supabase.from('bc_page_content').select('*').eq('page', pageParam).single()
+  : { data: null };
+// Se la pagina richiesta non è tra le 4 valide E non esiste ancora una riga per essa
+// (caso normale per una whitelist inesistente: la query sopra non viene nemmeno
+// eseguita), mostriamo "Pagina non trovata" invece di un form vuoto silenzioso — non
+// è un problema di sicurezza (RLS blocca comunque scritture non autorizzate, e la
+// select pubblica è `using (true)`), ma un form vuoto per una pagina inesistente è
+// un'esperienza confusa per chi sta amministrando i contenuti.
+const paginaNonTrovata = !isPaginaValida;
+const content = pagina?.content ?? {};
+---
+<BaseLayout title={paginaNonTrovata ? 'Pagina non trovata' : `Modifica pagina: ${pageParam}`}>
+  <section class="px-bc-page py-bc-2xl max-w-bc-content mx-auto">
+    {paginaNonTrovata ? (
+      <>
+        <h1 class="text-bc-h1">Pagina non trovata</h1>
+        <p class="mt-bc-sm">
+          "{pageParam}" non è una pagina gestibile da qui. Pagine disponibili: {PAGINE_VALIDE.join(', ')}.
+        </p>
+      </>
+    ) : (
+      <>
+        <h1 class="text-bc-h1">Pagina: {pageParam}</h1>
+        <form id="page-form" class="flex flex-col gap-bc-md mt-bc-md">
+          {Object.entries(content).map(([chiave, valore]) => (
+            <label>{chiave} <input name={chiave} value={String(valore)} class="border border-bc-black px-bc-md py-bc-xs w-full" /></label>
+          ))}
+          <button type="submit" class="bc-btn">Salva</button>
+        </form>
+        <p id="page-success" class="text-bc-black mt-bc-sm hidden">Salvato.</p>
+        <p id="page-error" class="text-red-600 mt-bc-sm hidden"></p>
+      </>
+    )}
+  </section>
+  <script define:vars={{ page: pageParam }}>
+    const form = document.getElementById('page-form');
+    if (form) {
+      const errorEl = document.getElementById('page-error');
+      const successEl = document.getElementById('page-success');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errorEl.classList.add('hidden');
+        successEl.classList.add('hidden');
+        const formData = new FormData(form);
+        const content = Object.fromEntries(formData.entries());
+        const res = await fetch(`/api/admin/pagine/${page}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content }),
+        });
+        if (res.ok) {
+          successEl.classList.remove('hidden');
+        } else {
+          const { error } = await res.json();
+          errorEl.textContent = typeof error === 'string' ? error : JSON.stringify(error);
+          errorEl.classList.remove('hidden');
+        }
+      });
+    }
+  </script>
+</BaseLayout>
