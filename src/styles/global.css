@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+@theme {
+  /* Breakpoint custom (variante es: tablet:, bc:) */
+  --breakpoint-tablet: 844px;
+  --breakpoint-md2: 860px;
+  --breakpoint-md3: 960px;
+  --breakpoint-bc: 1440px;
+
+  /* Colori */
+  --color-bc-canvas: #F7F6EF;
+  --color-bc-black: #000000;
+  --color-bc-white: #FFFFFF;
+
+  /* Font family */
+  --font-display: "Public Sans", system-ui, sans-serif;
+  --font-sans: "Public Sans", system-ui, sans-serif;
+
+  /* Scala tipografica (dimensione + line-height + letter-spacing per ciascuna) */
+  --text-bc-label2: 14px;
+  --text-bc-label2--line-height: 1.2;
+  --text-bc-label2--letter-spacing: 0.028em;
+  --text-bc-label1: 16px;
+  --text-bc-label1--line-height: 1.2;
+  --text-bc-label1--letter-spacing: 0.02em;
+  --text-bc-nav: 16px;
+  --text-bc-nav--line-height: 1.2;
+  --text-bc-nav--letter-spacing: 0.02em;
+  --text-bc-btn: 16px;
+  --text-bc-btn--line-height: 1.2;
+  --text-bc-btn--letter-spacing: 0.02em;
+  --text-bc-body2: 16px;
+  --text-bc-body2--line-height: 1.5;
+  --text-bc-body2--letter-spacing: 0.02em;
+  --text-bc-body1: 20px;
+  --text-bc-body1--line-height: 1.5;
+  --text-bc-body1--letter-spacing: 0.02em;
+  --text-bc-sub: 28px;
+  --text-bc-sub--line-height: 1.5;
+  --text-bc-h4: 20px;
+  --text-bc-h4--line-height: 1.5;
+  --text-bc-h4--letter-spacing: 0.02em;
+  --text-bc-h3: 24px;
+  --text-bc-h3--line-height: 1.5;
+  --text-bc-h3--letter-spacing: 0.02em;
+  --text-bc-h2: 28px;
+  --text-bc-h2--line-height: 1.5;
+  --text-bc-h2--letter-spacing: 0.02em;
+  --text-bc-h1: 32px;
+  --text-bc-h1--line-height: 1.5;
+  --text-bc-h1--letter-spacing: 0.02em;
+
+  /* Spacing custom (usato da p-*, m-*, gap-*, ecc.) */
+  --spacing-bc-2xs: 4px;
+  --spacing-bc-xs: 8px;
+  --spacing-bc-sm: 12px;
+  --spacing-bc-md: 16px;
+  --spacing-bc-xl: 32px;
+  --spacing-bc-2xl: 48px;
+  --spacing-bc-4xl: 80px;
+  --spacing-bc-page: 32px;
+}
+
+:root {
+  --bc-content: 1140px;
+  --bc-wrap: 1440px;
+}
+
+@font-face {
+  font-family: 'Public Sans';
+  src: url('/fonts/PublicSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Public Sans';
+  src: url('/fonts/PublicSans-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Public Sans';
+  src: url('/fonts/PublicSans-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  html {
+    font-family: 'Public Sans', system-ui, sans-serif;
+    background-color: #F7F6EF;
+    color: #000000;
+  }
+  h1, h2, h3 { font-family: 'Public Sans', system-ui, sans-serif; }
+}
+
+@layer components {
+  .bc-btn {
+    @apply inline-flex items-center w-fit
+           border border-bc-black
+           px-bc-md py-bc-xs
+           font-sans text-bc-btn font-normal text-bc-black
+           tracking-[0.02em]
+           hover:bg-bc-black hover:text-bc-canvas
+           transition-colors duration-200;
+  }
+  .bc-ghost {
+    @apply inline-flex flex-col items-start w-fit py-3
+           font-sans text-bc-btn font-normal text-bc-black tracking-[0.02em]
+           no-underline hover:opacity-60 transition-opacity duration-200;
+  }
+  .bc-ghost::after {
+    content: '';
+    @apply block h-px w-full bg-bc-black;
+  }
+}
