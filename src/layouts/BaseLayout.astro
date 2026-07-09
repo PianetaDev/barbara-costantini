@@ -19,6 +19,11 @@ const {
   description = "Barbara Costantini Restauro — restauro conservativo di opere d'arte e beni culturali.",
   titleIsFull = false,
 } = Astro.props;
+
+// Widget segnalazioni "Segnale" → crea GitHub Issue su PianetaDev/barbara-costantini.
+// data-source distingue chi segnala (pubblico del sito vs. team che lavora nell'admin),
+// stessa convenzione già usata su Apotheke (vedi apotheke-cms-improvements).
+const segnaleSource = Astro.url.pathname.startsWith('/admin') ? 'admin' : 'public';
 ---
 <!doctype html>
 <html lang="it">
@@ -28,6 +33,13 @@ const {
     <title>{titleIsFull ? title : `${title} — Barbara Costantini Restauro`}</title>
     <meta name="description" content={description} />
     <link rel="icon" href="/logo.svg" />
+    <script
+      is:inline
+      src="https://segnale-phi.vercel.app/widget.js"
+      defer
+      data-project="barbara-costantini"
+      data-source={segnaleSource}
+    ></script>
   </head>
   <body class="bg-bc-canvas text-bc-black font-sans">
     <Nav client:load currentPath={Astro.url.pathname} />
