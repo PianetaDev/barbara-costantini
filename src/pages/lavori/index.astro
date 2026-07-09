@@ -21,8 +21,13 @@ export const prerender = false;
 let progettiDb: Awaited<ReturnType<typeof getProgetti>> = [];
 try {
   progettiDb = await getProgetti();
-} catch {
-  progettiDb = [];
+} catch (err) {
+  // Senza questo log, un guasto di config (Supabase giù, anon key ruotata, RLS
+  // rotta) rende /lavori silenziosamente vuota per ogni visitatore — nessun
+  // errore visibile, nessun log. Stesso pattern di bug scoperto oggi su
+  // Apotheke (fallback MOCK_* silenzioso), corretto qui allo stesso modo.
+  console.error('[lavori/index] getProgetti() ha fallito, fallback su griglia vuota:', err)
+  progettiDb = []
 }
 // bc_projects.id è uno uuid generato da Supabase (gen_random_uuid()), non più il
 // codice progressivo "01".."12" del vecchio array statico: ricostruiamo lo stesso
