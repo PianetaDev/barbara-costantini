@@ -23,5 +23,13 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    ssr: {
+      // Il tracciamento dipendenze di Vercel non trova sempre `tslib`
+      // annidato nello store pnpm (es. @supabase/functions-js -> tslib),
+      // causando "Cannot find module 'tslib'" a runtime. Bundlare la
+      // catena @supabase/* invece di lasciarla esterna elimina il problema
+      // alla radice: niente require() a runtime da tracciare.
+      noExternal: [/^@supabase\//],
+    },
   },
 });
