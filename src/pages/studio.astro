@@ -19,8 +19,11 @@ export const prerender = false;
 let membriDb: Awaited<ReturnType<typeof getTeamMembers>> = [];
 try {
   membriDb = await getTeamMembers();
-} catch {
-  membriDb = [];
+} catch (err) {
+  // Vedi nota gemella in src/pages/lavori/index.astro: senza log, un guasto di
+  // config rende /studio silenziosamente vuota per ogni visitatore.
+  console.error('[studio] getTeamMembers() ha fallito, fallback su team vuoto:', err)
+  membriDb = []
 }
 const membri = membriDb.map((m) => ({
   nome: m.nome,

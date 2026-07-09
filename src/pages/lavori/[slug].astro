@@ -66,8 +66,11 @@ const progettiSuggeriti = await (async () => {
   let tutti: Awaited<ReturnType<typeof getProgetti>> = [];
   try {
     tutti = await getProgetti();
-  } catch {
-    return [];
+  } catch (err) {
+    // Vedi nota gemella in src/pages/lavori/index.astro: senza log, un guasto di
+    // config elimina silenziosamente i suggerimenti su ogni pagina progetto.
+    console.error('[lavori/[slug]] getProgetti() per i suggerimenti ha fallito:', err)
+    return []
   }
   const altri = tutti.filter((p) => p.slug !== progetto.slug);
   const curIdx = tutti.findIndex((p) => p.slug === progetto.slug);
