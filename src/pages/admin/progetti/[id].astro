@@ -8,7 +8,26 @@ const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
 const { data: progetto } = await supabase.from('bc_projects').select('*').eq('id', Astro.params.id).single();
 if (!progetto) return Astro.redirect('/admin/progetti');
 
-const blocks = (progetto as any).blocks ?? [];
+// Se blocks esiste in DB usalo, altrimenti converti sezioni+metodo esistenti
+const existingBlocks = (progetto as any).blocks;
+const blocks: any[] = (existingBlocks && existingBlocks.length > 0)
+  ? existingBlocks
+  : [
+      // intro → testo iniziale
+      ...(progetto.intro
+        ? progetto.intro.split('\n\n').filter(Boolean).map((t: string) => ({ type: 'text', content: t }))
+        : []),
+      // sezioni → h2 + h3 + testi
+      ...(progetto.sezioni ?? []).flatMap((s: any) => [
+        ...(s.titolo ? [{ type: 'h2', content: s.titolo }] : []),
+        ...(s.sottotitolo ? [{ type: 'h3', content: s.sottotitolo }] : []),
+        ...(s.testi ?? []).map((t: string) => ({ type: 'text', content: t })),
+      ]),
+      // metodo → quote
+      ...(progetto.metodo
+        ? [{ type: 'quote', text: (progetto.metodo.testi ?? []).join('\n\n'), citazione: progetto.metodo.citazione ?? '' }]
+        : []),
+    ];
 ---
 <AdminLayout title={progetto.titolo} backHref="/admin/progetti" backLabel="Torna ai lavori">
   <div class="max-w-[720px] flex flex-col gap-[56px]">
