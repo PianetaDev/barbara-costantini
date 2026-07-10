@@ -19,13 +19,16 @@ interface Membro {
 interface Props {
   membri?: Membro[];
 }
+const BIO_PLACEHOLDER = 'Biografia Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat. Mauris euismod orci in mauris vehicula vehicula. Pellentesque ornare ullamcorper lorem, sit amet hendrerit purus molestie sed.';
 const {
   membri = [
-    { nome: 'Nome Cognome 1', ruolo: 'Ruolo', bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat. Mauris euismod orci in mauris vehicula vehicula.' },
-    { nome: 'Nome Cognome 2', ruolo: 'Ruolo', bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat. Mauris euismod orci in mauris vehicula vehicula.' },
-    { nome: 'Nome Cognome 3', ruolo: 'Ruolo', bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia. Etiam gravida sapien arcu, ac convallis elit bibendum quis. Ut elementum mi eu dui tincidunt laoreet. Proin neque lorem, dapibus eu eros in, hendrerit laoreet erat. Mauris euismod orci in mauris vehicula vehicula.' },
+    { nome: 'Nome Cognome 1', ruolo: 'Ruolo', bio: BIO_PLACEHOLDER },
+    { nome: 'Nome Cognome 2', ruolo: 'Ruolo', bio: BIO_PLACEHOLDER },
+    { nome: 'Nome Cognome 3', ruolo: 'Ruolo', bio: BIO_PLACEHOLDER },
   ],
 } = Astro.props;
+
+const isRemote = (src?: string) => !!src && (src.startsWith('http://') || src.startsWith('https://'));
 ---
 <section class="w-full border-t border-bc-black px-[24px] tablet:px-bc-page">
 
@@ -36,7 +39,10 @@ const {
         {i > 0 && <div class="w-px bg-bc-black self-stretch shrink-0 mx-[40px]" />}
         <div class="flex flex-col gap-bc-xl flex-1 py-[64px]">
           <div class="w-full bg-bc-black/10 overflow-hidden" style="aspect-ratio: 327/407;">
-            {m.image && <Image src={risolviImmagine(m.image)} alt={m.nome} width={700} format="webp" quality={80} class="w-full h-full object-cover" />}
+            {m.image && (isRemote(m.image)
+              ? <img src={m.image} alt={m.nome} width={700} class="w-full h-full object-cover" loading="lazy" />
+              : <Image src={risolviImmagine(m.image)} alt={m.nome} width={700} format="webp" quality={80} class="w-full h-full object-cover" />
+            )}
           </div>
           <div class="flex flex-col gap-bc-md">
             <div class="flex flex-col gap-[12px]">
@@ -65,7 +71,10 @@ const {
       {membri.map((m) => (
         <div class="flex-none snap-start flex flex-col gap-bc-xl w-[85%] md:w-[calc(50%-8px)]">
           <div class="w-full bg-bc-black/10 overflow-hidden" style="aspect-ratio: 327/407;">
-            {m.image && <Image src={risolviImmagine(m.image)} alt={m.nome} width={700} format="webp" quality={80} class="w-full h-full object-cover" />}
+            {m.image && (isRemote(m.image)
+              ? <img src={m.image} alt={m.nome} width={700} class="w-full h-full object-cover" loading="lazy" />
+              : <Image src={risolviImmagine(m.image)} alt={m.nome} width={700} format="webp" quality={80} class="w-full h-full object-cover" />
+            )}
           </div>
           <div class="flex flex-col gap-bc-md">
             <div class="flex flex-col gap-[12px]">
