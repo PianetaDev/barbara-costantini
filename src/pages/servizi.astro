@@ -235,7 +235,6 @@ const partner = [
 </script>
 
 <style>
-  /* ── Accordion: animazione apertura/chiusura (equivalente a .sv-acc-body/.sv-acc-open dell'originale) ── */
   .sv-acc-inner {
     display: grid;
     grid-template-rows: 0fr;
@@ -252,10 +251,33 @@ const partner = [
     padding-top: 16px;
     padding-bottom: 32px;
   }
+  /* Stato di chiusura animata: forza i valori "chiusi" mentre open è ancora presente */
+  .sv-acc[open].sv-acc-closing .sv-acc-inner {
+    grid-template-rows: 0fr;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
   .sv-acc[open] .sv-acc-icon {
     transform: rotate(45deg);
+  }
+  .sv-acc[open].sv-acc-closing .sv-acc-icon {
+    transform: rotate(0deg);
   }
   .sv-acc summary::-webkit-details-marker {
     display: none;
   }
 </style>
+
+<script>
+  document.querySelectorAll<HTMLDetailsElement>('.sv-acc').forEach((details) => {
+    details.addEventListener('click', (e) => {
+      if (!details.open) return; // sta aprendo — lascia fare al browser
+      e.preventDefault();
+      details.classList.add('sv-acc-closing');
+      details.querySelector('.sv-acc-inner')?.addEventListener('transitionend', () => {
+        details.classList.remove('sv-acc-closing');
+        details.removeAttribute('open');
+      }, { once: true });
+    });
+  });
+</script>
