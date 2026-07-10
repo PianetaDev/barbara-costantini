@@ -3,14 +3,15 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
 import { createSupabaseServerClient } from '../../../lib/supabase';
 
 const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
-const { data: progetti } = await supabase.from('bc_projects').select('id, slug, titolo, committente').order('ordine');
+const { data: progetti } = await supabase.from('bc_projects').select('id, slug, titolo, committente, ordine').order('ordine');
 ---
 <AdminLayout title="Lavori">
   <ul class="flex flex-col divide-y divide-bc-black border-t border-bc-black">
     {progetti?.map((p) => (
       <li>
-        <a href={`/admin/progetti/${p.id}`} class="flex items-center justify-between py-[14px] font-sans text-[15px] font-light text-bc-black tracking-[0.02em] hover:underline">
-          <span>{p.titolo}</span>
+        <a href={`/admin/progetti/${p.id}`} class="flex items-center gap-[16px] py-[14px] font-sans text-[15px] font-light text-bc-black tracking-[0.02em] hover:underline">
+          <span class="text-bc-black/40 text-[13px] font-light shrink-0 w-[48px]">PRJ{String((p.ordine ?? 0) + 1).padStart(2, '0')}</span>
+          <span class="flex-1">{p.titolo}</span>
           <span class="text-bc-black/50 text-[13px]">{p.committente}</span>
         </a>
       </li>
