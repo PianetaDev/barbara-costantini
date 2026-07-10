@@ -1,17 +1,19 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
+import AdminLayout from '../../../layouts/AdminLayout.astro';
 import { createSupabaseServerClient } from '../../../lib/supabase';
 
 const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
 const { data: team } = await supabase.from('bc_team_members').select('id, nome, ruolo').order('ordine');
 ---
-<BaseLayout title="Team">
-  <section class="px-bc-page py-bc-2xl">
-    <h1 class="text-bc-h1">Team</h1>
-    <ul class="mt-bc-md">
-      {team?.map((m) => (
-        <li><a href={`/admin/team/${m.id}`} class="bc-ghost">{m.nome} — {m.ruolo}</a></li>
-      ))}
-    </ul>
-  </section>
-</BaseLayout>
+<AdminLayout title="Team">
+  <ul class="flex flex-col divide-y divide-bc-black border-t border-bc-black">
+    {team?.map((m) => (
+      <li>
+        <a href={`/admin/team/${m.id}`} class="flex items-center justify-between py-[14px] font-sans text-[15px] font-light text-bc-black tracking-[0.02em] hover:underline">
+          <span>{m.nome}</span>
+          <span class="text-bc-black/50 text-[13px]">{m.ruolo}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</AdminLayout>

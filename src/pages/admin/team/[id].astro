@@ -1,16 +1,15 @@
 ---
 import { Image } from 'astro:assets';
-import BaseLayout from '../../../layouts/BaseLayout.astro';
+import AdminLayout from '../../../layouts/AdminLayout.astro';
 import { createSupabaseServerClient } from '../../../lib/supabase';
 
 const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
 const { data: membro } = await supabase.from('bc_team_members').select('*').eq('id', Astro.params.id).single();
 if (!membro) return Astro.redirect('/admin/team');
 ---
-<BaseLayout title={`Modifica: ${membro.nome}`}>
-  <section class="px-bc-page py-bc-2xl max-w-bc-content mx-auto">
-    <h1 class="text-bc-h1">{membro.nome}</h1>
-    <form id="team-form" class="flex flex-col gap-bc-md mt-bc-md" data-id={membro.id}>
+<AdminLayout title={membro.nome} backHref="/admin/team" backLabel="Torna al team">
+  <section class="max-w-[680px]">
+    <form id="team-form" class="flex flex-col gap-bc-md" data-id={membro.id}>
       <label>Nome <input name="nome" value={membro.nome} class="border border-bc-black px-bc-md py-bc-xs w-full" /></label>
       <label>Ruolo <input name="ruolo" value={membro.ruolo ?? ''} class="border border-bc-black px-bc-md py-bc-xs w-full" /></label>
       <label>Bio <textarea name="bio" class="border border-bc-black px-bc-md py-bc-xs w-full">{membro.bio ?? ''}</textarea></label>
@@ -101,4 +100,4 @@ if (!membro) return Astro.redirect('/admin/team');
       }
     });
   </script>
-</BaseLayout>
+</AdminLayout>

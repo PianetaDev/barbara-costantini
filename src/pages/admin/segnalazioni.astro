@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import AdminLayout from '../../layouts/AdminLayout.astro';
 
 // Dashboard segnalazioni/rilasci servita da Segnale (segnale-phi.vercel.app), embed
 // read-only — stessa convenzione già usata su Apotheke. Il `key` è il read_key del
@@ -7,8 +7,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 const embedUrl = 'https://segnale-phi.vercel.app/embed/barbara-costantini?key=83ee0bc274985e414a216e17de21c506';
 ---
 
-<BaseLayout title="Segnalazioni">
-  <section class="px-bc-page py-bc-2xl">
+<AdminLayout title="Segnalazioni">
+  <section>
     <h1 class="text-bc-h1">Segnalazioni</h1>
     <p class="mt-bc-xs text-bc-black/70">
       Le segnalazioni inviate dal sito (bug, richieste) con il loro stato, e lo storico dei rilasci online.
@@ -17,4 +17,4 @@ const embedUrl = 'https://segnale-phi.vercel.app/embed/barbara-costantini?key=83
       <iframe src={embedUrl} class="block h-[620px] w-full border-0" title="Segnalazioni e rilasci" loading="lazy" />
     </div>
   </section>
-</BaseLayout>
+</AdminLayout>

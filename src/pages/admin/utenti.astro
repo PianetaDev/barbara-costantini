@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import AdminLayout from '../../layouts/AdminLayout.astro';
 import { createSupabaseServerClient } from '../../lib/supabase';
 import { checkIsSuperadmin } from '../../lib/admin-roles';
 
@@ -17,8 +17,8 @@ if (!isSuperadmin) {
 }
 const { data: utenti } = await supabase.from('bc_admin_users').select('email, role, invited_at');
 ---
-<BaseLayout title="Utenti">
-  <section class="px-bc-page py-bc-2xl">
+<AdminLayout title="Utenti">
+  <section>
     <h1 class="text-bc-h1">Utenti</h1>
     <table class="w-full mt-bc-md border border-bc-black border-collapse">
       <thead>
@@ -71,4 +71,4 @@ const { data: utenti } = await supabase.from('bc_admin_users').select('email, ro
       }
     });
   </script>
-</BaseLayout>
+</AdminLayout>
