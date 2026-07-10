@@ -1,77 +1,151 @@
 ---
 import AdminLayout from '../../../layouts/AdminLayout.astro';
 import RichTextEditor from '../../../components/admin/RichTextEditor.vue';
+import SlideshowEditor from '../../../components/admin/SlideshowEditor.vue';
+import BlockEditor from '../../../components/admin/BlockEditor.vue';
 import { createSupabaseServerClient } from '../../../lib/supabase';
 
 const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
 const { data: progetto } = await supabase.from('bc_projects').select('*').eq('id', Astro.params.id).single();
 if (!progetto) return Astro.redirect('/admin/progetti');
+
+const blocks = (progetto as any).blocks ?? [];
 ---
 <AdminLayout title={progetto.titolo} backHref="/admin/progetti" backLabel="Torna ai lavori">
-  <section class="max-w-[680px]">
-    <form id="progetto-form" class="flex flex-col gap-bc-md" data-id={progetto.id}>
-      <label>Titolo <input name="titolo" value={progetto.titolo} class="border border-bc-black px-bc-md py-bc-xs w-full" /></label>
-      <label>Committente <input name="committente" value={progetto.committente ?? ''} class="border border-bc-black px-bc-md py-bc-xs w-full" /></label>
-      <label>Anno <input name="anno" value={progetto.anno ?? ''} placeholder="es. 2014-2016" class="border border-bc-black px-bc-md py-bc-xs w-full" /></label>
-      <label>Introduzione</label>
-      <RichTextEditor client:load name="intro" modelValue={progetto.intro ?? ''} />
-      <button type="submit" class="bc-btn">Salva</button>
-    </form>
-    <p id="progetto-success" class="text-bc-black mt-bc-sm hidden">Salvato.</p>
-    <p id="progetto-error" class="text-red-600 mt-bc-sm hidden"></p>
+  <div class="max-w-[720px] flex flex-col gap-[56px]">
 
-    <div class="mt-[64px] pt-[32px] border-t border-bc-black">
-      <button id="elimina-progetto" data-id={progetto.id} class="font-sans text-[14px] font-light text-red-600 underline underline-offset-2 hover:no-underline">
+    <!-- INFO BASE -->
+    <section>
+      <h2 class="font-sans text-[13px] uppercase tracking-widest text-bc-black/50 mb-[24px]">Info base</h2>
+      <form id="info-form" class="flex flex-col gap-bc-md" data-id={progetto.id}>
+        <label class="flex flex-col gap-[6px] font-sans text-[14px] font-light">
+          Titolo
+          <input name="titolo" value={progetto.titolo} class="border border-bc-black px-bc-md py-bc-xs w-full" />
+        </label>
+        <label class="flex flex-col gap-[6px] font-sans text-[14px] font-light">
+          Committente
+          <input name="committente" value={progetto.committente ?? ''} class="border border-bc-black px-bc-md py-bc-xs w-full" />
+        </label>
+        <label class="flex flex-col gap-[6px] font-sans text-[14px] font-light">
+          Anno
+          <input name="anno" value={progetto.anno ?? ''} placeholder="es. 2014-2016" class="border border-bc-black px-bc-md py-bc-xs w-full" />
+        </label>
+        <label class="flex flex-col gap-[6px] font-sans text-[14px] font-light">
+          Introduzione
+          <RichTextEditor client:load name="intro" modelValue={progetto.intro ?? ''} />
+        </label>
+        <div class="flex items-center gap-[16px]">
+          <button type="submit" class="bc-btn">Salva info</button>
+          <p id="info-success" class="font-sans text-[13px] text-bc-black hidden">Salvato.</p>
+          <p id="info-error" class="font-sans text-[13px] text-red-600 hidden"></p>
+        </div>
+      </form>
+    </section>
+
+    <!-- SLIDESHOW -->
+    <section>
+      <h2 class="font-sans text-[13px] uppercase tracking-widest text-bc-black/50 mb-[24px]">Slideshow immagini</h2>
+      <form id="slideshow-form" class="flex flex-col gap-bc-md" data-id={progetto.id}>
+        <SlideshowEditor client:load name="immagini" modelValue={progetto.immagini ?? []} />
+        <div class="flex items-center gap-[16px]">
+          <button type="submit" class="bc-btn">Salva slideshow</button>
+          <p id="slideshow-success" class="font-sans text-[13px] text-bc-black hidden">Salvato.</p>
+          <p id="slideshow-error" class="font-sans text-[13px] text-red-600 hidden"></p>
+        </div>
+      </form>
+    </section>
+
+    <!-- CORPO PAGINA -->
+    <section>
+      <h2 class="font-sans text-[13px] uppercase tracking-widest text-bc-black/50 mb-[8px]">Corpo pagina</h2>
+      <p class="font-sans text-[13px] font-light text-bc-black/60 mb-[24px]">
+        Costruisci la pagina con blocchi: <strong>H2</strong> per titoli sezione, <strong>H3</strong> per sottotitoli,
+        <strong>Testo</strong> per paragrafi, <strong>Immagine singola</strong> per una foto larga,
+        <strong>Doppia colonna</strong> per due foto affiancate, <strong>Citazione</strong> per testo + frase in evidenza.
+      </p>
+      <form id="blocks-form" class="flex flex-col gap-bc-md" data-id={progetto.id}>
+        <BlockEditor client:load name="blocks" modelValue={blocks} />
+        <div class="flex items-center gap-[16px]">
+          <button type="submit" class="bc-btn">Salva corpo pagina</button>
+          <p id="blocks-success" class="font-sans text-[13px] text-bc-black hidden">Salvato.</p>
+          <p id="blocks-error" class="font-sans text-[13px] text-red-600 hidden"></p>
+        </div>
+      </form>
+    </section>
+
+    <!-- ELIMINA -->
+    <section class="pt-[32px] border-t border-bc-black">
+      <button id="elimina-progetto" data-id={progetto.id}
+              class="font-sans text-[14px] font-light text-red-600 underline underline-offset-2 hover:no-underline">
         Elimina questo lavoro
       </button>
-    </div>
-  </section>
-  <script>
-    const form = document.getElementById('progetto-form') as HTMLFormElement;
-    const errorEl = document.getElementById('progetto-error')!;
-    const successEl = document.getElementById('progetto-success')!;
+    </section>
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      errorEl.classList.add('hidden');
-      successEl.classList.add('hidden');
-      const id = form.dataset.id;
-      const formData = new FormData(form);
-      // formData.get('intro') legge l'<input type="hidden" name="intro"> renderizzato
-      // da RichTextEditor.vue (vedi commento nel componente): è un vero discendente
-      // di questo <form>, quindi il suo valore corrente arriva qui esattamente come
-      // per "titolo"/"committente" — nessun collegamento aggiuntivo necessario.
-      const payload = {
-        titolo: formData.get('titolo'),
-        committente: formData.get('committente'),
-        anno: formData.get('anno') || undefined,
-        intro: formData.get('intro'),
-      };
-      const res = await fetch(`/api/admin/progetti/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      if (res.ok) {
-        successEl.classList.remove('hidden');
-      } else {
-        const { error } = await res.json();
-        errorEl.textContent = typeof error === 'string' ? error : JSON.stringify(error);
-        errorEl.classList.remove('hidden');
-      }
-    });
-
-    document.getElementById('elimina-progetto')?.addEventListener('click', async (e) => {
-      const id = (e.currentTarget as HTMLElement).dataset.id;
-      if (!confirm('Eliminare questo lavoro? L\'operazione non è reversibile.')) return;
-      const res = await fetch(`/api/admin/progetti/${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        window.location.href = '/admin/progetti';
-      } else {
-        const { error } = await res.json();
-        errorEl.textContent = typeof error === 'string' ? error : JSON.stringify(error);
-        errorEl.classList.remove('hidden');
-      }
-    });
-  </script>
+  </div>
 </AdminLayout>
+
+<script>
+  async function patch(id: string, payload: object, successEl: HTMLElement, errorEl: HTMLElement) {
+    errorEl.classList.add('hidden');
+    successEl.classList.add('hidden');
+    const res = await fetch(`/api/admin/progetti/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (res.ok) {
+      successEl.classList.remove('hidden');
+      setTimeout(() => successEl.classList.add('hidden'), 2000);
+    } else {
+      const { error } = await res.json();
+      errorEl.textContent = typeof error === 'string' ? error : JSON.stringify(error);
+      errorEl.classList.remove('hidden');
+    }
+  }
+
+  // Info base
+  document.getElementById('info-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget as HTMLFormElement;
+    const id = form.dataset.id!;
+    const fd = new FormData(form);
+    await patch(id, {
+      titolo: fd.get('titolo'),
+      committente: fd.get('committente'),
+      anno: fd.get('anno') || undefined,
+      intro: fd.get('intro'),
+    }, document.getElementById('info-success')!, document.getElementById('info-error')!);
+  });
+
+  // Slideshow
+  document.getElementById('slideshow-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget as HTMLFormElement;
+    const id = form.dataset.id!;
+    const fd = new FormData(form);
+    const raw = fd.get('immagini') as string;
+    let immagini: any[] = [];
+    try { immagini = JSON.parse(raw); } catch {}
+    await patch(id, { immagini }, document.getElementById('slideshow-success')!, document.getElementById('slideshow-error')!);
+  });
+
+  // Blocks
+  document.getElementById('blocks-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget as HTMLFormElement;
+    const id = form.dataset.id!;
+    const fd = new FormData(form);
+    const raw = fd.get('blocks') as string;
+    let blocks: any[] = [];
+    try { blocks = JSON.parse(raw); } catch {}
+    await patch(id, { blocks }, document.getElementById('blocks-success')!, document.getElementById('blocks-error')!);
+  });
+
+  // Elimina
+  document.getElementById('elimina-progetto')?.addEventListener('click', async (e) => {
+    const id = (e.currentTarget as HTMLElement).dataset.id!;
+    if (!confirm("Eliminare questo lavoro? L'operazione non è reversibile.")) return;
+    const res = await fetch(`/api/admin/progetti/${id}`, { method: 'DELETE' });
+    if (res.ok) window.location.href = '/admin/progetti';
+  });
+</script>

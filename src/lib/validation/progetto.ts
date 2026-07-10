@@ -7,6 +7,9 @@ export const sezioneSchema = z.object({
   testi: z.array(z.string()),
 });
 
+// Blocchi corpo pagina — formato flessibile, validazione loose (jsonb libero)
+export const blockSchema = z.record(z.any());
+
 export const immagineSchema = z.object({
   src: z.string(),
   label: z.string(),
@@ -21,6 +24,7 @@ export const progettoSchema = z.object({
   tipo: z.enum(['horizontal', 'vertical']),
   intro: z.string().optional(),
   sezioni: z.array(sezioneSchema),
+  blocks: z.array(blockSchema).optional(),
   metodo: z.object({ testi: z.array(z.string()), citazione: z.string() }).optional(),
   immagini: z.array(immagineSchema),
   // NOTA: `.optional()`, non `.default(0)`. Questo schema viene usato sia per un

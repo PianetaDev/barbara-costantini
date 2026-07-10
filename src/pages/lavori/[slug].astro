@@ -152,63 +152,64 @@ const introParagrafi = progetto.intro ? progetto.intro.split('\n\n') : [];
       </div>
     </div>
 
-    <!-- Immagine grande contenuto -->
-    <div class="px-bc-page pb-[64px] bc-grid bc-2col bc-676">
-      <div class="bc-spacer-l" />
-      <div style="aspect-ratio:676/451; background:rgba(0,0,0,0.1); overflow:hidden;">
-        {progetto.immaginiContenuto?.[0] && (
-          <Image src={risolviImmagine(progetto.immaginiContenuto[0])} alt={progetto.titolo} width={1200} format="webp" quality={80} style="width:100%; height:100%; object-fit:cover;" />
-        )}
-      </div>
-      <div class="bc-spacer-r" />
-    </div>
-
-    <!-- Sezioni testo -->
-    {progetto.sezioni.map((s) => (
-      <div class="px-bc-page pb-[64px] bc-grid bc-2col bc-442">
-        <div class="bc-spacer-l" />
-        <div>
-          <h2 class="font-sans text-bc-black tracking-[0.02em]" style="font-size:24px; line-height:1.5; margin-bottom:32px; font-weight:400;">{s.titolo}</h2>
-          <h3 class="font-sans text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.5; margin-bottom:16px; font-weight:400;">{s.sottotitolo}</h3>
-          {s.testi.map((t) => (
-            <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5; margin-bottom:16px;">{t}</p>
-          ))}
+    <!-- Corpo pagina: blocchi CMS -->
+    {((progetto as any).blocks ?? []).map((b: any) => {
+      if (b.type === 'h2') return (
+        <div class="px-bc-page pb-[32px] bc-grid bc-2col bc-442">
+          <div class="bc-spacer-l" />
+          <h2 class="font-sans text-bc-black tracking-[0.02em]" style="font-size:24px; line-height:1.5; font-weight:400;">{b.content}</h2>
+          <div class="bc-spacer-r" />
         </div>
-        <div class="bc-spacer-r" />
-      </div>
-    ))}
-
-    <!-- Due immagini affiancate -->
-    <div class="px-bc-page pb-[64px] bc-grid bc-2col bc-676">
-      <div class="bc-spacer-l" />
-      <div style="display:flex; gap:24px;">
-        <div style="flex:1; min-width:0; aspect-ratio:326/406; background:rgba(0,0,0,0.1); overflow:hidden;">
-          {progetto.immaginiContenuto?.[0] && (
-            <Image src={risolviImmagine(progetto.immaginiContenuto[0])} alt={progetto.titolo} width={700} format="webp" quality={80} style="width:100%; height:100%; object-fit:cover;" />
-          )}
+      );
+      if (b.type === 'h3') return (
+        <div class="px-bc-page pb-[20px] bc-grid bc-2col bc-442">
+          <div class="bc-spacer-l" />
+          <h3 class="font-sans text-bc-black tracking-[0.02em]" style="font-size:20px; line-height:1.5; font-weight:400;">{b.content}</h3>
+          <div class="bc-spacer-r" />
         </div>
-        <div style="flex:1; min-width:0; aspect-ratio:326/406; background:rgba(0,0,0,0.1); overflow:hidden;">
-          {progetto.immaginiContenuto?.[1] && (
-            <Image src={risolviImmagine(progetto.immaginiContenuto[1])} alt={progetto.titolo} width={700} format="webp" quality={80} style="width:100%; height:100%; object-fit:cover;" />
-          )}
+      );
+      if (b.type === 'text') return (
+        <div class="px-bc-page pb-[16px] bc-grid bc-2col bc-442">
+          <div class="bc-spacer-l" />
+          <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5;">{b.content}</p>
+          <div class="bc-spacer-r" />
         </div>
-      </div>
-      <div class="bc-spacer-r" />
-    </div>
-
-    <!-- Testo metodo -->
-    {progetto.metodo && (
-      <div class="px-bc-page pb-[64px] bc-grid bc-2col bc-442">
-        <div class="bc-spacer-l" />
-        <div style="display:flex; flex-direction:column; gap:32px;">
-          <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5;">{progetto.metodo.testi[0]}</p>
-          <p class="font-sans font-normal text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5;">"{progetto.metodo.citazione}"</p>
-          {progetto.metodo.testi[1] && (
-            <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5;">{progetto.metodo.testi[1]}</p>
-          )}
+      );
+      if (b.type === 'image' && b.src) return (
+        <div class="px-bc-page pb-[64px] bc-grid bc-2col bc-676">
+          <div class="bc-spacer-l" />
+          <div style={`aspect-ratio:${b.aspetto === 'v' ? '451/676' : '676/451'}; overflow:hidden;`}>
+            <img src={b.src} alt={progetto.titolo} loading="lazy" style="width:100%; height:100%; object-fit:cover;" />
+          </div>
+          <div class="bc-spacer-r" />
         </div>
-      </div>
-    )}
+      );
+      if (b.type === 'images2') return (
+        <div class="px-bc-page pb-[64px] bc-grid bc-2col bc-676">
+          <div class="bc-spacer-l" />
+          <div style="display:flex; gap:24px;">
+            {b.src1 && <div style="flex:1; min-width:0; aspect-ratio:326/406; overflow:hidden;">
+              <img src={b.src1} alt={progetto.titolo} loading="lazy" style="width:100%; height:100%; object-fit:cover;" />
+            </div>}
+            {b.src2 && <div style="flex:1; min-width:0; aspect-ratio:326/406; overflow:hidden;">
+              <img src={b.src2} alt={progetto.titolo} loading="lazy" style="width:100%; height:100%; object-fit:cover;" />
+            </div>}
+          </div>
+          <div class="bc-spacer-r" />
+        </div>
+      );
+      if (b.type === 'quote') return (
+        <div class="px-bc-page pb-[64px] bc-grid bc-2col bc-442">
+          <div class="bc-spacer-l" />
+          <div style="display:flex; flex-direction:column; gap:32px;">
+            {b.text && <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5;">{b.text}</p>}
+            {b.citazione && <p class="font-sans font-normal text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5;">"{b.citazione}"</p>}
+          </div>
+          <div class="bc-spacer-r" />
+        </div>
+      );
+      return null;
+    })}
 
     <!-- Sfoglia altri lavori -->
     <SectionLavori
