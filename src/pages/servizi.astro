@@ -251,8 +251,15 @@ const partner = [
     padding-top: 16px;
     padding-bottom: 32px;
   }
-  /* Stato di chiusura animata: forza i valori "chiusi" mentre open è ancora presente */
+  /* Chiusura animata: tiene i valori "chiusi" mentre open è ancora presente */
   .sv-acc[open].sv-acc-closing .sv-acc-inner {
+    grid-template-rows: 0fr;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  /* Apertura animata: subito dopo setAttribute('open') tiene ancora lo stato chiuso,
+     poi il doppio rAF rimuove questa classe e scatta la transizione */
+  .sv-acc[open].sv-acc-opening .sv-acc-inner {
     grid-template-rows: 0fr;
     padding-top: 0;
     padding-bottom: 0;
@@ -260,7 +267,8 @@ const partner = [
   .sv-acc[open] .sv-acc-icon {
     transform: rotate(45deg);
   }
-  .sv-acc[open].sv-acc-closing .sv-acc-icon {
+  .sv-acc[open].sv-acc-closing .sv-acc-icon,
+  .sv-acc[open].sv-acc-opening .sv-acc-icon {
     transform: rotate(0deg);
   }
   .sv-acc summary::-webkit-details-marker {
@@ -280,14 +288,24 @@ const partner = [
     }, { once: true });
   }
 
+  function openAnimated(details: HTMLDetailsElement) {
+    // 1. Aggiunge opening + open insieme: il CSS di opening tiene lo stato "chiuso"
+    // 2. Dopo due rAF il browser ha paintato: rimuovere opening scatta la transizione
+    details.classList.add('sv-acc-opening');
+    details.setAttribute('open', '');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      details.classList.remove('sv-acc-opening');
+    }));
+  }
+
   all.forEach((details) => {
     details.addEventListener('click', (e) => {
+      e.preventDefault();
       if (details.open) {
-        e.preventDefault();
         closeAnimated(details);
       } else {
-        // chiudi tutti gli altri prima di aprire questo
         all.filter(d => d !== details).forEach(closeAnimated);
+        openAnimated(details);
       }
     });
   });
