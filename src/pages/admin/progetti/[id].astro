@@ -13,6 +13,7 @@ if (!progetto) return Astro.redirect('/admin/progetti');
     <form id="progetto-form" class="flex flex-col gap-bc-md mt-bc-md" data-id={progetto.id}>
       <label>Titolo <input name="titolo" value={progetto.titolo} class="border border-bc-black px-bc-md py-bc-xs w-full" /></label>
       <label>Committente <input name="committente" value={progetto.committente ?? ''} class="border border-bc-black px-bc-md py-bc-xs w-full" /></label>
+      <label>Anno <input name="anno" value={progetto.anno ?? ''} placeholder="es. 2014-2016" class="border border-bc-black px-bc-md py-bc-xs w-full" /></label>
       <label>Introduzione</label>
       <RichTextEditor client:load name="intro" modelValue={progetto.intro ?? ''} />
       <button type="submit" class="bc-btn">Salva</button>
@@ -38,6 +39,7 @@ if (!progetto) return Astro.redirect('/admin/progetti');
       const payload = {
         titolo: formData.get('titolo'),
         committente: formData.get('committente'),
+        anno: formData.get('anno') || undefined,
         intro: formData.get('intro'),
       };
       const res = await fetch(`/api/admin/progetti/${id}`, {
