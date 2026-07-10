@@ -277,7 +277,13 @@ const partner = [
 </style>
 
 <script>
-  const all = Array.from(document.querySelectorAll<HTMLDetailsElement>('.sv-acc'));
+  // Raggruppa per contenitore padre: un accordion aperto non chiude quelli degli altri gruppi
+  const groups = Array.from(document.querySelectorAll<HTMLElement>('.sv-acc')).reduce((map, el) => {
+    const parent = el.parentElement!;
+    if (!map.has(parent)) map.set(parent, []);
+    map.get(parent)!.push(el as HTMLDetailsElement);
+    return map;
+  }, new Map<HTMLElement, HTMLDetailsElement[]>());
 
   function closeAnimated(details: HTMLDetailsElement) {
     if (!details.open || details.classList.contains('sv-acc-closing')) return;
@@ -298,15 +304,17 @@ const partner = [
     }));
   }
 
-  all.forEach((details) => {
-    details.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (details.open) {
-        closeAnimated(details);
-      } else {
-        all.filter(d => d !== details).forEach(closeAnimated);
-        openAnimated(details);
-      }
+  groups.forEach((siblings) => {
+    siblings.forEach((details) => {
+      details.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (details.open) {
+          closeAnimated(details);
+        } else {
+          siblings.filter(d => d !== details).forEach(closeAnimated);
+          openAnimated(details);
+        }
+      });
     });
   });
 </script>
