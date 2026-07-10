@@ -1,6 +1,6 @@
 ---
 // src/pages/admin/pagine/[page].astro
-import BaseLayout from '../../../layouts/BaseLayout.astro';
+import AdminLayout from '../../../layouts/AdminLayout.astro';
 import { createSupabaseServerClient } from '../../../lib/supabase';
 import { pageContentSchema } from '../../../lib/validation/page-content';
 
@@ -23,8 +23,8 @@ const { data: pagina } = isPaginaValida
 const paginaNonTrovata = !isPaginaValida;
 const content = pagina?.content ?? {};
 ---
-<BaseLayout title={paginaNonTrovata ? 'Pagina non trovata' : `Modifica pagina: ${pageParam}`}>
-  <section class="px-bc-page py-bc-2xl max-w-bc-content mx-auto">
+<AdminLayout title={paginaNonTrovata ? 'Pagina non trovata' : `Pagina: ${pageParam}`}>
+  <section class="max-w-[680px]">
     {paginaNonTrovata ? (
       <>
         <h1 class="text-bc-h1">Pagina non trovata</h1>
@@ -73,4 +73,4 @@ const content = pagina?.content ?? {};
       });
     }
   </script>
-</BaseLayout>
+</AdminLayout>

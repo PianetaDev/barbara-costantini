@@ -1,0 +1,76 @@
+---
+// src/layouts/AdminLayout.astro
+// Layout dedicato all'area admin: niente Nav/Footer del sito pubblico.
+// Sidebar laterale con le sezioni modificabili.
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  /** Mostra freccia "← Indietro" con l'href indicato */
+  backHref?: string;
+  backLabel?: string;
+}
+const { title, backHref, backLabel = 'Indietro' } = Astro.props;
+const path = Astro.url.pathname;
+
+const navItems = [
+  { label: 'Lavori', href: '/admin/progetti' },
+];
+---
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} — Admin</title>
+    <link rel="icon" href="/logo.svg" />
+  </head>
+  <body class="bg-bc-canvas text-bc-black font-sans min-h-screen flex">
+
+    <!-- Sidebar -->
+    <aside class="w-[220px] shrink-0 border-r border-bc-black flex flex-col min-h-screen">
+      <div class="px-[24px] py-[32px] border-b border-bc-black">
+        <a href="/" class="font-sans text-[13px] font-light text-bc-black tracking-[0.02em] hover:underline">
+          ← Sito pubblico
+        </a>
+        <p class="font-sans text-[15px] font-normal text-bc-black tracking-[0.02em] mt-[12px]">Admin</p>
+      </div>
+      <nav class="flex flex-col py-[24px]">
+        {navItems.map((item) => {
+          const active = path.startsWith(item.href);
+          return (
+            <a
+              href={item.href}
+              class:list={[
+                'px-[24px] py-[10px] font-sans text-[14px] tracking-[0.02em] hover:underline',
+                active ? 'font-normal' : 'font-light',
+              ]}
+            >
+              {item.label}
+            </a>
+          );
+        })}
+      </nav>
+    </aside>
+
+    <!-- Contenuto principale -->
+    <div class="flex-1 flex flex-col min-h-screen overflow-x-hidden">
+      <!-- Topbar -->
+      <header class="border-b border-bc-black px-[40px] py-[20px] flex items-center gap-[16px]">
+        {backHref && (
+          <a href={backHref} class="flex items-center justify-center w-[32px] h-[32px] text-bc-black shrink-0" aria-label={backLabel}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="currentColor"/>
+            </svg>
+          </a>
+        )}
+        <h1 class="font-sans text-[18px] font-normal text-bc-black tracking-[0.02em]">{title}</h1>
+      </header>
+
+      <main class="flex-1 px-[40px] py-[40px]">
+        <slot />
+      </main>
+    </div>
+
+  </body>
+</html>

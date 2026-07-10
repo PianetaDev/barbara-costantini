@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
+import AdminLayout from '../../../layouts/AdminLayout.astro';
 import RichTextEditor from '../../../components/admin/RichTextEditor.vue';
 import { createSupabaseServerClient } from '../../../lib/supabase';
 
@@ -7,10 +7,9 @@ const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
 const { data: progetto } = await supabase.from('bc_projects').select('*').eq('id', Astro.params.id).single();
 if (!progetto) return Astro.redirect('/admin/progetti');
 ---
-<BaseLayout title={`Modifica: ${progetto.titolo}`}>
-  <section class="px-bc-page py-bc-2xl max-w-bc-content mx-auto">
-    <h1 class="text-bc-h1">{progetto.titolo}</h1>
-    <form id="progetto-form" class="flex flex-col gap-bc-md mt-bc-md" data-id={progetto.id}>
+<AdminLayout title={progetto.titolo} backHref="/admin/progetti" backLabel="Torna ai lavori">
+  <section class="max-w-[680px]">
+    <form id="progetto-form" class="flex flex-col gap-bc-md" data-id={progetto.id}>
       <label>Titolo <input name="titolo" value={progetto.titolo} class="border border-bc-black px-bc-md py-bc-xs w-full" /></label>
       <label>Committente <input name="committente" value={progetto.committente ?? ''} class="border border-bc-black px-bc-md py-bc-xs w-full" /></label>
       <label>Anno <input name="anno" value={progetto.anno ?? ''} placeholder="es. 2014-2016" class="border border-bc-black px-bc-md py-bc-xs w-full" /></label>
@@ -56,4 +55,4 @@ if (!progetto) return Astro.redirect('/admin/progetti');
       }
     });
   </script>
-</BaseLayout>
+</AdminLayout>
