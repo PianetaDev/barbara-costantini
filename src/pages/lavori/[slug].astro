@@ -116,7 +116,7 @@ const metaVoci = [
 // stringa unica (i paragrafi sono uniti con "\n\n" dal seed) — si riseparano qui.
 const introParagrafi = progetto.intro ? progetto.intro.split('\n\n') : [];
 ---
-<BaseLayout title={progetto.titolo}>
+<BaseLayout title={progetto.titolo} hideNav>
   <div>
     <!-- Navigazione dettaglio: freccia sx + titolo centrato — issue #19 -->
     <nav class="w-full border-b border-bc-black px-[24px] tablet:px-bc-page">
