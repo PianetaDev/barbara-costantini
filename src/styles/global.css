@@ -10,11 +10,18 @@
  */
 
 @theme {
-  /* Breakpoint custom (variante es: tablet:, bc:) */
+  /* Breakpoint — dichiarati in ordine crescente: Tailwind v4 genera le media
+     query nello stesso ordine in cui appaiono qui, quindi bc: (1440px) deve
+     venire DOPO xl: (1280px) altrimenti xl:grid-cols-5 vince per cascata. */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
   --breakpoint-tablet: 844px;
   --breakpoint-md2: 860px;
   --breakpoint-md3: 960px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
   --breakpoint-bc: 1440px;
+  --breakpoint-2xl: 1536px;
 
   /* Colori */
   --color-bc-canvas: #F7F6EF;
