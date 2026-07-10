@@ -29,11 +29,15 @@ const navItems = [
 
     <!-- Sidebar -->
     <aside class="w-[220px] shrink-0 border-r border-bc-black flex flex-col min-h-screen">
-      <div class="px-[24px] py-[32px] border-b border-bc-black">
-        <a href="/" class="font-sans text-[13px] font-light text-bc-black tracking-[0.02em] hover:underline">
-          ← Sito pubblico
+      <div class="px-[24px] py-[32px] border-b border-bc-black flex flex-col gap-[16px]">
+        <p class="font-sans text-[15px] font-normal text-bc-black tracking-[0.02em]">Admin</p>
+        <a href="/" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-[8px] border border-bc-black px-[12px] py-[8px] font-sans text-[13px] font-light text-bc-black tracking-[0.02em] hover:bg-bc-black hover:text-bc-canvas transition-colors">
+          Vai al sito
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </a>
-        <p class="font-sans text-[15px] font-normal text-bc-black tracking-[0.02em] mt-[12px]">Admin</p>
       </div>
       <nav class="flex flex-col py-[24px]">
         {navItems.map((item) => {
