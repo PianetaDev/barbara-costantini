@@ -269,15 +269,26 @@ const partner = [
 </style>
 
 <script>
-  document.querySelectorAll<HTMLDetailsElement>('.sv-acc').forEach((details) => {
+  const all = Array.from(document.querySelectorAll<HTMLDetailsElement>('.sv-acc'));
+
+  function closeAnimated(details: HTMLDetailsElement) {
+    if (!details.open || details.classList.contains('sv-acc-closing')) return;
+    details.classList.add('sv-acc-closing');
+    details.querySelector('.sv-acc-inner')?.addEventListener('transitionend', () => {
+      details.classList.remove('sv-acc-closing');
+      details.removeAttribute('open');
+    }, { once: true });
+  }
+
+  all.forEach((details) => {
     details.addEventListener('click', (e) => {
-      if (!details.open) return; // sta aprendo — lascia fare al browser
-      e.preventDefault();
-      details.classList.add('sv-acc-closing');
-      details.querySelector('.sv-acc-inner')?.addEventListener('transitionend', () => {
-        details.classList.remove('sv-acc-closing');
-        details.removeAttribute('open');
-      }, { once: true });
+      if (details.open) {
+        e.preventDefault();
+        closeAnimated(details);
+      } else {
+        // chiudi tutti gli altri prima di aprire questo
+        all.filter(d => d !== details).forEach(closeAnimated);
+      }
     });
   });
 </script>
