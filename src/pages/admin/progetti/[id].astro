@@ -1,6 +1,5 @@
 ---
 import AdminLayout from '../../../layouts/AdminLayout.astro';
-import RichTextEditor from '../../../components/admin/RichTextEditor.vue';
 import SlideshowEditor from '../../../components/admin/SlideshowEditor.vue';
 import BlockEditor from '../../../components/admin/BlockEditor.vue';
 import { createSupabaseServerClient } from '../../../lib/supabase';
@@ -29,10 +28,6 @@ const blocks = (progetto as any).blocks ?? [];
         <label class="flex flex-col gap-[6px] font-sans text-[14px] font-light">
           Anno
           <input name="anno" value={progetto.anno ?? ''} placeholder="es. 2014-2016" class="border border-bc-black px-bc-md py-bc-xs w-full" />
-        </label>
-        <label class="flex flex-col gap-[6px] font-sans text-[14px] font-light">
-          Introduzione
-          <RichTextEditor client:load name="intro" modelValue={progetto.intro ?? ''} />
         </label>
         <div class="flex items-center gap-[16px]">
           <button type="submit" class="bc-btn">Salva info</button>
@@ -113,7 +108,6 @@ const blocks = (progetto as any).blocks ?? [];
       titolo: fd.get('titolo'),
       committente: fd.get('committente'),
       anno: fd.get('anno') || undefined,
-      intro: fd.get('intro'),
     }, document.getElementById('info-success')!, document.getElementById('info-error')!);
   });
 

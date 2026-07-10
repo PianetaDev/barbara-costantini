@@ -32,9 +32,21 @@
         </div>
 
         <!-- Testo -->
-        <div v-else-if="block.type === 'text'" class="p-[16px]">
-          <textarea v-model="block.content" rows="5" placeholder="Paragrafo..."
-                    class="w-full border border-bc-black px-[12px] py-[8px] font-sans text-[15px] font-light resize-y leading-relaxed" />
+        <div v-else-if="block.type === 'text'" class="p-[16px] flex flex-col gap-[8px]">
+          <div class="flex gap-[6px]">
+            <button type="button" @click="execCmd('bold')"
+                    class="w-[28px] h-[28px] border border-bc-black font-sans font-bold text-[13px] hover:bg-bc-black hover:text-bc-canvas transition-colors">B</button>
+            <button type="button" @click="execCmd('italic')"
+                    class="w-[28px] h-[28px] border border-bc-black font-sans italic text-[13px] hover:bg-bc-black hover:text-bc-canvas transition-colors">I</button>
+          </div>
+          <div
+            :ref="el => setEditorRef(i, el)"
+            contenteditable="true"
+            :data-placeholder="'Paragrafo...'"
+            class="border border-bc-black px-[12px] py-[8px] font-sans text-[15px] font-light leading-relaxed min-h-[100px] focus:outline-none"
+            @input="block.content = ($event.target as HTMLElement).innerHTML"
+            v-html="block.content"
+          />
         </div>
 
         <!-- Immagine singola -->
@@ -129,6 +141,11 @@ const labelOf = (type: string) => types.find(t => t.value === type)?.label ?? ty
 const blocks = ref<Block[]>(
   (props.modelValue || []).map((b: any) => ({ ...b, _id: Math.random().toString(36).slice(2) }))
 );
+
+// Riferimenti agli editor contenteditable per bold/italic
+const editorRefs: Record<number, HTMLElement> = {};
+function setEditorRef(i: number, el: any) { if (el) editorRefs[i] = el; }
+function execCmd(cmd: string) { document.execCommand(cmd, false); }
 
 function add(type: string) {
   const b: Block = { _id: Math.random().toString(36).slice(2), type };
