@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "barbara-costantini",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--", "--port", "3456"],
+      "runtimeExecutable": "node_modules/.bin/astro",
+      "runtimeArgs": ["dev", "--port", "3456"],
       "port": 3456
     }
   ]

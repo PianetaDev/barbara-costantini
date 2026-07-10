@@ -5,6 +5,7 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
+  server: { port: 3456 },
   output: 'server',
   adapter: vercel(),
   integrations: [
