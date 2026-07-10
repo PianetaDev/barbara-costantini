@@ -9,8 +9,10 @@ interface Props {
   /** Mostra freccia "← Indietro" con l'href indicato */
   backHref?: string;
   backLabel?: string;
+  /** Nasconde la sidebar (per pagine pre-autenticazione: login, reset password) */
+  hideSidebar?: boolean;
 }
-const { title, backHref, backLabel = 'Indietro' } = Astro.props;
+const { title, backHref, backLabel = 'Indietro', hideSidebar = false } = Astro.props;
 const path = Astro.url.pathname;
 
 const navItems = [
@@ -28,7 +30,7 @@ const navItems = [
   <body class="bg-bc-canvas text-bc-black font-sans min-h-screen flex">
 
     <!-- Sidebar -->
-    <aside class="w-[220px] shrink-0 border-r border-bc-black flex flex-col min-h-screen">
+    {!hideSidebar && <aside class="w-[220px] shrink-0 border-r border-bc-black flex flex-col min-h-screen">
       <div class="px-[24px] py-[32px] border-b border-bc-black flex flex-col gap-[16px]">
         <p class="font-sans text-[15px] font-normal text-bc-black tracking-[0.02em]">Admin</p>
         <a href="/" target="_blank" rel="noopener noreferrer"
@@ -55,26 +57,32 @@ const navItems = [
           );
         })}
       </nav>
-    </aside>
+    </aside>}
 
     <!-- Contenuto principale -->
-    <div class="flex-1 flex flex-col min-h-screen overflow-x-hidden">
-      <!-- Topbar -->
-      <header class="border-b border-bc-black px-[40px] py-[20px] flex items-center gap-[16px]">
-        {backHref && (
-          <a href={backHref} class="flex items-center justify-center w-[32px] h-[32px] text-bc-black shrink-0" aria-label={backLabel}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="currentColor"/>
-            </svg>
-          </a>
-        )}
-        <h1 class="font-sans text-[18px] font-normal text-bc-black tracking-[0.02em]">{title}</h1>
-      </header>
-
-      <main class="flex-1 px-[40px] py-[40px]">
+    {hideSidebar ? (
+      <main class="flex-1 flex items-center justify-center px-[24px] py-[80px]">
         <slot />
       </main>
-    </div>
+    ) : (
+      <div class="flex-1 flex flex-col min-h-screen overflow-x-hidden">
+        <!-- Topbar -->
+        <header class="border-b border-bc-black px-[40px] py-[20px] flex items-center gap-[16px]">
+          {backHref && (
+            <a href={backHref} class="flex items-center justify-center w-[32px] h-[32px] text-bc-black shrink-0" aria-label={backLabel}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="currentColor"/>
+              </svg>
+            </a>
+          )}
+          <h1 class="font-sans text-[18px] font-normal text-bc-black tracking-[0.02em]">{title}</h1>
+        </header>
+
+        <main class="flex-1 px-[40px] py-[40px]">
+          <slot />
+        </main>
+      </div>
+    )}
 
   </body>
 </html>

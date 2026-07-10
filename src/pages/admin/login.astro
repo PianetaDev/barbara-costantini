@@ -1,11 +1,11 @@
 ---
 // src/pages/admin/login.astro
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import AdminLayout from '../../layouts/AdminLayout.astro';
 ---
-<BaseLayout title="Accedi">
-  <section class="px-bc-page py-bc-4xl max-w-md mx-auto">
-    <h1 class="text-bc-h1">Accedi</h1>
-    <form id="login-form" class="flex flex-col gap-bc-md mt-bc-xl">
+<AdminLayout title="Admin" hideSidebar>
+  <section class="w-full max-w-[400px]">
+    <h1 class="font-sans text-[24px] font-normal text-bc-black tracking-[0.02em] mb-[32px]">Accedi</h1>
+    <form id="login-form" class="flex flex-col gap-bc-md">
       <input type="email" name="email" placeholder="Email" required class="border border-bc-black px-bc-md py-bc-xs" />
       <input type="password" name="password" placeholder="Password" required class="border border-bc-black px-bc-md py-bc-xs" />
       <button type="submit" class="bc-btn">Accedi</button>
@@ -62,4 +62,4 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       }
     });
   </script>
-</BaseLayout>
+</AdminLayout>
