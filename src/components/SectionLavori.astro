@@ -120,7 +120,20 @@ const {
 
     <!-- Card tablet+mobile: scroll orizzontale con snap (sostituisce il carousel JS) -->
     <div class="lg:hidden flex flex-col gap-bc-md flex-1 min-w-0">
-      <div class="overflow-x-auto">
+      <!-- Frecce navigazione: sempre top-right sopra le card -->
+      <div class="flex justify-end gap-[16px]">
+        <button data-scroll-prev class="w-[40px] h-[40px] flex items-center justify-center text-bc-black disabled:opacity-30 transition-opacity" aria-label="Precedente">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 12H5M5 12L11 6M5 12L11 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button data-scroll-next class="w-[40px] h-[40px] flex items-center justify-center text-bc-black disabled:opacity-30 transition-opacity" aria-label="Successivo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="overflow-x-auto" data-scroll-track>
         <div class="flex gap-[16px] items-start snap-x snap-mandatory">
           {progetti.map((p) => (
             <a
@@ -162,3 +175,22 @@ const {
 
   </div>
 </section>
+
+<script>
+  // Scroll arrows per SectionLavori (mobile/tablet).
+  // Usato su più istanze della stessa pagina — iteriamo su tutti i blocchi.
+  document.querySelectorAll<HTMLElement>('.lg\\:hidden').forEach((block) => {
+    const track = block.querySelector<HTMLElement>('[data-scroll-track]');
+    const prev  = block.querySelector<HTMLButtonElement>('[data-scroll-prev]');
+    const next  = block.querySelector<HTMLButtonElement>('[data-scroll-next]');
+    if (!track || !prev || !next) return;
+
+    const step = () => {
+      const card = track.querySelector<HTMLElement>('.snap-start');
+      return card ? card.offsetWidth + 16 : track.clientWidth * 0.55;
+    };
+
+    prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+    next.addEventListener('click', () => track.scrollBy({ left:  step(), behavior: 'smooth' }));
+  });
+</script>
