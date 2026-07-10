@@ -29,14 +29,7 @@ const membri = membriDb.map((m) => ({
   nome: m.nome,
   ruolo: m.ruolo ?? '',
   bio: m.bio ?? '',
-  // SectionTeam passa `image` a risolviImmagine(), che risolve solo path locali
-  // noti tipo "/images/bc-NNN.jpg" (vedi src/utils/imagenes.ts) — nessuno dei 3
-  // membri seedati (scripts/seed-bc-cms.mjs) ha ancora una foto (foto_url è null
-  // per tutti). Se in futuro il CRUD team (Task 14) valorizza foto_url con un URL
-  // remoto di Supabase Storage, quel valore non è risolvibile da risolviImmagine():
-  // qui lo scartiamo esplicitamente invece di lasciarlo passare e far esplodere la
-  // pagina pubblica in SSR per tutti i visitatori.
-  image: m.foto_url && m.foto_url.startsWith('/images/') ? m.foto_url : undefined,
+  image: m.foto_url ?? undefined,
 }));
 // Non assumiamo che ci sia sempre almeno un membro: con `membri` un array vuoto
 // (nessuna riga in bc_team_members), SectionTeam renderizza semplicemente una
