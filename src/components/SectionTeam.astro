@@ -52,7 +52,16 @@ const {
 
   <!-- Mobile + Tablet: scroll orizzontale con snap (sostituisce il carousel JS) -->
   <div class="lg:hidden mx-auto max-w-bc-content w-full py-bc-2xl">
-    <div class="flex gap-[16px] overflow-x-auto snap-x snap-mandatory pb-bc-xs">
+    <!-- Frecce navigazione: top-right sopra le card -->
+    <div class="flex justify-end gap-[8px] mb-bc-md">
+      <button data-team-prev class="w-[40px] h-[40px] flex items-center justify-center text-bc-black disabled:opacity-30 transition-opacity" aria-label="Precedente">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="currentColor"/></svg>
+      </button>
+      <button data-team-next class="w-[40px] h-[40px] flex items-center justify-center text-bc-black disabled:opacity-30 transition-opacity" aria-label="Successivo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4L10.59 5.41L16.17 11H4V13H16.17L10.59 18.59L12 20L20 12L12 4Z" fill="currentColor"/></svg>
+      </button>
+    </div>
+    <div class="flex gap-[16px] overflow-x-auto snap-x snap-mandatory pb-bc-xs" data-team-track>
       {membri.map((m) => (
         <div class="flex-none snap-start flex flex-col gap-bc-xl w-[85%] md:w-[calc(50%-8px)]">
           <div class="w-full bg-bc-black/10 overflow-hidden" style="aspect-ratio: 327/407;">
@@ -71,3 +80,27 @@ const {
   </div>
 
 </section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.lg\\:hidden').forEach((block) => {
+    const track = block.querySelector<HTMLElement>('[data-team-track]');
+    const prev  = block.querySelector<HTMLButtonElement>('[data-team-prev]');
+    const next  = block.querySelector<HTMLButtonElement>('[data-team-next]');
+    if (!track || !prev || !next) return;
+
+    const step = () => {
+      const card = track.querySelector<HTMLElement>('.snap-start');
+      return card ? card.offsetWidth + 16 : track.clientWidth * 0.9;
+    };
+
+    const update = () => {
+      prev.disabled = track.scrollLeft <= 1;
+      next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 1;
+    };
+
+    prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+    next.addEventListener('click', () => track.scrollBy({ left:  step(), behavior: 'smooth' }));
+    track.addEventListener('scroll', update, { passive: true });
+    update();
+  });
+</script>
