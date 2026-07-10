@@ -156,7 +156,7 @@ const partner = [
   ))}
 
   <!-- Partner: 3 colonne desktop, scroll orizzontale con snap su mobile/tablet — come SectionTeam -->
-  <section class="w-full border-b border-bc-black px-[24px] tablet:px-bc-page overflow-hidden">
+  <section class="w-full border-b border-bc-black px-[24px] tablet:px-bc-page">
 
     <!-- Desktop: 3 colonne con divider verticali -->
     <div class="hidden lg:flex lg:items-stretch mx-auto max-w-bc-content">
@@ -178,7 +178,15 @@ const partner = [
 
     <!-- Mobile + Tablet: scroll orizzontale con snap (sostituisce il carousel JS) -->
     <div class="lg:hidden mx-auto max-w-bc-content py-bc-2xl">
-      <div class="flex gap-[16px] overflow-x-auto snap-x snap-mandatory pb-bc-xs">
+      <div class="flex justify-end gap-[8px] mb-bc-md">
+        <button data-partner-prev class="w-[40px] h-[40px] flex items-center justify-center text-bc-black disabled:opacity-30 transition-opacity" aria-label="Precedente">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="currentColor"/></svg>
+        </button>
+        <button data-partner-next class="w-[40px] h-[40px] flex items-center justify-center text-bc-black disabled:opacity-30 transition-opacity" aria-label="Successivo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4L10.59 5.41L16.17 11H4V13H16.17L10.59 18.59L12 20L20 12L12 4Z" fill="currentColor"/></svg>
+        </button>
+      </div>
+      <div class="flex gap-[16px] overflow-x-auto snap-x snap-mandatory pb-bc-xs" data-partner-track>
         {partner.map((p) => (
           <div class="flex-none snap-start flex flex-col gap-[32px] w-[85%] tablet:w-[calc(50%-8px)]">
             <div class="w-full bg-bc-black/10 overflow-hidden" style="aspect-ratio:327/407;">
@@ -205,6 +213,26 @@ const partner = [
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  const track = document.querySelector<HTMLElement>('[data-partner-track]');
+  const prev  = document.querySelector<HTMLButtonElement>('[data-partner-prev]');
+  const next  = document.querySelector<HTMLButtonElement>('[data-partner-next]');
+  if (track && prev && next) {
+    const step = () => {
+      const card = track.querySelector<HTMLElement>('.snap-start');
+      return card ? card.offsetWidth + 16 : track.clientWidth * 0.9;
+    };
+    const update = () => {
+      prev.disabled = track.scrollLeft <= 1;
+      next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 1;
+    };
+    prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+    next.addEventListener('click', () => track.scrollBy({ left:  step(), behavior: 'smooth' }));
+    track.addEventListener('scroll', update, { passive: true });
+    update();
+  }
+</script>
 
 <style>
   /* ── Accordion: animazione apertura/chiusura (equivalente a .sv-acc-body/.sv-acc-open dell'originale) ── */
