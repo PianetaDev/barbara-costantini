@@ -1,46 +1,42 @@
-# Task pendenti — Barbara Costantini
+# Task — Barbara Costantini
 
-Esegui questi task nell'ordine indicato.
+## Cosa fa Claude in autonomia
+
+Esegui questi comandi nel terminale:
+
+```bash
+# Merge e deploy
+git checkout main
+git merge develop
+git push origin main
+curl -X POST "https://api.vercel.com/v1/integrations/deploy/prj_GVdCmZxWV5v2fhlDSXgF25z9hWQx/dpr1SMM5BR"
+git checkout develop
+```
 
 ---
 
-## 1. Supabase — aggiungi colonna `blocks`
+## Cosa deve fare Max (solo dashboard, niente terminale)
 
-Vai su [supabase.com](https://supabase.com) → progetto `fmplfkzqexaposaamgwi` → SQL Editor → esegui:
+### Supabase — SQL Editor
+Vai su supabase.com → progetto `fmplfkzqexaposaamgwi` → SQL Editor → incolla ed esegui:
 
 ```sql
 alter table bc_projects
   add column if not exists blocks jsonb not null default '[]'::jsonb;
 ```
 
----
-
-## 2. Supabase — crea bucket Storage
-
-Vai su Supabase → Storage → New Bucket:
+### Supabase — Storage
+Vai su Storage → New Bucket:
 - Nome: `barbara-costantini-progetti`
-- Visibilità: **Public**
+- Visibilità: Public
 
 ---
 
-## 3. Deploy su Vercel
+## Feature ancora da sviluppare (prossime sessioni)
 
-Dal terminale nella cartella del repo:
-
-```bash
-git checkout main
-git merge develop
-git push origin main
-```
-
-Se il deploy non parte in automatico, triggeralo manualmente:
-
-```bash
-curl -X POST "https://api.vercel.com/v1/integrations/deploy/prj_GVdCmZxWV5v2fhlDSXgF25z9hWQx/dpr1SMM5BR"
-```
-
----
-
-## Fine
-
-Quando tutti e 3 i task sono completati, il sito di staging sarà aggiornato con il nuovo CMS admin.
+- Creazione nuovo progetto dall'admin
+- Editor pagine statiche: Home, Studio, Servizi, Contatti
+- Editor testi Cookie e Privacy
+- Modifica dati Footer
+- Progetti "in evidenza" per la home
+- Progetti correlati nella pagina dettaglio
