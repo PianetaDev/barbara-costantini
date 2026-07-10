@@ -19,6 +19,12 @@ if (!progetto) return Astro.redirect('/admin/progetti');
     </form>
     <p id="progetto-success" class="text-bc-black mt-bc-sm hidden">Salvato.</p>
     <p id="progetto-error" class="text-red-600 mt-bc-sm hidden"></p>
+
+    <div class="mt-[64px] pt-[32px] border-t border-bc-black">
+      <button id="elimina-progetto" data-id={progetto.id} class="font-sans text-[14px] font-light text-red-600 underline underline-offset-2 hover:no-underline">
+        Elimina questo lavoro
+      </button>
+    </div>
   </section>
   <script>
     const form = document.getElementById('progetto-form') as HTMLFormElement;
@@ -48,6 +54,19 @@ if (!progetto) return Astro.redirect('/admin/progetti');
       });
       if (res.ok) {
         successEl.classList.remove('hidden');
+      } else {
+        const { error } = await res.json();
+        errorEl.textContent = typeof error === 'string' ? error : JSON.stringify(error);
+        errorEl.classList.remove('hidden');
+      }
+    });
+
+    document.getElementById('elimina-progetto')?.addEventListener('click', async (e) => {
+      const id = (e.currentTarget as HTMLElement).dataset.id;
+      if (!confirm('Eliminare questo lavoro? L\'operazione non è reversibile.')) return;
+      const res = await fetch(`/api/admin/progetti/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        window.location.href = '/admin/progetti';
       } else {
         const { error } = await res.json();
         errorEl.textContent = typeof error === 'string' ? error : JSON.stringify(error);

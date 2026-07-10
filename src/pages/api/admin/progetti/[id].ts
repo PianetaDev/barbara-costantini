@@ -47,3 +47,19 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
   }
   return new Response(JSON.stringify({ ok: true }), { status: 200 });
 };
+
+export const DELETE: APIRoute = async ({ params, request, cookies }) => {
+  const supabase = createSupabaseServerClient(cookies, request);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return new Response(JSON.stringify({ error: 'Non autenticato' }), { status: 401 });
+  }
+
+  const { error } = await supabase.from('bc_projects').delete().eq('id', params.id);
+  if (error) {
+    return new Response(JSON.stringify({ error: error.message }), { status: 400 });
+  }
+  return new Response(JSON.stringify({ ok: true }), { status: 200 });
+};
