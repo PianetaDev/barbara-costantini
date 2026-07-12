@@ -31,6 +31,30 @@ if (!progetto) return Astro.redirect('/admin/progetti');
         <div id="immagini-list" class="flex flex-col gap-bc-md" data-immagini={JSON.stringify(progetto.immagini ?? [])}></div>
         <button type="button" id="aggiungi-immagine" class="bc-ghost mt-bc-xs">+ Aggiungi immagine</button>
       </div>
+
+      <div id="immagini-contenuto-wrap" data-immagini-contenuto={JSON.stringify(progetto.immaginiContenuto ?? [])}>
+        <p class="font-sans text-[14px] mb-bc-xs">Immagini contenuto (usate nel dettaglio pubblico)</p>
+        <div class="flex gap-bc-md">
+          <div>
+            <p class="text-[12px] mb-bc-2xs">Immagine 1</p>
+            {progetto.immaginiContenuto?.[0] && <img src={progetto.immaginiContenuto[0]} alt="" class="w-32 h-32 object-cover mb-bc-2xs" />}
+            <input type="file" id="immagine-contenuto-0" accept="image/jpeg,image/png,image/webp" />
+          </div>
+          <div>
+            <p class="text-[12px] mb-bc-2xs">Immagine 2</p>
+            {progetto.immaginiContenuto?.[1] && <img src={progetto.immaginiContenuto[1]} alt="" class="w-32 h-32 object-cover mb-bc-2xs" />}
+            <input type="file" id="immagine-contenuto-1" accept="image/jpeg,image/png,image/webp" />
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p class="font-sans text-[14px] mb-bc-xs">Metodo</p>
+        <textarea id="metodo-testo-0" placeholder="Primo paragrafo" class="border border-bc-black px-bc-md py-bc-xs w-full">{progetto.metodo?.testi?.[0] ?? ''}</textarea>
+        <input id="metodo-citazione" placeholder="Citazione" value={progetto.metodo?.citazione ?? ''} class="border border-bc-black px-bc-md py-bc-xs w-full mt-bc-xs" />
+        <textarea id="metodo-testo-1" placeholder="Secondo paragrafo (opzionale)" class="border border-bc-black px-bc-md py-bc-xs w-full mt-bc-xs">{progetto.metodo?.testi?.[1] ?? ''}</textarea>
+      </div>
+
       <button type="submit" class="bc-btn">Salva</button>
     </form>
     <p id="progetto-success" class="text-bc-black mt-bc-sm hidden">Salvato.</p>
@@ -188,6 +212,28 @@ if (!progetto) return Astro.redirect('/admin/progetti');
       renderImmagini();
     });
 
+    const immaginiContenutoWrap = document.getElementById('immagini-contenuto-wrap') as HTMLElement;
+    let immaginiContenuto: string[] = JSON.parse(immaginiContenutoWrap.dataset.immaginiContenuto || '[]');
+
+    document.getElementById('immagine-contenuto-0')?.addEventListener('change', async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+      immaginiContenuto[0] = await uploadFile(file);
+    });
+    document.getElementById('immagine-contenuto-1')?.addEventListener('change', async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+      immaginiContenuto[1] = await uploadFile(file);
+    });
+
+    function leggiMetodo() {
+      const testo0 = (document.getElementById('metodo-testo-0') as HTMLTextAreaElement).value;
+      const citazione = (document.getElementById('metodo-citazione') as HTMLInputElement).value;
+      const testo1 = (document.getElementById('metodo-testo-1') as HTMLTextAreaElement).value;
+      if (!testo0 && !citazione) return undefined;
+      return { testi: testo1 ? [testo0, testo1] : [testo0], citazione };
+    }
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       errorEl.classList.add('hidden');
@@ -206,6 +252,8 @@ if (!progetto) return Astro.redirect('/admin/progetti');
         intro: formData.get('intro'),
         sezioni,
         immagini,
+        immaginiContenuto,
+        metodo: leggiMetodo(),
       };
       const res = await fetch(`/api/admin/progetti/${id}`, {
         method: 'PATCH',
