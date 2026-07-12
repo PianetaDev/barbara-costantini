@@ -41,12 +41,12 @@ if (!progetto) return Astro.redirect('/admin/progetti');
         <div class="flex gap-bc-md">
           <div>
             <p class="text-[12px] mb-bc-2xs">Immagine 1</p>
-            {progetto.immaginiContenuto?.[0] && <img src={progetto.immaginiContenuto[0]} alt="" class="w-32 h-32 object-cover mb-bc-2xs" />}
+            <div id="immagine-contenuto-0-preview" class="w-32 h-32"></div>
             <input type="file" id="immagine-contenuto-0" accept="image/jpeg,image/png,image/webp" />
           </div>
           <div>
             <p class="text-[12px] mb-bc-2xs">Immagine 2</p>
-            {progetto.immaginiContenuto?.[1] && <img src={progetto.immaginiContenuto[1]} alt="" class="w-32 h-32 object-cover mb-bc-2xs" />}
+            <div id="immagine-contenuto-1-preview" class="w-32 h-32"></div>
             <input type="file" id="immagine-contenuto-1" accept="image/jpeg,image/png,image/webp" />
           </div>
         </div>
@@ -219,15 +219,31 @@ if (!progetto) return Astro.redirect('/admin/progetti');
     const immaginiContenutoWrap = document.getElementById('immagini-contenuto-wrap') as HTMLElement;
     let immaginiContenuto: string[] = JSON.parse(immaginiContenutoWrap.dataset.immaginiContenuto || '[]');
 
+    function renderImmagineContenuto(index: 0 | 1) {
+      const wrap = document.getElementById(`immagine-contenuto-${index}-preview`)!;
+      wrap.replaceChildren();
+      const src = immaginiContenuto[index];
+      if (!src) return;
+      const el = document.createElement('img');
+      el.src = src;
+      el.alt = '';
+      el.className = 'w-32 h-32 object-cover mb-bc-2xs';
+      wrap.appendChild(el);
+    }
+    renderImmagineContenuto(0);
+    renderImmagineContenuto(1);
+
     document.getElementById('immagine-contenuto-0')?.addEventListener('change', async (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (!file) return;
       immaginiContenuto[0] = await uploadFile(file);
+      renderImmagineContenuto(0);
     });
     document.getElementById('immagine-contenuto-1')?.addEventListener('change', async (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (!file) return;
       immaginiContenuto[1] = await uploadFile(file);
+      renderImmagineContenuto(1);
     });
 
     function leggiMetodo() {
