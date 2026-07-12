@@ -13,6 +13,12 @@ if (!progetto) return Astro.redirect('/admin/progetti');
       <label>Titolo <input name="titolo" value={progetto.titolo} class="border border-bc-black px-bc-md py-bc-xs w-full" /></label>
       <label>Committente <input name="committente" value={progetto.committente ?? ''} class="border border-bc-black px-bc-md py-bc-xs w-full" /></label>
       <label>Anno <input name="anno" value={progetto.anno ?? ''} placeholder="es. 2014-2016" class="border border-bc-black px-bc-md py-bc-xs w-full" /></label>
+      <label>Tipo
+        <select name="tipo" class="border border-bc-black px-bc-md py-bc-xs w-full">
+          <option value="horizontal" selected={progetto.tipo === 'horizontal'}>Horizontal</option>
+          <option value="vertical" selected={progetto.tipo === 'vertical'}>Vertical</option>
+        </select>
+      </label>
       <label>Introduzione</label>
       <RichTextEditor client:load name="intro" modelValue={progetto.intro ?? ''} />
       <button type="submit" class="bc-btn">Salva</button>
@@ -21,8 +27,8 @@ if (!progetto) return Astro.redirect('/admin/progetti');
     <p id="progetto-error" class="text-red-600 mt-bc-sm hidden"></p>
 
     <div class="mt-[64px] pt-[32px] border-t border-bc-black">
-      <button id="elimina-progetto" data-id={progetto.id} class="font-sans text-[14px] font-light text-red-600 underline underline-offset-2 hover:no-underline">
-        Elimina questo lavoro
+      <button id="archivia-progetto" data-id={progetto.id} class="font-sans text-[14px] font-light text-red-600 underline underline-offset-2 hover:no-underline">
+        Archivia questo lavoro
       </button>
     </div>
   </section>
@@ -45,6 +51,7 @@ if (!progetto) return Astro.redirect('/admin/progetti');
         titolo: formData.get('titolo'),
         committente: formData.get('committente'),
         anno: formData.get('anno') || undefined,
+        tipo: formData.get('tipo'),
         intro: formData.get('intro'),
       };
       const res = await fetch(`/api/admin/progetti/${id}`, {
@@ -61,10 +68,14 @@ if (!progetto) return Astro.redirect('/admin/progetti');
       }
     });
 
-    document.getElementById('elimina-progetto')?.addEventListener('click', async (e) => {
+    document.getElementById('archivia-progetto')?.addEventListener('click', async (e) => {
       const id = (e.currentTarget as HTMLElement).dataset.id;
-      if (!confirm('Eliminare questo lavoro? L\'operazione non è reversibile.')) return;
-      const res = await fetch(`/api/admin/progetti/${id}`, { method: 'DELETE' });
+      if (!confirm('Archiviare questo lavoro? Sparirà dal sito pubblico ma potrà essere ripristinato dalla lista Lavori.')) return;
+      const res = await fetch(`/api/admin/progetti/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ archiviato: true }),
+      });
       if (res.ok) {
         window.location.href = '/admin/progetti';
       } else {
