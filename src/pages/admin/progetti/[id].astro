@@ -6,6 +6,10 @@ import { createSupabaseServerClient } from '../../../lib/supabase';
 const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
 const { data: progetto } = await supabase.from('bc_projects').select('*').eq('id', Astro.params.id).single();
 if (!progetto) return Astro.redirect('/admin/progetti');
+// La riga grezza da Supabase usa snake_case (immagini_contenuto); il markup e lo
+// script più sotto usano camelCase (immaginiContenuto) come il resto della codebase
+// (vedi mapProgettoRow in src/lib/supabase-public.ts per lo stesso pattern lato pubblico).
+(progetto as Record<string, unknown>).immaginiContenuto = progetto.immagini_contenuto ?? [];
 ---
 <AdminLayout title={progetto.titolo} backHref="/admin/progetti" backLabel="Torna ai lavori">
   <section class="max-w-[680px]">
