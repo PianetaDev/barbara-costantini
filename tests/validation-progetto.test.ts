@@ -55,4 +55,25 @@ describe('validazione progetto', () => {
     expect(result.success && result.data).toEqual({ intro: '<p>solo intro</p>' });
     expect(result.success && 'ordine' in result.data).toBe(false);
   });
+
+  it('accetta archiviato e immaginiContenuto (max 2 elementi)', () => {
+    const result = progettoSchema.partial().safeParse({
+      archiviato: true,
+      immaginiContenuto: ['https://esempio.test/a.jpg', 'https://esempio.test/b.jpg'],
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('rifiuta immaginiContenuto con più di 2 elementi', () => {
+    const result = progettoSchema.partial().safeParse({
+      immaginiContenuto: ['a', 'b', 'c'],
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('un update parziale che omette archiviato non lo inietta con un default', () => {
+    const result = progettoSchema.partial().safeParse({ titolo: 'Solo titolo' });
+    expect(result.success).toBe(true);
+    expect(result.success && 'archiviato' in result.data).toBe(false);
+  });
 });

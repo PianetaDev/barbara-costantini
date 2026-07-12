@@ -28,4 +28,15 @@ describe('validazione team member', () => {
     expect(result.success && result.data).toEqual({ bio: 'solo bio' });
     expect(result.success && 'ordine' in result.data).toBe(false);
   });
+
+  it('accetta archiviato', () => {
+    const result = teamMemberSchema.partial().safeParse({ archiviato: true });
+    expect(result.success).toBe(true);
+  });
+
+  it('un update parziale che omette archiviato non lo inietta con un default', () => {
+    const result = teamMemberSchema.partial().safeParse({ nome: 'Solo nome' });
+    expect(result.success).toBe(true);
+    expect(result.success && 'archiviato' in result.data).toBe(false);
+  });
 });

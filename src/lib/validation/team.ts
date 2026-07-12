@@ -16,6 +16,7 @@ export const teamMemberSchema = z.object({
   // silenziosamente l'ordine esistente in bc_team_members. La colonna DB ha già
   // `default 0` per il caso insert.
   ordine: z.number().optional(),
+  archiviato: z.boolean().optional(),
 });
 
 export type TeamMember = z.infer<typeof teamMemberSchema>;
