@@ -3,9 +3,11 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
 import { createSupabaseServerClient } from '../../../lib/supabase';
 
 const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
-const { data: progetti } = await supabase.from('bc_projects').select('id, slug, titolo, committente, ordine').order('ordine');
+const { data: progetti } = await supabase.from('bc_projects').select('id, slug, titolo, committente, ordine').eq('archiviato', false).order('ordine');
+const { data: archiviati } = await supabase.from('bc_projects').select('id, titolo, committente').eq('archiviato', true).order('titolo');
 ---
 <AdminLayout title="Lavori">
+  <a href="/admin/progetti/nuovo" class="bc-btn inline-block mb-bc-md">+ Nuovo progetto</a>
   <ul id="progetti-list" class="flex flex-col divide-y divide-bc-black border-t border-bc-black">
     {progetti?.map((p) => (
       <li
@@ -30,6 +32,22 @@ const { data: progetti } = await supabase.from('bc_projects').select('id, slug, 
       </li>
     ))}
   </ul>
+  {archiviati && archiviati.length > 0 && (
+    <div class="mt-bc-2xl">
+      <p class="font-sans text-[14px] font-normal mb-bc-sm">Archiviati</p>
+      <ul class="flex flex-col divide-y divide-bc-black border-t border-bc-black">
+        {archiviati.map((p) => (
+          <li class="flex items-center justify-between py-[14px]">
+            <span class="font-sans text-[15px] font-light text-bc-black/60">{p.titolo} — {p.committente}</span>
+            <span class="flex gap-bc-sm">
+              <button data-action="ripristina" data-id={p.id} class="bc-ghost text-[13px]">Ripristina</button>
+              <button data-action="elimina" data-id={p.id} class="bc-ghost text-[13px] text-red-600">Elimina definitivamente</button>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
   <p id="reorder-status" class="mt-[16px] font-sans text-[13px] text-bc-black/50 hidden"></p>
 </AdminLayout>
 
@@ -85,5 +103,26 @@ const { data: progetti } = await supabase.from('bc_projects').select('id, slug, 
     });
     status.textContent = res.ok ? 'Ordine salvato.' : 'Errore nel salvataggio.';
     setTimeout(() => status.classList.add('hidden'), 2000);
+  });
+
+  document.querySelectorAll('[data-action="ripristina"]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const id = (btn as HTMLElement).dataset.id;
+      const res = await fetch(`/api/admin/progetti/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ archiviato: false }),
+      });
+      if (res.ok) window.location.reload();
+    });
+  });
+
+  document.querySelectorAll('[data-action="elimina"]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const id = (btn as HTMLElement).dataset.id;
+      if (!confirm('Cancellazione irreversibile. Continuare?')) return;
+      const res = await fetch(`/api/admin/progetti/${id}`, { method: 'DELETE' });
+      if (res.ok) window.location.reload();
+    });
   });
 </script>
