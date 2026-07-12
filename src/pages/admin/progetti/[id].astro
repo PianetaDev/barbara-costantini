@@ -26,6 +26,11 @@ if (!progetto) return Astro.redirect('/admin/progetti');
         <div id="sezioni-list" class="flex flex-col gap-bc-md" data-sezioni={JSON.stringify(progetto.sezioni ?? [])}></div>
         <button type="button" id="aggiungi-sezione" class="bc-ghost mt-bc-xs">+ Aggiungi sezione</button>
       </div>
+      <div>
+        <p class="font-sans text-[14px] mb-bc-xs">Galleria (carosello)</p>
+        <div id="immagini-list" class="flex flex-col gap-bc-md" data-immagini={JSON.stringify(progetto.immagini ?? [])}></div>
+        <button type="button" id="aggiungi-immagine" class="bc-ghost mt-bc-xs">+ Aggiungi immagine</button>
+      </div>
       <button type="submit" class="bc-btn">Salva</button>
     </form>
     <p id="progetto-success" class="text-bc-black mt-bc-sm hidden">Salvato.</p>
@@ -108,6 +113,81 @@ if (!progetto) return Astro.redirect('/admin/progetti');
       renderSezioni();
     });
 
+    interface ImmagineGalleria { src: string; label: string; aspetto?: 'h' | 'v' }
+
+    const immaginiList = document.getElementById('immagini-list')!;
+    let immagini: ImmagineGalleria[] = JSON.parse(immaginiList.dataset.immagini || '[]');
+
+    async function uploadFile(file: File): Promise<string> {
+      const uploadData = new FormData();
+      uploadData.append('file', file);
+      uploadData.append('bucket', 'barbara-costantini-progetti');
+      const res = await fetch('/api/admin/upload-image', { method: 'POST', body: uploadData });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error);
+      return json.url;
+    }
+
+    function renderImmagini() {
+      immaginiList.replaceChildren();
+      immagini.forEach((img, i) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'border border-bc-black p-bc-sm flex flex-col gap-bc-xs';
+
+        if (img.src) {
+          const preview = document.createElement('img');
+          preview.src = img.src;
+          preview.alt = '';
+          preview.className = 'w-32 h-32 object-cover';
+          wrap.appendChild(preview);
+        }
+
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'image/jpeg,image/png,image/webp';
+        fileInput.addEventListener('change', async () => {
+          const file = fileInput.files?.[0];
+          if (!file) return;
+          img.src = await uploadFile(file);
+          renderImmagini();
+        });
+
+        const labelInput = document.createElement('input');
+        labelInput.placeholder = 'Etichetta';
+        labelInput.value = img.label;
+        labelInput.className = 'border border-bc-black px-bc-md py-bc-xs w-full';
+        labelInput.addEventListener('input', () => { img.label = labelInput.value; });
+
+        const aspettoSelect = document.createElement('select');
+        aspettoSelect.className = 'border border-bc-black px-bc-md py-bc-xs w-full';
+        ['', 'h', 'v'].forEach((v) => {
+          const opt = document.createElement('option');
+          opt.value = v;
+          opt.textContent = v === '' ? '(nessuno)' : v;
+          opt.selected = (img.aspetto ?? '') === v;
+          aspettoSelect.appendChild(opt);
+        });
+        aspettoSelect.addEventListener('change', () => {
+          img.aspetto = aspettoSelect.value === '' ? undefined : (aspettoSelect.value as 'h' | 'v');
+        });
+
+        const rimuovi = document.createElement('button');
+        rimuovi.type = 'button';
+        rimuovi.textContent = 'Rimuovi immagine';
+        rimuovi.className = 'bc-ghost self-start text-red-600';
+        rimuovi.addEventListener('click', () => { immagini.splice(i, 1); renderImmagini(); });
+
+        wrap.append(fileInput, labelInput, aspettoSelect, rimuovi);
+        immaginiList.appendChild(wrap);
+      });
+    }
+    renderImmagini();
+
+    document.getElementById('aggiungi-immagine')?.addEventListener('click', () => {
+      immagini.push({ src: '', label: '' });
+      renderImmagini();
+    });
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       errorEl.classList.add('hidden');
@@ -125,6 +205,7 @@ if (!progetto) return Astro.redirect('/admin/progetti');
         tipo: formData.get('tipo'),
         intro: formData.get('intro'),
         sezioni,
+        immagini,
       };
       const res = await fetch(`/api/admin/progetti/${id}`, {
         method: 'PATCH',
