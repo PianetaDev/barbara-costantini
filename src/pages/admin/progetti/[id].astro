@@ -21,6 +21,11 @@ if (!progetto) return Astro.redirect('/admin/progetti');
       </label>
       <label>Introduzione</label>
       <RichTextEditor client:load name="intro" modelValue={progetto.intro ?? ''} />
+      <div>
+        <p class="font-sans text-[14px] mb-bc-xs">Sezioni</p>
+        <div id="sezioni-list" class="flex flex-col gap-bc-md" data-sezioni={JSON.stringify(progetto.sezioni ?? [])}></div>
+        <button type="button" id="aggiungi-sezione" class="bc-ghost mt-bc-xs">+ Aggiungi sezione</button>
+      </div>
       <button type="submit" class="bc-btn">Salva</button>
     </form>
     <p id="progetto-success" class="text-bc-black mt-bc-sm hidden">Salvato.</p>
@@ -36,6 +41,72 @@ if (!progetto) return Astro.redirect('/admin/progetti');
     const form = document.getElementById('progetto-form') as HTMLFormElement;
     const errorEl = document.getElementById('progetto-error')!;
     const successEl = document.getElementById('progetto-success')!;
+
+    interface Sezione { titolo: string; sottotitolo: string; testi: string[] }
+
+    const sezioniList = document.getElementById('sezioni-list')!;
+    let sezioni: Sezione[] = JSON.parse(sezioniList.dataset.sezioni || '[]');
+
+    function renderSezioni() {
+      sezioniList.replaceChildren();
+      sezioni.forEach((sezione, i) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'border border-bc-black p-bc-sm flex flex-col gap-bc-xs';
+
+        const titoloInput = document.createElement('input');
+        titoloInput.placeholder = 'Titolo sezione';
+        titoloInput.value = sezione.titolo;
+        titoloInput.className = 'border border-bc-black px-bc-md py-bc-xs w-full';
+        titoloInput.addEventListener('input', () => { sezioni[i].titolo = titoloInput.value; });
+
+        const sottotitoloInput = document.createElement('input');
+        sottotitoloInput.placeholder = 'Sottotitolo';
+        sottotitoloInput.value = sezione.sottotitolo;
+        sottotitoloInput.className = 'border border-bc-black px-bc-md py-bc-xs w-full';
+        sottotitoloInput.addEventListener('input', () => { sezioni[i].sottotitolo = sottotitoloInput.value; });
+
+        const testiWrap = document.createElement('div');
+        testiWrap.className = 'flex flex-col gap-bc-2xs';
+        function renderTesti() {
+          testiWrap.replaceChildren();
+          sezione.testi.forEach((testo, j) => {
+            const textarea = document.createElement('textarea');
+            textarea.placeholder = `Paragrafo ${j + 1}`;
+            textarea.value = testo;
+            textarea.className = 'border border-bc-black px-bc-md py-bc-xs w-full';
+            textarea.addEventListener('input', () => { sezioni[i].testi[j] = textarea.value; });
+            const rimuoviTesto = document.createElement('button');
+            rimuoviTesto.type = 'button';
+            rimuoviTesto.textContent = 'Rimuovi paragrafo';
+            rimuoviTesto.className = 'bc-ghost self-start text-[12px]';
+            rimuoviTesto.addEventListener('click', () => { sezione.testi.splice(j, 1); renderTesti(); });
+            testiWrap.append(textarea, rimuoviTesto);
+          });
+        }
+        renderTesti();
+
+        const aggiungiTesto = document.createElement('button');
+        aggiungiTesto.type = 'button';
+        aggiungiTesto.textContent = '+ Paragrafo';
+        aggiungiTesto.className = 'bc-ghost self-start text-[12px]';
+        aggiungiTesto.addEventListener('click', () => { sezione.testi.push(''); renderTesti(); });
+
+        const rimuoviSezione = document.createElement('button');
+        rimuoviSezione.type = 'button';
+        rimuoviSezione.textContent = 'Rimuovi sezione';
+        rimuoviSezione.className = 'bc-ghost self-start text-red-600';
+        rimuoviSezione.addEventListener('click', () => { sezioni.splice(i, 1); renderSezioni(); });
+
+        wrap.append(titoloInput, sottotitoloInput, testiWrap, aggiungiTesto, rimuoviSezione);
+        sezioniList.appendChild(wrap);
+      });
+    }
+    renderSezioni();
+
+    document.getElementById('aggiungi-sezione')?.addEventListener('click', () => {
+      sezioni.push({ titolo: '', sottotitolo: '', testi: [''] });
+      renderSezioni();
+    });
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -53,6 +124,7 @@ if (!progetto) return Astro.redirect('/admin/progetti');
         anno: formData.get('anno') || undefined,
         tipo: formData.get('tipo'),
         intro: formData.get('intro'),
+        sezioni,
       };
       const res = await fetch(`/api/admin/progetti/${id}`, {
         method: 'PATCH',
