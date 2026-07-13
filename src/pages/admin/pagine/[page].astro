@@ -29,7 +29,51 @@ const FIELD_LABELS: Record<string, Record<string, string>> = {
     indirizzo: 'Indirizzo',
   },
   servizi: {
-    intro: 'Testo introduttivo',
+    hero_titolo: 'Titolo pagina',
+    hero_testo: 'Testo introduttivo (colonna destra)',
+    g1_titolo: 'Gruppo 1 — Titolo sezione',
+    g1_s1_titolo: 'Gruppo 1 · Servizio 1 — Titolo',
+    g1_s1_corpo: 'Gruppo 1 · Servizio 1 — Descrizione',
+    g1_s2_titolo: 'Gruppo 1 · Servizio 2 — Titolo',
+    g1_s2_corpo: 'Gruppo 1 · Servizio 2 — Descrizione',
+    g1_s3_titolo: 'Gruppo 1 · Servizio 3 — Titolo',
+    g1_s3_corpo: 'Gruppo 1 · Servizio 3 — Descrizione',
+    g1_s4_titolo: 'Gruppo 1 · Servizio 4 — Titolo',
+    g1_s4_corpo: 'Gruppo 1 · Servizio 4 — Descrizione',
+    g2_titolo: 'Gruppo 2 — Titolo sezione',
+    g2_s1_titolo: 'Gruppo 2 · Servizio 1 — Titolo',
+    g2_s1_corpo: 'Gruppo 2 · Servizio 1 — Descrizione',
+    g2_s2_titolo: 'Gruppo 2 · Servizio 2 — Titolo',
+    g2_s2_corpo: 'Gruppo 2 · Servizio 2 — Descrizione',
+    g2_s3_titolo: 'Gruppo 2 · Servizio 3 — Titolo',
+    g2_s3_corpo: 'Gruppo 2 · Servizio 3 — Descrizione',
+    g2_s4_titolo: 'Gruppo 2 · Servizio 4 — Titolo',
+    g2_s4_corpo: 'Gruppo 2 · Servizio 4 — Descrizione',
+    g3_titolo: 'Gruppo 3 — Titolo sezione',
+    g3_s1_titolo: 'Gruppo 3 · Servizio 1 — Titolo',
+    g3_s1_corpo: 'Gruppo 3 · Servizio 1 — Descrizione',
+    g3_s2_titolo: 'Gruppo 3 · Servizio 2 — Titolo',
+    g3_s2_corpo: 'Gruppo 3 · Servizio 2 — Descrizione',
+    g3_s3_titolo: 'Gruppo 3 · Servizio 3 — Titolo',
+    g3_s3_corpo: 'Gruppo 3 · Servizio 3 — Descrizione',
+    g3_s4_titolo: 'Gruppo 3 · Servizio 4 — Titolo',
+    g3_s4_corpo: 'Gruppo 3 · Servizio 4 — Descrizione',
+    g4_titolo: 'Gruppo 4 — Titolo sezione',
+    g4_s1_titolo: 'Gruppo 4 · Servizio 1 — Titolo',
+    g4_s1_corpo: 'Gruppo 4 · Servizio 1 — Descrizione',
+    g4_s2_titolo: 'Gruppo 4 · Servizio 2 — Titolo',
+    g4_s2_corpo: 'Gruppo 4 · Servizio 2 — Descrizione',
+    g4_s3_titolo: 'Gruppo 4 · Servizio 3 — Titolo',
+    g4_s3_corpo: 'Gruppo 4 · Servizio 3 — Descrizione',
+    g4_s4_titolo: 'Gruppo 4 · Servizio 4 — Titolo',
+    g4_s4_corpo: 'Gruppo 4 · Servizio 4 — Descrizione',
+    p1_titolo: 'Partner 1 — Nome',
+    p1_testo: 'Partner 1 — Descrizione',
+    p2_titolo: 'Partner 2 — Nome',
+    p2_testo: 'Partner 2 — Descrizione',
+    p3_titolo: 'Partner 3 — Nome',
+    p3_testo: 'Partner 3 — Descrizione',
+    cta_testo: 'CTA — Testo finale',
   },
   'privacy-policy': {
     html_body: 'Contenuto Privacy Policy (HTML)',
@@ -48,7 +92,7 @@ const labelsForPage = FIELD_LABELS[pageParam ?? ''] ?? {};
 
 // Campi che usano textarea invece di input (testi lunghi).
 function isTextarea(chiave: string): boolean {
-  return chiave.endsWith('_testo') || chiave === 'bio_testo' || chiave === 'html_body';
+  return chiave.endsWith('_testo') || chiave.endsWith('_corpo') || chiave === 'html_body';
 }
 
 const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
