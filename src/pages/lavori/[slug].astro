@@ -133,7 +133,28 @@ const metaVoci = [
 // confine verso i visitatori pubblici, quindi non si fida ciecamente di ciò che è
 // nel DB indipendentemente da come ci sia arrivato (es. una riga modificata a mano
 // su Supabase bypasserebbe la sanificazione in scrittura). Vedi src/lib/sanitize-intro.ts.
-const introHtml = progetto.intro ? sanitizeIntroHtml(progetto.intro) : '';
+// PIA-85/86: se blocks è popolato usalo; altrimenti converti sezioni legacy (seed).
+// Questo specchia la logica di admin/progetti/[id].astro così il frontend mostra
+// sempre lo stesso contenuto che vede l'admin — prima e dopo la migrazione manuale.
+const existingBlocks: any[] = (progetto as any).blocks ?? [];
+const frontendBlocks: any[] = existingBlocks.length > 0
+  ? existingBlocks
+  : [
+      ...(progetto.sezioni ?? []).flatMap((s) => [
+        ...(s.titolo ? [{ type: 'h2', content: s.titolo }] : []),
+        ...(s.sottotitolo ? [{ type: 'h3', content: s.sottotitolo }] : []),
+        ...(s.testi ?? []).map((t) => ({ type: 'text', content: t })),
+      ]),
+      ...(progetto.metodo
+        ? [{ type: 'quote', text: (progetto.metodo.testi ?? []).join('\n\n'), citazione: progetto.metodo.citazione ?? '' }]
+        : []),
+    ];
+// PIA-85: nasconde intro solo se ci sono blocks SALVATI (colonna blocks non vuota).
+// Se i blocks derivano dalla conversione sezioni (existingBlocks vuoto), intro
+// rimane visibile — intro e sezioni sono contenuti distinti in aree diverse.
+const introHtml = (existingBlocks.length === 0 && progetto.intro)
+  ? sanitizeIntroHtml(progetto.intro)
+  : '';
 ---
 <BaseLayout title={progetto.titolo} hideNav>
   <div>
@@ -174,7 +195,7 @@ const introHtml = progetto.intro ? sanitizeIntroHtml(progetto.intro) : '';
     </div>
 
     <!-- Corpo pagina: blocchi CMS -->
-    {((progetto as any).blocks ?? []).map((b: any) => {
+    {frontendBlocks.map((b: any) => {
       if (b.type === 'h2') return (
         <div class="px-bc-page pb-[32px] bc-grid bc-2col bc-442">
           <div class="bc-spacer-l" />

@@ -35,6 +35,7 @@ try {
   // fallback: defaults used below
 }
 const heroTitolo = pageContent.hero_titolo || 'Barbara Costantini Restauro';
+const heroTesto = pageContent.hero_testo || '';
 ---
 <BaseLayout title="Barbara Costantini Restauro" titleIsFull>
   <!-- Hero: testo sx + foto quadrata dx -->
@@ -44,6 +45,7 @@ const heroTitolo = pageContent.hero_titolo || 'Barbara Costantini Restauro';
         <h1 class="font-sans text-[28px] lg:text-bc-h1 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">
           {heroTitolo}
         </h1>
+        {heroTesto && <p class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] leading-[1.5]">{heroTesto}</p>}
         <div><a href="/studio" class="bc-ghost">Scopri il nostro studio →</a></div>
       </div>
       <div class="aspect-square overflow-hidden my-[32px]">

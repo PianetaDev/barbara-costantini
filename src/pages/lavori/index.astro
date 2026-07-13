@@ -6,7 +6,7 @@
 // dall'array statico src/data/progetti.ts.
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getProgetti } from '../../lib/supabase-public';
+import { getProgetti, getPageContent } from '../../lib/supabase-public';
 import { risolviImmagine } from '../../utils/imagenes';
 
 // output: 'server' (astro.config.mjs) rende già questa pagina SSR di default;
@@ -33,6 +33,11 @@ try {
 // codice progressivo "01".."12" del vecchio array statico: ricostruiamo lo stesso
 // formato di visualizzazione ("PRJ01"...) dalla colonna `ordine` (0-based, stesso
 // ordine di inserimento del seed — vedi scripts/seed-bc-cms.mjs).
+let lavoriContent: Record<string, string> = {};
+try { lavoriContent = await getPageContent('lavori'); } catch {}
+const heroTitolo = lavoriContent.hero_titolo || 'I lavori';
+const heroTesto = lavoriContent.hero_testo || '';
+
 const progetti = progettiDb.map((p) => ({
   codice: `PRJ${String(p.ordine + 1).padStart(2, '0')}`,
   committente: p.committente,
@@ -49,14 +54,12 @@ const progetti = progettiDb.map((p) => ({
                 py-[48px] tablet:py-[64px] gap-y-[32px] tablet:gap-y-0">
       <div class="flex flex-col justify-start tablet:pr-[80px]">
         <h1 class="font-sans text-[28px] lg:text-bc-h1 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">
-          I lavori&nbsp;&nbsp;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel.
+          {heroTitolo}
         </h1>
       </div>
       <div class="flex items-start justify-center tablet:pl-[40px] lg:pl-0">
         <div class="lg:w-[442px] tablet:pt-[12px] lg:pt-[18px]">
-          <p class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] leading-[1.5]">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.
-          </p>
+          {heroTesto && <p class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] leading-[1.5]">{heroTesto}</p>}
         </div>
       </div>
     </div>

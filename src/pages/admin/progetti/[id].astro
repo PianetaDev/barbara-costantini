@@ -44,6 +44,10 @@ const blocks: any[] = (existingBlocks && existingBlocks.length > 0)
       <h2 class="font-sans text-[13px] uppercase tracking-widest text-bc-black/50 mb-[24px]">Info base</h2>
       <form id="info-form" class="flex flex-col gap-bc-md" data-id={progetto.id}>
         <label class="flex flex-col gap-[6px] font-sans text-[14px] font-light">
+          Slug (URL: /lavori/<strong>{progetto.slug}</strong>)
+          <input name="slug" value={progetto.slug} class="border border-bc-black px-bc-md py-bc-xs w-full font-mono text-[13px]" />
+        </label>
+        <label class="flex flex-col gap-[6px] font-sans text-[14px] font-light">
           Titolo
           <input name="titolo" value={progetto.titolo} class="border border-bc-black px-bc-md py-bc-xs w-full" />
         </label>
@@ -167,6 +171,7 @@ const blocks: any[] = (existingBlocks && existingBlocks.length > 0)
     const id = form.dataset.id!;
     const fd = new FormData(form);
     await patch(id, {
+      slug: fd.get('slug') || undefined,
       titolo: fd.get('titolo'),
       committente: fd.get('committente'),
       anno: fd.get('anno') || undefined,
