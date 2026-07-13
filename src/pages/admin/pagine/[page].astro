@@ -5,7 +5,6 @@ import { createSupabaseServerClient } from '../../../lib/supabase';
 import { pageContentSchema } from '../../../lib/validation/page-content';
 import ServiziGruppiEditor from '../../../components/admin/ServiziGruppiEditor.vue';
 import ServiziPartnerEditor from '../../../components/admin/ServiziPartnerEditor.vue';
-import LivePreviewPanel from '../../../components/admin/LivePreviewPanel.vue';
 
 // Riusa l'array della whitelist Zod invece di duplicarlo qui a mano (DRY con
 // src/lib/validation/page-content.ts, unica fonte di verità sulle pagine ammesse).
@@ -85,7 +84,7 @@ const serviziFlat: Record<string, string> = isServizi ? {
   cta_testo: String(content.cta_testo ?? ''),
 } : {};
 ---
-<AdminLayout title={paginaNonTrovata ? 'Pagina non trovata' : `Pagina: ${pageParam}`}>
+<AdminLayout title={paginaNonTrovata ? 'Pagina non trovata' : `Pagina: ${pageParam}`} previewSrc={paginaNonTrovata ? undefined : `/${pageParam}`}>
   <section class="max-w-[680px]">
     {paginaNonTrovata ? (
       <>
@@ -167,9 +166,6 @@ const serviziFlat: Record<string, string> = isServizi ? {
       </>
     )}
   </section>
-  {!paginaNonTrovata && (
-    <LivePreviewPanel client:load page={pageParam!} initialContent={content} />
-  )}
   <script define:vars={{ page: pageParam, isServizi }}>
     const form = document.getElementById('page-form');
     if (form) {
@@ -195,6 +191,7 @@ const serviziFlat: Record<string, string> = isServizi ? {
         });
         if (res.ok) {
           successEl.classList.remove('hidden');
+          window.dispatchEvent(new CustomEvent('preview-refresh'));
         } else {
           const { error } = await res.json();
           errorEl.textContent = typeof error === 'string' ? error : JSON.stringify(error);

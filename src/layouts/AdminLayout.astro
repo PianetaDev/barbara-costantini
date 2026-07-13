@@ -11,8 +11,10 @@ interface Props {
   backLabel?: string;
   /** Nasconde la sidebar (per pagine pre-autenticazione: login, reset password) */
   hideSidebar?: boolean;
+  /** Se presente, attiva la split view: form a sinistra, iframe della pagina a destra */
+  previewSrc?: string;
 }
-const { title, backHref, backLabel = 'Indietro', hideSidebar = false } = Astro.props;
+const { title, backHref, backLabel = 'Indietro', hideSidebar = false, previewSrc } = Astro.props;
 const path = Astro.url.pathname;
 
 const navGroups = [
@@ -48,10 +50,10 @@ const navGroups = [
     <title>{title} — Admin</title>
     <link rel="icon" href="/logo.svg" />
   </head>
-  <body class="bg-bc-canvas text-bc-black font-sans min-h-screen flex">
+  <body class={`bg-bc-canvas text-bc-black font-sans flex ${previewSrc ? 'h-screen overflow-hidden' : 'min-h-screen'}`}>
 
     <!-- Sidebar -->
-    {!hideSidebar && <aside class="w-[220px] shrink-0 border-r border-bc-black flex flex-col min-h-screen">
+    {!hideSidebar && <aside class={`w-[220px] shrink-0 border-r border-bc-black flex flex-col ${previewSrc ? 'h-screen overflow-y-auto' : 'min-h-screen'}`}>
       <div class="px-[24px] py-[32px] border-b border-bc-black">
         <p class="font-sans text-[15px] font-normal text-bc-black tracking-[0.02em]">Admin</p>
       </div>
@@ -88,13 +90,23 @@ const navGroups = [
       </div>
     </aside>}
 
+    <!-- Script reload iframe su salvataggio -->
+    {previewSrc && (
+      <script>
+        window.addEventListener('preview-refresh', () => {
+          const iframe = document.getElementById('admin-preview-iframe') as HTMLIFrameElement | null;
+          if (iframe) iframe.src = iframe.src;
+        });
+      </script>
+    )}
+
     <!-- Contenuto principale -->
     {hideSidebar ? (
       <main class="flex-1 flex items-center justify-center px-[24px] py-[80px]">
         <slot />
       </main>
     ) : (
-      <div class="flex-1 flex flex-col min-h-screen overflow-x-hidden">
+      <div class={`flex-1 flex flex-col overflow-x-hidden ${previewSrc ? 'h-screen' : 'min-h-screen'}`}>
         <!-- Topbar -->
         <header class="border-b border-bc-black px-[40px] py-[20px] flex items-center gap-[16px]">
           {backHref && (
@@ -107,9 +119,25 @@ const navGroups = [
           <h1 class="font-sans text-[18px] font-normal text-bc-black tracking-[0.02em]">{title}</h1>
         </header>
 
-        <main class="flex-1 px-[40px] py-[40px]">
-          <slot />
-        </main>
+        {previewSrc ? (
+          <div class="flex-1 flex overflow-hidden">
+            <div class="w-[500px] shrink-0 overflow-y-auto px-[40px] py-[40px] border-r border-bc-black">
+              <slot />
+            </div>
+            <div class="flex-1 overflow-hidden">
+              <iframe
+                id="admin-preview-iframe"
+                src={previewSrc}
+                class="w-full h-full border-none"
+                title="preview"
+              />
+            </div>
+          </div>
+        ) : (
+          <main class="flex-1 px-[40px] py-[40px]">
+            <slot />
+          </main>
+        )}
       </div>
     )}
 

@@ -36,7 +36,7 @@ const blocks: any[] = (existingBlocks && existingBlocks.length > 0)
         : []),
     ];
 ---
-<AdminLayout title={progetto.titolo} backHref="/admin/progetti" backLabel="Torna ai lavori">
+<AdminLayout title={progetto.titolo} backHref="/admin/progetti" backLabel="Torna ai lavori" previewSrc={`/lavori/${progetto.slug}`}>
   <div class="max-w-[720px] flex flex-col gap-[56px]">
 
     <!-- INFO BASE -->
@@ -157,6 +157,7 @@ const blocks: any[] = (existingBlocks && existingBlocks.length > 0)
     if (res.ok) {
       successEl.classList.remove('hidden');
       setTimeout(() => successEl.classList.add('hidden'), 2000);
+      window.dispatchEvent(new CustomEvent('preview-refresh'));
     } else {
       const { error } = await res.json();
       errorEl.textContent = typeof error === 'string' ? error : JSON.stringify(error);
@@ -231,6 +232,7 @@ const blocks: any[] = (existingBlocks && existingBlocks.length > 0)
       if (res.ok) {
         successEl!.classList.remove('hidden');
         setTimeout(() => successEl!.classList.add('hidden'), 2000);
+        window.dispatchEvent(new CustomEvent('preview-refresh'));
       } else {
         const { error } = await res.json();
         errorEl!.textContent = typeof error === 'string' ? error : JSON.stringify(error);
