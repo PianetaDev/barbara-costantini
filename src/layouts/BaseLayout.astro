@@ -4,6 +4,7 @@ import '../styles/global.css';
 import Nav from '../components/Nav.vue';
 import Footer from '../components/Footer.astro';
 import CookieBanner from '../components/CookieBanner.vue';
+import { getPageContent } from '../lib/supabase-public';
 
 interface Props {
   title: string;
@@ -23,6 +24,16 @@ const {
 // data-source distingue chi segnala (pubblico del sito vs. team che lavora nell'admin),
 // stessa convenzione già usata su Apotheke (vedi apotheke-cms-improvements).
 const segnaleSource = Astro.url.pathname.startsWith('/admin') ? 'admin' : 'public';
+
+// PIA-77: carica i dati del footer dal CMS una volta sola nel layout, evitando
+// chiamate ridondanti in ogni pagina. getPageContent già gestisce errori internamente
+// (ritorna {}); il try/catch è difesa extra contro eccezioni impreviste.
+let footerContent: Record<string, string> = {};
+try {
+  footerContent = await getPageContent('footer');
+} catch {
+  // fallback: Footer usa i valori hardcoded di default
+}
 ---
 <!doctype html>
 <html lang="it">
@@ -45,7 +56,7 @@ const segnaleSource = Astro.url.pathname.startsWith('/admin') ? 'admin' : 'publi
     <main>
       <slot />
     </main>
-    <Footer />
+    <Footer content={footerContent} />
     <CookieBanner client:load />
   </body>
 </html>
