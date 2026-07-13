@@ -15,15 +15,28 @@ interface Props {
 const { title, backHref, backLabel = 'Indietro', hideSidebar = false } = Astro.props;
 const path = Astro.url.pathname;
 
-const navItems = [
-  { label: 'Lavori', href: '/admin/progetti' },
-  { label: 'Home', href: '/admin/pagine/home' },
-  { label: 'Studio', href: '/admin/pagine/studio' },
-  { label: 'Contatti', href: '/admin/pagine/contatti' },
-  { label: 'Servizi', href: '/admin/pagine/servizi' },
-  { label: 'Privacy Policy', href: '/admin/pagine/privacy-policy' },
-  { label: 'Cookie Policy', href: '/admin/pagine/cookie-policy' },
-  { label: 'Footer', href: '/admin/pagine/footer' },
+const navGroups = [
+  {
+    label: 'Contenuto',
+    items: [
+      { label: 'Lavori', href: '/admin/progetti' },
+      { label: '+ Nuovo lavoro', href: '/admin/progetti/nuovo' },
+      { label: 'Team', href: '/admin/team' },
+      { label: '+ Nuovo membro', href: '/admin/team/nuovo' },
+    ],
+  },
+  {
+    label: 'Pagine',
+    items: [
+      { label: 'Home', href: '/admin/pagine/home' },
+      { label: 'Studio', href: '/admin/pagine/studio' },
+      { label: 'Contatti', href: '/admin/pagine/contatti' },
+      { label: 'Servizi', href: '/admin/pagine/servizi' },
+      { label: 'Privacy Policy', href: '/admin/pagine/privacy-policy' },
+      { label: 'Cookie Policy', href: '/admin/pagine/cookie-policy' },
+      { label: 'Footer', href: '/admin/pagine/footer' },
+    ],
+  },
 ];
 ---
 <!doctype html>
@@ -41,23 +54,30 @@ const navItems = [
       <div class="px-[24px] py-[32px] border-b border-bc-black">
         <p class="font-sans text-[15px] font-normal text-bc-black tracking-[0.02em]">Admin</p>
       </div>
-      <nav class="flex flex-col py-[24px] flex-1">
-        {navItems.map((item) => {
-          const active = path.startsWith(item.href);
-          return (
-            <a
-              href={item.href}
-              class:list={[
-                'px-[24px] py-[10px] font-sans text-[14px] tracking-[0.02em] transition-colors',
-                active
-                  ? 'font-normal bg-bc-black text-bc-canvas'
-                  : 'font-light hover:underline',
-              ]}
-            >
-              {item.label}
-            </a>
-          );
-        })}
+      <nav class="flex flex-col py-[16px] flex-1">
+        {navGroups.map((group) => (
+          <div class="mb-[8px]">
+            <p class="px-[24px] py-[6px] font-sans text-[10px] uppercase tracking-widest text-bc-black/40">
+              {group.label}
+            </p>
+            {group.items.map((item) => {
+              const active = path === item.href || (item.href !== '/admin/progetti' && path.startsWith(item.href));
+              return (
+                <a
+                  href={item.href}
+                  class:list={[
+                    'px-[24px] py-[8px] font-sans text-[14px] tracking-[0.02em] transition-colors block',
+                    active
+                      ? 'font-normal bg-bc-black text-bc-canvas'
+                      : 'font-light hover:underline',
+                  ]}
+                >
+                  {item.label}
+                </a>
+              );
+            })}
+          </div>
+        ))}
       </nav>
       <div class="px-[24px] py-[24px] border-t border-bc-black">
         <a href="/" target="_blank" rel="noopener noreferrer"
