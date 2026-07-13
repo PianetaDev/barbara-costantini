@@ -3,6 +3,8 @@
 import AdminLayout from '../../../layouts/AdminLayout.astro';
 import { createSupabaseServerClient } from '../../../lib/supabase';
 import { pageContentSchema } from '../../../lib/validation/page-content';
+import ServiziGruppiEditor from '../../../components/admin/ServiziGruppiEditor.vue';
+import ServiziPartnerEditor from '../../../components/admin/ServiziPartnerEditor.vue';
 
 // Riusa l'array della whitelist Zod invece di duplicarlo qui a mano (DRY con
 // src/lib/validation/page-content.ts, unica fonte di verità sulle pagine ammesse).
@@ -31,48 +33,6 @@ const FIELD_LABELS: Record<string, Record<string, string>> = {
   servizi: {
     hero_titolo: 'Titolo pagina',
     hero_testo: 'Testo introduttivo (colonna destra)',
-    g1_titolo: 'Gruppo 1 — Titolo sezione',
-    g1_s1_titolo: 'Gruppo 1 · Servizio 1 — Titolo',
-    g1_s1_corpo: 'Gruppo 1 · Servizio 1 — Descrizione',
-    g1_s2_titolo: 'Gruppo 1 · Servizio 2 — Titolo',
-    g1_s2_corpo: 'Gruppo 1 · Servizio 2 — Descrizione',
-    g1_s3_titolo: 'Gruppo 1 · Servizio 3 — Titolo',
-    g1_s3_corpo: 'Gruppo 1 · Servizio 3 — Descrizione',
-    g1_s4_titolo: 'Gruppo 1 · Servizio 4 — Titolo',
-    g1_s4_corpo: 'Gruppo 1 · Servizio 4 — Descrizione',
-    g2_titolo: 'Gruppo 2 — Titolo sezione',
-    g2_s1_titolo: 'Gruppo 2 · Servizio 1 — Titolo',
-    g2_s1_corpo: 'Gruppo 2 · Servizio 1 — Descrizione',
-    g2_s2_titolo: 'Gruppo 2 · Servizio 2 — Titolo',
-    g2_s2_corpo: 'Gruppo 2 · Servizio 2 — Descrizione',
-    g2_s3_titolo: 'Gruppo 2 · Servizio 3 — Titolo',
-    g2_s3_corpo: 'Gruppo 2 · Servizio 3 — Descrizione',
-    g2_s4_titolo: 'Gruppo 2 · Servizio 4 — Titolo',
-    g2_s4_corpo: 'Gruppo 2 · Servizio 4 — Descrizione',
-    g3_titolo: 'Gruppo 3 — Titolo sezione',
-    g3_s1_titolo: 'Gruppo 3 · Servizio 1 — Titolo',
-    g3_s1_corpo: 'Gruppo 3 · Servizio 1 — Descrizione',
-    g3_s2_titolo: 'Gruppo 3 · Servizio 2 — Titolo',
-    g3_s2_corpo: 'Gruppo 3 · Servizio 2 — Descrizione',
-    g3_s3_titolo: 'Gruppo 3 · Servizio 3 — Titolo',
-    g3_s3_corpo: 'Gruppo 3 · Servizio 3 — Descrizione',
-    g3_s4_titolo: 'Gruppo 3 · Servizio 4 — Titolo',
-    g3_s4_corpo: 'Gruppo 3 · Servizio 4 — Descrizione',
-    g4_titolo: 'Gruppo 4 — Titolo sezione',
-    g4_s1_titolo: 'Gruppo 4 · Servizio 1 — Titolo',
-    g4_s1_corpo: 'Gruppo 4 · Servizio 1 — Descrizione',
-    g4_s2_titolo: 'Gruppo 4 · Servizio 2 — Titolo',
-    g4_s2_corpo: 'Gruppo 4 · Servizio 2 — Descrizione',
-    g4_s3_titolo: 'Gruppo 4 · Servizio 3 — Titolo',
-    g4_s3_corpo: 'Gruppo 4 · Servizio 3 — Descrizione',
-    g4_s4_titolo: 'Gruppo 4 · Servizio 4 — Titolo',
-    g4_s4_corpo: 'Gruppo 4 · Servizio 4 — Descrizione',
-    p1_titolo: 'Partner 1 — Nome',
-    p1_testo: 'Partner 1 — Descrizione',
-    p2_titolo: 'Partner 2 — Nome',
-    p2_testo: 'Partner 2 — Descrizione',
-    p3_titolo: 'Partner 3 — Nome',
-    p3_testo: 'Partner 3 — Descrizione',
     cta_testo: 'CTA — Testo finale',
   },
   'privacy-policy': {
@@ -106,7 +66,19 @@ const { data: pagina } = isPaginaValida
 // select pubblica è `using (true)`), ma un form vuoto per una pagina inesistente è
 // un'esperienza confusa per chi sta amministrando i contenuti.
 const paginaNonTrovata = !isPaginaValida;
-const content = pagina?.content ?? {};
+const content = pagina?.content ?? {} as Record<string, any>;
+const isServizi = pageParam === 'servizi';
+
+// Per la pagina servizi, estrai gli array JSONB per i Vue CRUD components
+const initialGruppi = isServizi && Array.isArray(content.gruppi) ? content.gruppi : [];
+const initialPartner = isServizi && Array.isArray(content.partner) ? content.partner : [];
+
+// Campi flat della pagina servizi (escludi gli array gestiti dai Vue components)
+const serviziFlat: Record<string, string> = isServizi ? {
+  hero_titolo: String(content.hero_titolo ?? ''),
+  hero_testo: String(content.hero_testo ?? ''),
+  cta_testo: String(content.cta_testo ?? ''),
+} : {};
 ---
 <AdminLayout title={paginaNonTrovata ? 'Pagina non trovata' : `Pagina: ${pageParam}`}>
   <section class="max-w-[680px]">
@@ -121,26 +93,68 @@ const content = pagina?.content ?? {};
       <>
         <h1 class="text-bc-h1">Pagina: {pageParam}</h1>
         <form id="page-form" class="flex flex-col gap-bc-md mt-bc-md">
-          {Object.entries(content).map(([chiave, valore]) => (
-            <label class="flex flex-col gap-[4px]">
-              <span class="font-sans text-[13px] font-normal text-bc-black tracking-[0.02em]">
-                {labelsForPage[chiave] ?? chiave}
-              </span>
-              {isTextarea(chiave) ? (
-                <textarea
-                  name={chiave}
-                  rows={chiave === 'html_body' ? 20 : 4}
-                  class={`border border-bc-black px-bc-md py-bc-xs w-full font-light resize-y${chiave === 'html_body' ? ' font-mono text-[12px]' : ' font-sans text-[14px]'}`}
-                >{String(valore)}</textarea>
-              ) : (
-                <input
-                  name={chiave}
-                  value={String(valore)}
-                  class="border border-bc-black px-bc-md py-bc-xs w-full font-sans text-[14px] font-light"
-                />
-              )}
-            </label>
-          ))}
+          {isServizi ? (
+            <>
+              {/* Campi flat: hero + cta */}
+              {Object.entries(serviziFlat).map(([chiave, valore]) => (
+                <label class="flex flex-col gap-[4px]">
+                  <span class="font-sans text-[13px] font-normal text-bc-black tracking-[0.02em]">
+                    {labelsForPage[chiave] ?? chiave}
+                  </span>
+                  {isTextarea(chiave) ? (
+                    <textarea
+                      name={chiave}
+                      rows={4}
+                      class="border border-bc-black px-bc-md py-bc-xs w-full font-sans text-[14px] font-light resize-y"
+                    >{valore}</textarea>
+                  ) : (
+                    <input
+                      name={chiave}
+                      value={valore}
+                      class="border border-bc-black px-bc-md py-bc-xs w-full font-sans text-[14px] font-light"
+                    />
+                  )}
+                </label>
+              ))}
+
+              {/* CRUD Gruppi */}
+              <div class="flex flex-col gap-[4px]">
+                <span class="font-sans text-[13px] font-normal text-bc-black tracking-[0.02em]">
+                  Gruppi di servizi
+                </span>
+                <ServiziGruppiEditor client:load name="gruppi" modelValue={initialGruppi} />
+              </div>
+
+              {/* CRUD Partner */}
+              <div class="flex flex-col gap-[4px]">
+                <span class="font-sans text-[13px] font-normal text-bc-black tracking-[0.02em]">
+                  Partner
+                </span>
+                <ServiziPartnerEditor client:load name="partner" modelValue={initialPartner} />
+              </div>
+            </>
+          ) : (
+            Object.entries(content).map(([chiave, valore]) => (
+              <label class="flex flex-col gap-[4px]">
+                <span class="font-sans text-[13px] font-normal text-bc-black tracking-[0.02em]">
+                  {labelsForPage[chiave] ?? chiave}
+                </span>
+                {isTextarea(chiave) ? (
+                  <textarea
+                    name={chiave}
+                    rows={chiave === 'html_body' ? 20 : 4}
+                    class={`border border-bc-black px-bc-md py-bc-xs w-full font-light resize-y${chiave === 'html_body' ? ' font-mono text-[12px]' : ' font-sans text-[14px]'}`}
+                  >{String(valore)}</textarea>
+                ) : (
+                  <input
+                    name={chiave}
+                    value={String(valore)}
+                    class="border border-bc-black px-bc-md py-bc-xs w-full font-sans text-[14px] font-light"
+                  />
+                )}
+              </label>
+            ))
+          )}
           <button type="submit" class="bc-btn">Salva</button>
         </form>
         <p id="page-success" class="text-bc-black mt-bc-sm hidden">Salvato.</p>
@@ -148,7 +162,7 @@ const content = pagina?.content ?? {};
       </>
     )}
   </section>
-  <script define:vars={{ page: pageParam }}>
+  <script define:vars={{ page: pageParam, isServizi }}>
     const form = document.getElementById('page-form');
     if (form) {
       const errorEl = document.getElementById('page-error');
@@ -160,6 +174,12 @@ const content = pagina?.content ?? {};
         successEl.classList.add('hidden');
         const formData = new FormData(form);
         const content = Object.fromEntries(formData.entries());
+        // Per la pagina servizi, i Vue components serializzano gruppi/partner come
+        // JSON string nei hidden inputs. Li parsiamo in oggetti prima di inviare.
+        if (isServizi) {
+          try { content.gruppi = JSON.parse(content.gruppi); } catch { content.gruppi = []; }
+          try { content.partner = JSON.parse(content.partner); } catch { content.partner = []; }
+        }
         const res = await fetch(`/api/admin/pagine/${page}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },

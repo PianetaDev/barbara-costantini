@@ -20,68 +20,67 @@ import { getPageContent } from '../lib/supabase-public';
 
 export const prerender = false;
 
-const cms = await getPageContent('servizi');
+const cms = await getPageContent('servizi') as Record<string, any>;
 
-const gruppi = [
+interface Servizio { titolo: string; corpo: string }
+interface Gruppo { titolo: string; immagine: string; servizi: Servizio[] }
+interface Partner { titolo: string; immagine: string; testo: string }
+
+const defaultGruppi: Gruppo[] = [
   {
-    titolo: cms.g1_titolo || 'Beni Archivistici e Librari',
-    image: '/images/bc-059.jpg',
+    titolo: 'Beni Archivistici e Librari',
+    immagine: '/images/bc-059.jpg',
     servizi: [
-      { titolo: cms.g1_s1_titolo || 'Servizio 1', corpo: cms.g1_s1_corpo || '' },
-      { titolo: cms.g1_s2_titolo || 'Servizio 2', corpo: cms.g1_s2_corpo || '' },
-      { titolo: cms.g1_s3_titolo || 'Servizio 3', corpo: cms.g1_s3_corpo || '' },
-      { titolo: cms.g1_s4_titolo || 'Servizio 4', corpo: cms.g1_s4_corpo || '' },
+      { titolo: 'Servizio 1', corpo: '' },
+      { titolo: 'Servizio 2', corpo: '' },
+      { titolo: 'Servizio 3', corpo: '' },
+      { titolo: 'Servizio 4', corpo: '' },
     ],
   },
   {
-    titolo: cms.g2_titolo || "Opere d’arte su carta",
-    image: '/images/bc-060.jpg',
+    titolo: "Opere d’arte su carta",
+    immagine: '/images/bc-060.jpg',
     servizi: [
-      { titolo: cms.g2_s1_titolo || 'Servizio 1', corpo: cms.g2_s1_corpo || '' },
-      { titolo: cms.g2_s2_titolo || 'Servizio 2', corpo: cms.g2_s2_corpo || '' },
-      { titolo: cms.g2_s3_titolo || 'Servizio 3', corpo: cms.g2_s3_corpo || '' },
-      { titolo: cms.g2_s4_titolo || 'Servizio 4', corpo: cms.g2_s4_corpo || '' },
+      { titolo: 'Servizio 1', corpo: '' },
+      { titolo: 'Servizio 2', corpo: '' },
+      { titolo: 'Servizio 3', corpo: '' },
+      { titolo: 'Servizio 4', corpo: '' },
     ],
   },
   {
-    titolo: cms.g3_titolo || 'Materiali fotografici',
-    image: '/images/bc-025.jpg',
+    titolo: 'Materiali fotografici',
+    immagine: '/images/bc-025.jpg',
     servizi: [
-      { titolo: cms.g3_s1_titolo || 'Servizio 1', corpo: cms.g3_s1_corpo || '' },
-      { titolo: cms.g3_s2_titolo || 'Servizio 2', corpo: cms.g3_s2_corpo || '' },
-      { titolo: cms.g3_s3_titolo || 'Servizio 3', corpo: cms.g3_s3_corpo || '' },
-      { titolo: cms.g3_s4_titolo || 'Servizio 4', corpo: cms.g3_s4_corpo || '' },
+      { titolo: 'Servizio 1', corpo: '' },
+      { titolo: 'Servizio 2', corpo: '' },
+      { titolo: 'Servizio 3', corpo: '' },
+      { titolo: 'Servizio 4', corpo: '' },
     ],
   },
   {
-    titolo: cms.g4_titolo || 'Servizi trasversali',
-    image: '/images/bc-027.jpg',
+    titolo: 'Servizi trasversali',
+    immagine: '/images/bc-027.jpg',
     servizi: [
-      { titolo: cms.g4_s1_titolo || 'Progettazione', corpo: cms.g4_s1_corpo || '' },
-      { titolo: cms.g4_s2_titolo || 'Redazione di condition report', corpo: cms.g4_s2_corpo || '' },
-      { titolo: cms.g4_s3_titolo || 'Spolveratura ordinaria e straordinaria', corpo: cms.g4_s3_corpo || '' },
-      { titolo: cms.g4_s4_titolo || 'Ricognizione conservativa di fondi e collezioni', corpo: cms.g4_s4_corpo || '' },
+      { titolo: 'Progettazione', corpo: '' },
+      { titolo: 'Redazione di condition report', corpo: '' },
+      { titolo: 'Spolveratura ordinaria e straordinaria', corpo: '' },
+      { titolo: 'Ricognizione conservativa di fondi e collezioni', corpo: '' },
     ],
   },
 ];
 
-const partner = [
+const defaultPartner: Partner[] = [
   {
-    titolo: cms.p1_titolo || 'Cornici',
-    image: '/images/bc-003.jpg',
-    testo: cms.p1_testo || 'Collaboriamo con il laboratorio di incorniciatura Pierluigi Ferro Cornici. Tale collaborazione consente di integrare gli interventi conservativi soluzioni espositive e di montaggio di altissimo livello, compatibili con esigenze di tutela, valorizzazione e sicurezza delle opere.',
+    titolo: 'Cornici',
+    immagine: '/images/bc-003.jpg',
+    testo: 'Collaboriamo con il laboratorio di incorniciatura Pierluigi Ferro Cornici. Tale collaborazione consente di integrare gli interventi conservativi soluzioni espositive e di montaggio di altissimo livello, compatibili con esigenze di tutela, valorizzazione e sicurezza delle opere.',
   },
-  {
-    titolo: cms.p2_titolo || 'Fotografia',
-    image: '/images/bc-026.jpg',
-    testo: cms.p2_testo || '',
-  },
-  {
-    titolo: cms.p3_titolo || 'Diagnostica',
-    image: '/images/bc-038.jpg',
-    testo: cms.p3_testo || '',
-  },
+  { titolo: 'Fotografia', immagine: '/images/bc-026.jpg', testo: '' },
+  { titolo: 'Diagnostica', immagine: '/images/bc-038.jpg', testo: '' },
 ];
+
+const gruppi: Gruppo[] = Array.isArray(cms.gruppi) ? cms.gruppi : defaultGruppi;
+const partner: Partner[] = Array.isArray(cms.partner) ? cms.partner : defaultPartner;
 ---
 <BaseLayout title="Servizi">
   <!-- Hero: split h1 sx + body dx — come pagina Lavori -->
@@ -114,7 +113,7 @@ const partner = [
         <!-- Immagine sx: flex-1 fino a xl, 443px fissi da xl -->
         <div class="flex items-center tablet:flex-1 xl:flex-none xl:shrink-0 tablet:py-[80px]">
           <div class="w-full xl:w-[443px] aspect-[443/553] bg-bc-black/10 overflow-hidden">
-            <Image src={risolviImmagine(gruppo.image)} alt={gruppo.titolo} width={900} format="webp" quality={80} class="w-full h-full object-cover" />
+            <Image src={risolviImmagine(gruppo.immagine)} alt={gruppo.titolo} width={900} format="webp" quality={80} class="w-full h-full object-cover" />
           </div>
         </div>
 
@@ -159,7 +158,7 @@ const partner = [
           {i > 0 && <div class="w-px bg-bc-black self-stretch shrink-0 mx-[40px]" />}
           <div class="flex flex-col gap-[32px] flex-1 py-[64px]">
             <div class="w-full bg-bc-black/10 overflow-hidden" style="aspect-ratio:327/407;">
-              {p.image && <Image src={risolviImmagine(p.image)} alt={p.titolo} width={700} format="webp" quality={80} class="w-full h-full object-cover" />}
+              {p.immagine && <Image src={risolviImmagine(p.immagine)} alt={p.titolo} width={700} format="webp" quality={80} class="w-full h-full object-cover" />}
             </div>
             <div class="flex flex-col gap-bc-md">
               <h3 class="font-sans font-normal text-bc-h3 text-bc-black tracking-[0.02em]">{p.titolo}</h3>
@@ -184,7 +183,7 @@ const partner = [
         {partner.map((p) => (
           <div class="flex-none snap-start flex flex-col gap-[32px] w-[85%] tablet:w-[calc(50%-8px)]">
             <div class="w-full bg-bc-black/10 overflow-hidden" style="aspect-ratio:327/407;">
-              {p.image && <Image src={risolviImmagine(p.image)} alt={p.titolo} width={700} format="webp" quality={80} class="w-full h-full object-cover" />}
+              {p.immagine && <Image src={risolviImmagine(p.immagine)} alt={p.titolo} width={700} format="webp" quality={80} class="w-full h-full object-cover" />}
             </div>
             <div class="flex flex-col gap-bc-md">
               <h3 class="font-sans font-normal text-bc-h3 text-bc-black tracking-[0.02em]">{p.titolo}</h3>
