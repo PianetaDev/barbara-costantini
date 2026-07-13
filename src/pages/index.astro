@@ -22,7 +22,7 @@ try {
 const progettiHome = progettiEvidenza.map((p) => ({
   slug: p.slug,
   titolo: p.titolo,
-  codice: p.id,
+  codice: `P${String((p.ordine ?? 0) + 1).padStart(2, '0')}`,
   committente: p.committente,
   tipo: p.tipo,
   immagini: p.immagini,
