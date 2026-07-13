@@ -25,6 +25,7 @@ import SectionLavori from '../../components/SectionLavori.astro';
 import CaroselloImmagini from '../../components/CaroselloImmagini.vue';
 import { getProgetto, getProgetti, ERRORE_RIGA_NON_TROVATA } from '../../lib/supabase-public';
 import { risolviImmagine } from '../../utils/imagenes';
+import { sanitizeIntroHtml } from '../../lib/sanitize-intro';
 
 export const prerender = false;
 
@@ -112,9 +113,13 @@ const metaVoci = [
   { label: 'Anno', valore: progetto.anno },
 ].filter((m): m is { label: string; valore: string } => Boolean(m.valore));
 
-// `intro` era un array di paragrafi nello statico; nella riga Supabase è una
-// stringa unica (i paragrafi sono uniti con "\n\n" dal seed) — si riseparano qui.
-const introParagrafi = progetto.intro ? progetto.intro.split('\n\n') : [];
+// `intro` è HTML prodotto da RichTextEditor.vue (Tiptap), non testo semplice — va
+// sanificato di nuovo qui (in aggiunta alla sanificazione già fatta in scrittura da
+// src/pages/api/admin/progetti/[id].ts): questo `set:html` più sotto è il vero
+// confine verso i visitatori pubblici, quindi non si fida ciecamente di ciò che è
+// nel DB indipendentemente da come ci sia arrivato (es. una riga modificata a mano
+// su Supabase bypasserebbe la sanificazione in scrittura). Vedi src/lib/sanitize-intro.ts.
+const introHtml = progetto.intro ? sanitizeIntroHtml(progetto.intro) : '';
 ---
 <BaseLayout title={progetto.titolo} hideNav>
   <div>
@@ -146,11 +151,10 @@ const introParagrafi = progetto.intro ? progetto.intro.split('\n\n') : [];
             </div>
           ))}
         </div>
-        <div class="flex flex-col gap-bc-md bc-intro">
-          {introParagrafi.map((t) => (
-            <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5;">{t}</p>
-          ))}
-        </div>
+        <div
+          class="flex flex-col gap-bc-md bc-intro [&>*]:font-sans [&>*]:font-light [&>*]:text-bc-black [&>*]:tracking-[0.02em] [&>*]:text-[18px] [&>*]:leading-[1.5]"
+          set:html={introHtml}
+        />
         <div class="bc-spacer-r" />
       </div>
     </div>

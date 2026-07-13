@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { createSupabaseServerClient } from '../../../../lib/supabase';
 import { progettoSchema } from '../../../../lib/validation/progetto';
 import { parseJsonBody } from '../../../../lib/parse-json-body';
+import { sanitizeIntroHtml } from '../../../../lib/sanitize-intro';
 
 // Client server-side legato ai cookie della richiesta (NON service_role): la RLS
 // `projects_admin_write` su bc_projects già permette la scrittura a qualunque utente
@@ -33,12 +34,21 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
     return new Response(JSON.stringify({ error: z.flattenError(parsed.error) }), { status: 400 });
   }
 
+  // `intro` è HTML prodotto da RichTextEditor.vue (Tiptap), non testo semplice — va
+  // sanificato prima di finire su Supabase e da lì sulla pagina pubblica (vedi
+  // src/lib/sanitize-intro.ts). `.partial()` significa che questo PATCH potrebbe non
+  // toccare affatto `intro`, quindi si sanifica solo se presente nel body.
+  const updateData = parsed.data;
+  if (updateData.intro !== undefined) {
+    updateData.intro = sanitizeIntroHtml(updateData.intro);
+  }
+
   // .select('id'): senza, `update().eq('id', ...)` non imposta `error` quando la eq
   // non matcha nessuna riga (0 righe modificate non è un errore per Postgres/PostgREST)
   // — un PATCH verso un id inesistente/già cancellato tornerebbe comunque 200 senza
   // aver scritto nulla. Con .select('id') possiamo distinguere i due casi guardando
   // se l'array di righe aggiornate è vuoto.
-  const { data, error } = await supabase.from('bc_projects').update(parsed.data).eq('id', params.id).select('id');
+  const { data, error } = await supabase.from('bc_projects').update(updateData).eq('id', params.id).select('id');
   if (error) {
     return new Response(JSON.stringify({ error: error.message }), { status: 400 });
   }
