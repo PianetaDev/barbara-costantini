@@ -99,3 +99,12 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
   if (error) throw error;
   return data ?? [];
 }
+
+export async function getPageContent(page: string): Promise<Record<string, string>> {
+  const { data } = await supabase
+    .from('bc_page_content')
+    .select('content')
+    .eq('page', page)
+    .single();
+  return (data?.content ?? {}) as Record<string, string>;
+}

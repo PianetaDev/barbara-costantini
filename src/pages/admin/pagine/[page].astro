@@ -10,6 +10,35 @@ const PAGINE_VALIDE = pageContentSchema.shape.page.options;
 const pageParam = Astro.params.page;
 const isPaginaValida = (PAGINE_VALIDE as readonly string[]).includes(pageParam ?? '');
 
+// PIA-75: etichette leggibili per ogni campo, per pagina.
+const FIELD_LABELS: Record<string, Record<string, string>> = {
+  home: {
+    hero_titolo: 'Titolo pagina',
+    hero_testo: 'Testo sotto il titolo',
+  },
+  studio: {
+    hero_titolo: 'Titolo pagina Studio',
+    hero_testo: 'Testo sotto il titolo',
+    bio_ruolo: 'Ruolo di Barbara',
+    bio_testo: 'Bio di Barbara',
+  },
+  contatti: {
+    email: 'Email di contatto',
+    instagram: 'Handle Instagram (es. @barbara_costantini)',
+    telefono: 'Numero di telefono',
+    indirizzo: 'Indirizzo',
+  },
+  servizi: {
+    intro: 'Testo introduttivo',
+  },
+};
+const labelsForPage = FIELD_LABELS[pageParam ?? ''] ?? {};
+
+// Campi che usano textarea invece di input (testi lunghi).
+function isTextarea(chiave: string): boolean {
+  return chiave.includes('testo') || chiave.includes('bio');
+}
+
 const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
 const { data: pagina } = isPaginaValida
   ? await supabase.from('bc_page_content').select('*').eq('page', pageParam).single()
@@ -37,7 +66,24 @@ const content = pagina?.content ?? {};
         <h1 class="text-bc-h1">Pagina: {pageParam}</h1>
         <form id="page-form" class="flex flex-col gap-bc-md mt-bc-md">
           {Object.entries(content).map(([chiave, valore]) => (
-            <label>{chiave} <input name={chiave} value={String(valore)} class="border border-bc-black px-bc-md py-bc-xs w-full" /></label>
+            <label class="flex flex-col gap-[4px]">
+              <span class="font-sans text-[13px] font-normal text-bc-black tracking-[0.02em]">
+                {labelsForPage[chiave] ?? chiave}
+              </span>
+              {isTextarea(chiave) ? (
+                <textarea
+                  name={chiave}
+                  rows={4}
+                  class="border border-bc-black px-bc-md py-bc-xs w-full font-sans text-[14px] font-light resize-y"
+                >{String(valore)}</textarea>
+              ) : (
+                <input
+                  name={chiave}
+                  value={String(valore)}
+                  class="border border-bc-black px-bc-md py-bc-xs w-full font-sans text-[14px] font-light"
+                />
+              )}
+            </label>
           ))}
           <button type="submit" class="bc-btn">Salva</button>
         </form>
