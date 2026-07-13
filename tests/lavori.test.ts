@@ -11,9 +11,13 @@ import { getContainerRenderer } from '@astrojs/vue/container-renderer';
 // Righe come le restituirebbe bc_projects via Supabase (vedi
 // supabase/migrations/20260708100000_bc_cms_schema.sql + scripts/seed-bc-cms.mjs):
 // committente/anno/intro a livello di riga (non annidati in `meta` come nel vecchio
-// array statico), `intro` come stringa unica (i paragrafi originali sono uniti con
-// "\n\n" dal seed), e senza il campo `immaginiContenuto` (mai esistito nello
+// array statico), e senza il campo `immaginiContenuto` (mai esistito nello
 // schema/seed — vedi il commento in src/pages/lavori/[slug].astro).
+//
+// `intro` è HTML reale (prodotto da RichTextEditor.vue/Tiptap, vedi
+// src/lib/sanitize-intro.ts), non più testo semplice unito con "\n\n": la pagina
+// pubblica ora fa `set:html` diretto sul contenuto sanificato invece di splittare
+// su "\n\n" (Task: fix mismatch editing/rendering di `intro`).
 const RIGHE_MOCK = vi.hoisted(() => [
   {
     id: 'uuid-1',
@@ -22,7 +26,7 @@ const RIGHE_MOCK = vi.hoisted(() => [
     committente: 'Cliente Uno',
     anno: '2022–2023',
     tipo: 'horizontal',
-    intro: 'Prima riga di intro.\n\nSeconda riga di intro.',
+    intro: '<p>Prima riga di <strong>intro</strong>.</p><p>Seconda riga di intro.</p>',
     sezioni: [{ titolo: 'Titolo sezione', sottotitolo: 'Sottotitolo sezione', testi: ['Testo sezione'] }],
     metodo: { testi: ['Testo metodo'], citazione: 'Citazione metodo' },
     immagini: [
@@ -114,6 +118,29 @@ describe('lavori (da Supabase)', () => {
     expect(html).toContain('Progetto Uno');
     expect(html).toContain('Cliente Uno');
     expect(html).not.toContain('Progetto non trovato');
+  });
+
+  it('[slug] renderizza `intro` come HTML reale (bold), non come tag escapati', async () => {
+    const renderers = await loadRenderers([getContainerRenderer()]);
+    const container = await AstroContainer.create({ renderers });
+    const html = await container.renderToString(LavoriSlug, { params: { slug: 'progetto-uno' } });
+    expect(html).toContain('<strong>intro</strong>');
+    expect(html).not.toContain('&lt;strong&gt;');
+  });
+
+  it('[slug] sanifica `intro` prima del set:html: uno script iniettato non arriva mai al markup', async () => {
+    mockGetProgetto.mockImplementationOnce(async () => ({
+      ...RIGHE_MOCK[0],
+      intro: '<p>Testo</p><script>alert(1)</script><img src=x onerror="alert(1)">',
+    }));
+    const renderers = await loadRenderers([getContainerRenderer()]);
+    const container = await AstroContainer.create({ renderers });
+    const html = await container.renderToString(LavoriSlug, { params: { slug: 'progetto-uno' } });
+    // La pagina contiene legittimamente altri <script> (widget Segnale, hydration
+    // Astro): l'asserzione mirata è che il payload iniettato specifico non sopravviva,
+    // non l'assenza di qualunque tag <script> nella pagina.
+    expect(html).not.toContain('alert(1)');
+    expect(html).not.toContain('onerror');
   });
 
   it('uno slug inesistente (PGRST116) risponde con un vero 404, non un redirect/soft-404', async () => {
