@@ -101,10 +101,13 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
 }
 
 export async function getPageContent(page: string): Promise<Record<string, string>> {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('bc_page_content')
     .select('content')
     .eq('page', page)
     .single();
+  if (error) {
+    console.error('[getPageContent]', page, error.message);
+  }
   return (data?.content ?? {}) as Record<string, string>;
 }

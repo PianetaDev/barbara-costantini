@@ -36,7 +36,7 @@ const labelsForPage = FIELD_LABELS[pageParam ?? ''] ?? {};
 
 // Campi che usano textarea invece di input (testi lunghi).
 function isTextarea(chiave: string): boolean {
-  return chiave.includes('testo') || chiave.includes('bio');
+  return chiave.endsWith('_testo') || chiave === 'bio_testo';
 }
 
 const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);

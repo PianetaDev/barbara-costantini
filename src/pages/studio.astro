@@ -36,7 +36,7 @@ try {
 }
 const studioHeroTitolo = studioContent.hero_titolo || 'Lo studio';
 const studioHeroTesto = studioContent.hero_testo || '';
-const bioBio = studioContent.bio_testo;
+const bioTesto = studioContent.bio_testo;
 const bioRuolo = studioContent.bio_ruolo;
 const membri = membriDb.map((m) => ({
   nome: m.nome,
@@ -64,6 +64,6 @@ const membri = membriDb.map((m) => ({
     </div>
   </section>
 
-  <SectionBio imageSrc="/images/bc-030.jpg" imageAlt="Barbara Costantini" ruolo={bioRuolo} bio={bioBio} />
+  <SectionBio imageSrc="/images/bc-030.jpg" imageAlt="Barbara Costantini" ruolo={bioRuolo} bio={bioTesto} />
   <SectionTeam membri={membri} />
 </BaseLayout>

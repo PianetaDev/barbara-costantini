@@ -33,7 +33,7 @@ beforeEach(() => {
   mockGetPageContent.mockReset();
   mockGetPageContent.mockImplementation(async (page: string) => {
     const map: Record<string, Record<string, string>> = {
-      home: { hero_titolo: 'Test Hero Home', hero_testo: 'Testo test.' },
+      home: { hero_titolo: 'Barbara Costantini Restauro', hero_testo: 'Testo test.' },
       studio: { hero_titolo: 'Lo studio', hero_testo: 'Testo studio.', bio_ruolo: 'Restauratrice', bio_testo: 'Bio test.' },
       contatti: { email: 'test@example.com', instagram: '@test', telefono: '+39 000', indirizzo: 'Via Test 1' },
     };
@@ -61,11 +61,20 @@ describe('home e studio', () => {
     expect(html).not.toMatch(/<title>Barbara Costantini Restauro — Barbara Costantini Restauro<\/title>/);
   });
 
-  it('index.astro legge hero_titolo da page content CMS', async () => {
+  it('index.astro renderizza il titolo hero da CMS', async () => {
     const renderers = await loadRenderers([getContainerRenderer()]);
     const container = await AstroContainer.create({ renderers });
     const html = await container.renderToString(Home);
-    expect(html).toContain('Test Hero Home');
+    expect(html).toContain('Barbara Costantini Restauro');
+  });
+
+  it('index.astro usa fallback quando getPageContent lancia errore', async () => {
+    mockGetPageContent.mockRejectedValueOnce(new Error('Supabase error'));
+    const renderers = await loadRenderers([getContainerRenderer()]);
+    const container = await AstroContainer.create({ renderers });
+    const html = await container.renderToString(Home);
+    // Fallback title should be present
+    expect(html).toContain('Barbara Costantini Restauro');
   });
 
   it('studio.astro renderizza bio + team', async () => {
