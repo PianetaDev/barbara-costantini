@@ -24,6 +24,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import SectionLavori from '../../components/SectionLavori.astro';
 import CaroselloImmagini from '../../components/CaroselloImmagini.vue';
 import { getProgetto, getProgetti, ERRORE_RIGA_NON_TROVATA } from '../../lib/supabase-public';
+import type { Progetto } from '../../lib/supabase-public';
 import { risolviImmagine } from '../../utils/imagenes';
 import { sanitizeIntroHtml } from '../../lib/sanitize-intro';
 
@@ -57,6 +58,19 @@ try {
 }
 if (!progetto) {
   return Astro.rewrite('/404');
+}
+
+const slugsCorrelati: string[] = (progetto as any).correlati ?? [];
+let progettiCorrelati: Progetto[] = [];
+if (slugsCorrelati.length > 0) {
+  try {
+    const tutti = await getProgetti();
+    progettiCorrelati = tutti
+      .filter((p) => slugsCorrelati.includes(p.slug))
+      .slice(0, 3);
+  } catch {
+    // fallback: nessun correlato
+  }
 }
 
 const progettiSuggeriti = await (async () => {
@@ -227,6 +241,27 @@ const introHtml = progetto.intro ? sanitizeIntroHtml(progetto.intro) : '';
       borderTop
       borderBottom={false}
     />
+
+    {progettiCorrelati.length > 0 && (
+      <section class="w-full border-t border-bc-black mt-[80px]">
+        <div class="px-bc-page py-[64px]">
+          <h2 class="font-sans text-[20px] font-normal text-bc-black mb-[48px]">Potrebbe interessarti</h2>
+          <div class="grid grid-cols-1 tablet:grid-cols-3 gap-[48px]">
+            {progettiCorrelati.map((p) => (
+              <a href={`/lavori/${p.slug}`} class="group flex flex-col gap-[16px]">
+                {p.immagini?.[0] && (
+                  <img src={p.immagini[0].src} alt={p.titolo}
+                    class="w-full aspect-[4/3] object-cover" loading="lazy" />
+                )}
+                <p class="font-sans text-[16px] font-light text-bc-black group-hover:underline">
+                  {p.titolo}
+                </p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
   </div>
 </BaseLayout>
 

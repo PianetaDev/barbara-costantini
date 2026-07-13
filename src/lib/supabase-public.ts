@@ -57,6 +57,7 @@ export interface Progetto {
   immaginiContenuto: string[];
   archiviato: boolean;
   in_evidenza: boolean;
+  correlati: string[];
 }
 
 export interface TeamMember {
@@ -74,7 +75,7 @@ type ProgettoRow = Omit<Progetto, 'immaginiContenuto'> & { immagini_contenuto: s
 
 function mapProgettoRow(row: ProgettoRow): Progetto {
   const { immagini_contenuto, ...resto } = row;
-  return { ...resto, immaginiContenuto: immagini_contenuto, in_evidenza: row.in_evidenza ?? false };
+  return { ...resto, immaginiContenuto: immagini_contenuto, in_evidenza: row.in_evidenza ?? false, correlati: (row.correlati as string[]) ?? [] };
 }
 
 export async function getProgetti(): Promise<Progetto[]> {
