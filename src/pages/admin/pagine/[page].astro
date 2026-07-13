@@ -31,12 +31,18 @@ const FIELD_LABELS: Record<string, Record<string, string>> = {
   servizi: {
     intro: 'Testo introduttivo',
   },
+  'privacy-policy': {
+    html_body: 'Contenuto Privacy Policy (HTML)',
+  },
+  'cookie-policy': {
+    html_body: 'Contenuto Cookie Policy (HTML)',
+  },
 };
 const labelsForPage = FIELD_LABELS[pageParam ?? ''] ?? {};
 
 // Campi che usano textarea invece di input (testi lunghi).
 function isTextarea(chiave: string): boolean {
-  return chiave.endsWith('_testo') || chiave === 'bio_testo';
+  return chiave.endsWith('_testo') || chiave === 'bio_testo' || chiave === 'html_body';
 }
 
 const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
@@ -73,8 +79,8 @@ const content = pagina?.content ?? {};
               {isTextarea(chiave) ? (
                 <textarea
                   name={chiave}
-                  rows={4}
-                  class="border border-bc-black px-bc-md py-bc-xs w-full font-sans text-[14px] font-light resize-y"
+                  rows={chiave === 'html_body' ? 20 : 4}
+                  class={`border border-bc-black px-bc-md py-bc-xs w-full font-light resize-y${chiave === 'html_body' ? ' font-mono text-[12px]' : ' font-sans text-[14px]'}`}
                 >{String(valore)}</textarea>
               ) : (
                 <input
