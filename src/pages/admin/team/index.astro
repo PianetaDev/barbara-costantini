@@ -3,9 +3,11 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
 import { createSupabaseServerClient } from '../../../lib/supabase';
 
 const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
-const { data: team } = await supabase.from('bc_team_members').select('id, nome, ruolo').order('ordine');
+const { data: team } = await supabase.from('bc_team_members').select('id, nome, ruolo').eq('archiviato', false).order('ordine');
+const { data: archiviati } = await supabase.from('bc_team_members').select('id, nome, ruolo').eq('archiviato', true).order('nome');
 ---
 <AdminLayout title="Team">
+  <a href="/admin/team/nuovo" class="bc-btn inline-block mb-bc-md">+ Nuovo membro</a>
   <ul class="flex flex-col divide-y divide-bc-black border-t border-bc-black">
     {team?.map((m) => (
       <li>
@@ -16,4 +18,44 @@ const { data: team } = await supabase.from('bc_team_members').select('id, nome, 
       </li>
     ))}
   </ul>
+
+  {archiviati && archiviati.length > 0 && (
+    <div class="mt-bc-2xl">
+      <p class="font-sans text-[14px] font-normal mb-bc-sm">Archiviati</p>
+      <ul class="flex flex-col divide-y divide-bc-black border-t border-bc-black">
+        {archiviati.map((m) => (
+          <li class="flex items-center justify-between py-[14px]">
+            <span class="font-sans text-[15px] font-light text-bc-black/60">{m.nome} — {m.ruolo}</span>
+            <span class="flex gap-bc-sm">
+              <button data-action="ripristina" data-id={m.id} class="bc-ghost text-[13px]">Ripristina</button>
+              <button data-action="elimina" data-id={m.id} class="bc-ghost text-[13px] text-red-600">Elimina definitivamente</button>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+
+  <script>
+    document.querySelectorAll('[data-action="ripristina"]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const id = (btn as HTMLElement).dataset.id;
+        const res = await fetch(`/api/admin/team/${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ archiviato: false }),
+        });
+        if (res.ok) window.location.reload();
+      });
+    });
+
+    document.querySelectorAll('[data-action="elimina"]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const id = (btn as HTMLElement).dataset.id;
+        if (!confirm('Cancellazione irreversibile. Continuare?')) return;
+        const res = await fetch(`/api/admin/team/${id}`, { method: 'DELETE' });
+        if (res.ok) window.location.reload();
+      });
+    });
+  </script>
 </AdminLayout>

@@ -33,12 +33,25 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
     return new Response(JSON.stringify({ error: z.flattenError(parsed.error) }), { status: 400 });
   }
 
+  // La colonna DB è snake_case (immagini_contenuto, vedi
+  // supabase/migrations/20260711000000_bc_archiviato_immagini_contenuto.sql) mentre lo
+  // schema Zod/il form usano camelCase (immaginiContenuto, stesso pattern di
+  // mapProgettoRow in src/lib/supabase-public.ts, lì per la lettura pubblica). Va
+  // tradotta prima dell'update, altrimenti PostgREST non trova la colonna e fallisce.
+  // `!== undefined` (non un semplice `if (immaginiContenuto)`) perché questo è un PATCH
+  // parziale: il campo potrebbe non essere nel body per niente, e non va aggiunto a
+  // datiDaScrivere in quel caso (lo distruggerebbe con `undefined`).
+  const { immaginiContenuto, ...restoDati } = parsed.data;
+  const datiDaScrivere = immaginiContenuto !== undefined
+    ? { ...restoDati, immagini_contenuto: immaginiContenuto }
+    : restoDati;
+
   // .select('id'): senza, `update().eq('id', ...)` non imposta `error` quando la eq
   // non matcha nessuna riga (0 righe modificate non è un errore per Postgres/PostgREST)
   // — un PATCH verso un id inesistente/già cancellato tornerebbe comunque 200 senza
   // aver scritto nulla. Con .select('id') possiamo distinguere i due casi guardando
   // se l'array di righe aggiornate è vuoto.
-  const { data, error } = await supabase.from('bc_projects').update(parsed.data).eq('id', params.id).select('id');
+  const { data, error } = await supabase.from('bc_projects').update(datiDaScrivere).eq('id', params.id).select('id');
   if (error) {
     return new Response(JSON.stringify({ error: error.message }), { status: 400 });
   }

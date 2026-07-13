@@ -37,6 +37,8 @@ export const progettoSchema = z.object({
   // ordine=999 è stata azzerata da un PATCH che non menzionava affatto `ordine`).
   // La tabella ha già `default 0` a livello di colonna, che copre il caso insert.
   ordine: z.number().optional(),
+  immaginiContenuto: z.array(z.string()).max(2).optional(),
+  archiviato: z.boolean().optional(),
 });
 
 export type Progetto = z.infer<typeof progettoSchema>;

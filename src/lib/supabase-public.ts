@@ -39,12 +39,9 @@ export interface Metodo {
   citazione: string;
 }
 
-// Riga reale di bc_projects (vedi la migration citata sopra). NOTA: a differenza del
-// vecchio array statico src/data/progetti.ts, qui NON esiste un campo
-// `immaginiContenuto` (mai aggiunto allo schema né allo script di seed, vedi
-// scripts/seed-bc-cms.mjs e src/lib/validation/progetto.ts usato dal CRUD admin) —
-// i chiamanti vanno scritti per tollerarne l'assenza. `intro` è una stringa unica
-// (i paragrafi originali sono stati uniti con "\n\n" dal seed), non più un array.
+// Riga reale di bc_projects (vedi la migration citata sopra). `intro` è una stringa
+// unica (i paragrafi originali sono stati uniti con "\n\n" dal seed), non più un
+// array come nel vecchio array statico src/data/progetti.ts.
 export interface Progetto {
   id: string;
   slug: string;
@@ -57,12 +54,8 @@ export interface Progetto {
   metodo: Metodo | null;
   immagini: Immagine[];
   ordine: number;
-  // Non esiste come colonna in bc_projects (vedi la migration citata sopra): sarà
-  // sempre `undefined` finché non verrà aggiunta allo schema in un task futuro. Il
-  // campo resta tipato qui (opzionale) solo perché src/pages/lavori/[slug].astro lo
-  // legge in modo difensivo (optional chaining) per le due sezioni "immagine
-  // contenuto" del dettaglio progetto, che nel frattempo restano senza foto.
-  immaginiContenuto?: string[];
+  immaginiContenuto: string[];
+  archiviato: boolean;
 }
 
 export interface TeamMember {
@@ -72,12 +65,21 @@ export interface TeamMember {
   bio: string | null;
   foto_url: string | null;
   ordine: number;
+  archiviato: boolean;
+}
+
+// Riga grezza da Supabase (snake_case per immagini_contenuto, non ancora mappata).
+type ProgettoRow = Omit<Progetto, 'immaginiContenuto'> & { immagini_contenuto: string[] };
+
+function mapProgettoRow(row: ProgettoRow): Progetto {
+  const { immagini_contenuto, ...resto } = row;
+  return { ...resto, immaginiContenuto: immagini_contenuto };
 }
 
 export async function getProgetti(): Promise<Progetto[]> {
-  const { data, error } = await supabase.from('bc_projects').select('*').order('ordine');
+  const { data, error } = await supabase.from('bc_projects').select('*').eq('archiviato', false).order('ordine');
   if (error) throw error;
-  return data ?? [];
+  return (data ?? []).map(mapProgettoRow);
 }
 
 // Codice errore PostgREST per ".single() con 0 (o >1) righe" — è così che si
@@ -87,13 +89,13 @@ export async function getProgetti(): Promise<Progetto[]> {
 export const ERRORE_RIGA_NON_TROVATA = 'PGRST116';
 
 export async function getProgetto(slug: string): Promise<Progetto> {
-  const { data, error } = await supabase.from('bc_projects').select('*').eq('slug', slug).single();
+  const { data, error } = await supabase.from('bc_projects').select('*').eq('slug', slug).eq('archiviato', false).single();
   if (error) throw error;
-  return data;
+  return mapProgettoRow(data);
 }
 
 export async function getTeamMembers(): Promise<TeamMember[]> {
-  const { data, error } = await supabase.from('bc_team_members').select('*').order('ordine');
+  const { data, error } = await supabase.from('bc_team_members').select('*').eq('archiviato', false).order('ordine');
   if (error) throw error;
   return data ?? [];
 }

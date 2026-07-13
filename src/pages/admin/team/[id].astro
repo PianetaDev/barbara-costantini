@@ -36,6 +36,12 @@ if (!membro) return Astro.redirect('/admin/team');
     </form>
     <p id="team-success" class="text-bc-black mt-bc-sm hidden">Salvato.</p>
     <p id="team-error" class="text-red-600 mt-bc-sm hidden"></p>
+
+    <div class="mt-[64px] pt-[32px] border-t border-bc-black">
+      <button id="archivia-membro" data-id={membro.id} class="font-sans text-[14px] font-light text-red-600 underline underline-offset-2 hover:no-underline">
+        Archivia questo membro
+      </button>
+    </div>
   </section>
   <script>
     const form = document.getElementById('team-form') as HTMLFormElement;
@@ -93,6 +99,23 @@ if (!membro) return Astro.redirect('/admin/team');
           el.className = 'w-32 h-32 object-cover';
           previewWrap.appendChild(el);
         }
+      } else {
+        const { error } = await res.json();
+        errorEl.textContent = typeof error === 'string' ? error : JSON.stringify(error);
+        errorEl.classList.remove('hidden');
+      }
+    });
+
+    document.getElementById('archivia-membro')?.addEventListener('click', async (e) => {
+      const id = (e.currentTarget as HTMLElement).dataset.id;
+      if (!confirm('Archiviare questo membro? Sparirà dal sito pubblico ma potrà essere ripristinato dalla lista Team.')) return;
+      const res = await fetch(`/api/admin/team/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ archiviato: true }),
+      });
+      if (res.ok) {
+        window.location.href = '/admin/team';
       } else {
         const { error } = await res.json();
         errorEl.textContent = typeof error === 'string' ? error : JSON.stringify(error);
