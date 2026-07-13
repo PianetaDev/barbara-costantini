@@ -75,4 +75,24 @@ describe('pagine statiche', () => {
     expect(html).not.toContain('Privacy content from CMS');
     expect(html.length).toBeGreaterThan(500); // ha contenuto statico reale
   });
+
+  it('cookie-policy.astro legge html_body da CMS quando disponibile', async () => {
+    mockGetPageContent.mockImplementation(async (page: string) => {
+      if (page === 'cookie-policy') return { html_body: '<p>Cookie content from CMS</p>' };
+      return {};
+    });
+    const renderers = await loadRenderers([getContainerRenderer()]);
+    const container = await AstroContainer.create({ renderers });
+    const html = await container.renderToString(Cookie);
+    expect(html).toContain('Cookie content from CMS');
+  });
+
+  it('cookie-policy.astro usa markup statico quando html_body è vuoto', async () => {
+    mockGetPageContent.mockImplementation(async () => ({ html_body: '' }));
+    const renderers = await loadRenderers([getContainerRenderer()]);
+    const container = await AstroContainer.create({ renderers });
+    const html = await container.renderToString(Cookie);
+    expect(html).not.toContain('Cookie content from CMS');
+    expect(html.length).toBeGreaterThan(500);
+  });
 });
