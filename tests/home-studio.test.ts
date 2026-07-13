@@ -14,16 +14,37 @@ const MEMBRI_MOCK = vi.hoisted(() => [
 // sovrascrivere il comportamento di default con mockRejectedValueOnce — fix code
 // review Task 17, stesso pattern di tests/lavori.test.ts.
 const { mockGetTeamMembers } = vi.hoisted(() => ({ mockGetTeamMembers: vi.fn() }));
+// PIA-75: mock per getPageContent
+const { mockGetPageContent } = vi.hoisted(() => ({ mockGetPageContent: vi.fn() }));
+// PIA-78: mock per getProgettiInEvidenza
+const { mockGetProgettiInEvidenza } = vi.hoisted(() => ({ mockGetProgettiInEvidenza: vi.fn() }));
+
 vi.mock('../src/lib/supabase-public', () => ({
   getTeamMembers: mockGetTeamMembers,
+  getPageContent: mockGetPageContent,
+  getProgettiInEvidenza: mockGetProgettiInEvidenza,
 }));
 
 import Home from '../src/pages/index.astro';
 import Studio from '../src/pages/studio.astro';
+import Contatti from '../src/pages/contatti.astro';
 
 beforeEach(() => {
   mockGetTeamMembers.mockReset();
   mockGetTeamMembers.mockImplementation(async () => MEMBRI_MOCK);
+
+  mockGetProgettiInEvidenza.mockReset();
+  mockGetProgettiInEvidenza.mockResolvedValue([]);
+
+  mockGetPageContent.mockReset();
+  mockGetPageContent.mockImplementation(async (page: string) => {
+    const map: Record<string, Record<string, string>> = {
+      home: { hero_titolo: 'Barbara Costantini Restauro', hero_testo: 'Testo test.' },
+      studio: { hero_titolo: 'Lo studio', hero_testo: 'Testo studio.', bio_ruolo: 'Restauratrice', bio_testo: 'Bio test.' },
+      contatti: { email: 'test@example.com', instagram: '@test', telefono: '+39 000', indirizzo: 'Via Test 1' },
+    };
+    return map[page] ?? {};
+  });
 });
 
 describe('home e studio', () => {
@@ -44,6 +65,22 @@ describe('home e studio', () => {
     // Costantini Restauro" concatenato da BaseLayout per le altre pagine.
     expect(html).not.toMatch(/<title>Home/);
     expect(html).not.toMatch(/<title>Barbara Costantini Restauro — Barbara Costantini Restauro<\/title>/);
+  });
+
+  it('index.astro renderizza il titolo hero da CMS', async () => {
+    const renderers = await loadRenderers([getContainerRenderer()]);
+    const container = await AstroContainer.create({ renderers });
+    const html = await container.renderToString(Home);
+    expect(html).toContain('Barbara Costantini Restauro');
+  });
+
+  it('index.astro usa fallback quando getPageContent lancia errore', async () => {
+    mockGetPageContent.mockRejectedValueOnce(new Error('Supabase error'));
+    const renderers = await loadRenderers([getContainerRenderer()]);
+    const container = await AstroContainer.create({ renderers });
+    const html = await container.renderToString(Home);
+    // Fallback title should be present
+    expect(html).toContain('Barbara Costantini Restauro');
   });
 
   it('studio.astro renderizza bio + team', async () => {
@@ -81,5 +118,12 @@ describe('home e studio', () => {
     for (const m of MEMBRI_MOCK) {
       expect(html).not.toContain(m.nome);
     }
+  });
+
+  it('contatti.astro legge email da CMS', async () => {
+    const renderers = await loadRenderers([getContainerRenderer()]);
+    const container = await AstroContainer.create({ renderers });
+    const html = await container.renderToString(Contatti);
+    expect(html).toContain('test@example.com');
   });
 });

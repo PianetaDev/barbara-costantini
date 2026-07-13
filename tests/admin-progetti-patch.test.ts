@@ -85,4 +85,22 @@ describe('PATCH /api/admin/progetti/[id]', () => {
     expect(res.status).toBe(401);
     expect(mockFrom).not.toHaveBeenCalled();
   });
+
+  it('PATCH /api/admin/progetti/[id] con in_evidenza:true aggiorna il campo', async () => {
+    const request = buildRequest('progetto-1', { in_evidenza: true });
+
+    const res = await PATCH({ params: { id: 'progetto-1' }, request, cookies: {} } as any);
+
+    expect(res.status).toBe(200);
+    expect(mockUpdate).toHaveBeenCalledWith({ in_evidenza: true });
+  });
+
+  it('PATCH /api/admin/progetti/[id] con correlati accetta array di slug', async () => {
+    const request = buildRequest('progetto-1', { correlati: ['slug-a', 'slug-b'] });
+
+    const res = await PATCH({ params: { id: 'progetto-1' }, request, cookies: {} } as any);
+
+    expect(res.status).toBe(200);
+    expect(mockUpdate).toHaveBeenCalledWith({ correlati: ['slug-a', 'slug-b'] });
+  });
 });

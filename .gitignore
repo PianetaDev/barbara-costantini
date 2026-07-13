@@ -9,3 +9,4 @@ dist
 .env.local
 PRIVATE.md
 package-lock.json
+.env*.local

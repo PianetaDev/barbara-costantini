@@ -7,7 +7,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionBio from '../components/SectionBio.astro';
 import SectionTeam from '../components/SectionTeam.astro';
-import { getTeamMembers } from '../lib/supabase-public';
+import { getTeamMembers, getPageContent } from '../lib/supabase-public';
 import { risolviImmagine } from '../utils/imagenes';
 
 export const prerender = false;
@@ -25,6 +25,19 @@ try {
   console.error('[studio] getTeamMembers() ha fallito, fallback su team vuoto:', err)
   membriDb = []
 }
+
+// PIA-75: carica contenuti hero e bio da CMS (bc_page_content, page='studio').
+// Fallback ai valori di default se Supabase non risponde.
+let studioContent: Record<string, string> = {};
+try {
+  studioContent = await getPageContent('studio');
+} catch {
+  // fallback: defaults used below
+}
+const studioHeroTitolo = studioContent.hero_titolo || 'Lo studio';
+const studioHeroTesto = studioContent.hero_testo || '';
+const bioTesto = studioContent.bio_testo;
+const bioRuolo = studioContent.bio_ruolo;
 const membri = membriDb.map((m) => ({
   nome: m.nome,
   ruolo: m.ruolo ?? '',
@@ -42,7 +55,7 @@ const membri = membriDb.map((m) => ({
     <div class="grid grid-cols-1 tablet:grid-cols-2 tablet:items-center max-w-bc-wrap mx-auto w-full">
       <div class="pt-[48px] pb-0 tablet:py-[80px] tablet:pr-[80px] flex flex-col gap-bc-xl justify-center">
         <h1 class="font-sans text-[28px] lg:text-bc-h1 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">
-          Lo studio&nbsp;&nbsp;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.
+          {studioHeroTitolo}{studioHeroTesto && <Fragment>&nbsp;&nbsp;{studioHeroTesto}</Fragment>}
         </h1>
       </div>
       <div class="aspect-square overflow-hidden my-[32px]">
@@ -51,6 +64,6 @@ const membri = membriDb.map((m) => ({
     </div>
   </section>
 
-  <SectionBio imageSrc="/images/bc-030.jpg" imageAlt="Barbara Costantini" />
+  <SectionBio imageSrc="/images/bc-030.jpg" imageAlt="Barbara Costantini" ruolo={bioRuolo} bio={bioTesto} />
   <SectionTeam membri={membri} />
 </BaseLayout>

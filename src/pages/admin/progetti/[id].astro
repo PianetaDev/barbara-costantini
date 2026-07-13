@@ -8,6 +8,16 @@ const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
 const { data: progetto } = await supabase.from('bc_projects').select('*').eq('id', Astro.params.id).single();
 if (!progetto) return Astro.redirect('/admin/progetti');
 
+// Load all projects for the correlati picker (exclude current)
+const { data: tuttiProgetti } = await supabase
+  .from('bc_projects')
+  .select('id, slug, titolo')
+  .eq('archiviato', false)
+  .neq('id', progetto.id)
+  .order('ordine');
+
+const correlatiAttuali: string[] = (progetto as any).correlati ?? [];
+
 // Se blocks esiste in DB usalo, altrimenti converti sezioni+metodo esistenti
 const existingBlocks = (progetto as any).blocks;
 const blocks: any[] = (existingBlocks && existingBlocks.length > 0)
@@ -52,6 +62,12 @@ const blocks: any[] = (existingBlocks && existingBlocks.length > 0)
             <option value="vertical" selected={progetto.tipo === 'vertical'}>Vertical</option>
           </select>
         </label>
+        <label class="flex items-center gap-[12px] font-sans text-[14px] font-light cursor-pointer">
+          <input type="checkbox" name="in_evidenza"
+            checked={Boolean((progetto as any).in_evidenza)}
+            class="w-[16px] h-[16px] accent-bc-black cursor-pointer" />
+          Mostra in home (in evidenza)
+        </label>
         <div class="flex items-center gap-[16px]">
           <button type="submit" class="bc-btn">Salva info</button>
           <p id="info-success" class="font-sans text-[13px] text-bc-black hidden">Salvato.</p>
@@ -87,6 +103,29 @@ const blocks: any[] = (existingBlocks && existingBlocks.length > 0)
           <button type="submit" class="bc-btn">Salva corpo pagina</button>
           <p id="blocks-success" class="font-sans text-[13px] text-bc-black hidden">Salvato.</p>
           <p id="blocks-error" class="font-sans text-[13px] text-red-600 hidden"></p>
+        </div>
+      </form>
+    </section>
+
+    <!-- CORRELATI -->
+    <section>
+      <h2 class="font-sans text-[13px] uppercase tracking-widest text-bc-black/50 mb-[24px]">Progetti correlati</h2>
+      <form id="correlati-form" class="flex flex-col gap-bc-md" data-id={progetto.id}>
+        <p class="font-sans text-[13px] font-light text-bc-black/60">
+          Seleziona fino a 3 progetti da mostrare come "Potrebbe interessarti" in fondo al lavoro.
+        </p>
+        <select name="correlati" multiple size={Math.min((tuttiProgetti?.length ?? 0) + 1, 8)}
+          class="border border-bc-black px-bc-md py-bc-xs w-full font-sans text-[14px] font-light">
+          {tuttiProgetti?.map((p) => (
+            <option value={p.slug} selected={correlatiAttuali.includes(p.slug)}>
+              {p.titolo}
+            </option>
+          ))}
+        </select>
+        <div class="flex items-center gap-[16px]">
+          <button type="submit" class="bc-btn">Salva correlati</button>
+          <p id="correlati-success" class="font-sans text-[13px] text-bc-black hidden">Salvato.</p>
+          <p id="correlati-error" class="font-sans text-[13px] text-red-600 hidden"></p>
         </div>
       </form>
     </section>
@@ -132,6 +171,7 @@ const blocks: any[] = (existingBlocks && existingBlocks.length > 0)
       committente: fd.get('committente'),
       anno: fd.get('anno') || undefined,
       tipo: fd.get('tipo'),
+      in_evidenza: fd.has('in_evidenza'),
     }, document.getElementById('info-success')!, document.getElementById('info-error')!);
   });
 
@@ -158,6 +198,41 @@ const blocks: any[] = (existingBlocks && existingBlocks.length > 0)
     try { blocks = JSON.parse(raw); } catch {}
     await patch(id, { blocks }, document.getElementById('blocks-success')!, document.getElementById('blocks-error')!);
   });
+
+  // Correlati
+  (function () {
+    const form = document.getElementById('correlati-form');
+    if (!form) return;
+    const progettoId = (form as HTMLElement).dataset.id;
+    const successEl = document.getElementById('correlati-success');
+    const errorEl = document.getElementById('correlati-error');
+    const selectEl = form.querySelector('select[name="correlati"]') as HTMLSelectElement;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      successEl!.classList.add('hidden');
+      errorEl!.classList.add('hidden');
+      const correlati = Array.from(selectEl.selectedOptions).map((o) => o.value);
+      if (correlati.length > 3) {
+        errorEl!.textContent = 'Puoi selezionare al massimo 3 progetti correlati.';
+        errorEl!.classList.remove('hidden');
+        return;
+      }
+      const res = await fetch(`/api/admin/progetti/${progettoId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ correlati }),
+      });
+      if (res.ok) {
+        successEl!.classList.remove('hidden');
+        setTimeout(() => successEl!.classList.add('hidden'), 2000);
+      } else {
+        const { error } = await res.json();
+        errorEl!.textContent = typeof error === 'string' ? error : JSON.stringify(error);
+        errorEl!.classList.remove('hidden');
+      }
+    });
+  })();
 
   // Archivia
   document.getElementById('archivia-progetto')?.addEventListener('click', async (e) => {

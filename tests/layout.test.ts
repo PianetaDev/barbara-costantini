@@ -1,7 +1,14 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { loadRenderers } from 'astro:container';
 import { getContainerRenderer } from '@astrojs/vue/container-renderer';
+
+// PIA-77: BaseLayout ora chiama getPageContent('footer') per caricare i dati del
+// footer dal CMS. Mocchiamo il modulo così i test non dipendono da un Supabase reale.
+vi.mock('../src/lib/supabase-public', () => ({
+  getPageContent: vi.fn().mockResolvedValue({}),
+}));
+
 import BaseLayout from '../src/layouts/BaseLayout.astro';
 
 describe('BaseLayout', () => {

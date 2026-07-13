@@ -5,14 +5,21 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionLavori from '../components/SectionLavori.astro';
 import SectionServizi from '../components/SectionServizi.astro';
-import { PROGETTI } from '../data/progetti';
+import { getPageContent, getProgettiInEvidenza } from '../lib/supabase-public';
 import { risolviImmagine } from '../utils/imagenes';
+
+let progettiEvidenza: Awaited<ReturnType<typeof getProgettiInEvidenza>> = [];
+try {
+  progettiEvidenza = await getProgettiInEvidenza();
+} catch {
+  progettiEvidenza = [];
+}
 
 // Sulla home BcSectionLavori.vue veniva usato senza prop `progetti` (v. app/pages/index.vue),
 // affidandosi ai suoi 3 progetti di default hardcoded (codice "01"/"02"/"03" = id progetto,
-// non "PRJ01" — quel prefisso è usato solo nella pagina di listing /lavori). Qui passiamo
-// gli stessi identici primi 3 progetti reali, ma dalla fonte dati condivisa.
-const progettiHome = PROGETTI.slice(0, 3).map((p) => ({
+// non "PRJ01" — quel prefisso è usato solo nella pagina di listing /lavori). Ora leggiamo
+// i progetti in evidenza da Supabase (colonna in_evidenza) invece dell'array statico.
+const progettiHome = progettiEvidenza.map((p) => ({
   slug: p.slug,
   titolo: p.titolo,
   codice: p.id,
@@ -20,6 +27,14 @@ const progettiHome = PROGETTI.slice(0, 3).map((p) => ({
   tipo: p.tipo,
   immagini: p.immagini,
 }));
+
+let pageContent: Record<string, string> = {};
+try {
+  pageContent = await getPageContent('home');
+} catch {
+  // fallback: defaults used below
+}
+const heroTitolo = pageContent.hero_titolo || 'Barbara Costantini Restauro';
 ---
 <BaseLayout title="Barbara Costantini Restauro" titleIsFull>
   <!-- Hero: testo sx + foto quadrata dx -->
@@ -27,7 +42,7 @@ const progettiHome = PROGETTI.slice(0, 3).map((p) => ({
     <div class="grid grid-cols-1 tablet:grid-cols-2 tablet:items-center max-w-bc-wrap mx-auto w-full">
       <div class="pt-[48px] pb-0 tablet:py-[80px] tablet:pr-[80px] flex flex-col gap-bc-xl justify-center">
         <h1 class="font-sans text-[28px] lg:text-bc-h1 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">
-          Barbara Costantini Restauro&nbsp;&nbsp;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus ipsum vel commodo lacinia.
+          {heroTitolo}
         </h1>
         <div><a href="/studio" class="bc-ghost">Scopri il nostro studio →</a></div>
       </div>

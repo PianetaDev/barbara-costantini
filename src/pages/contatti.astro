@@ -1,9 +1,25 @@
 ---
 // src/pages/contatti.astro
 // Figma: 791:8385 — Contatti: testo sx + immagine square dx
+// PIA-75: email/instagram/telefono/indirizzo provengono da bc_page_content (CMS).
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPageContent } from '../lib/supabase-public';
 import { risolviImmagine } from '../utils/imagenes';
+
+export const prerender = false;
+
+let contattiContent: Record<string, string> = {};
+try {
+  contattiContent = await getPageContent('contatti');
+} catch {
+  // fallback: defaults used below
+}
+const email = contattiContent.email || 'bb.costantini@gmail.com';
+const instagram = contattiContent.instagram || '@barbara_costantini';
+const telefono = contattiContent.telefono || '+39 349 6718022';
+const indirizzo = contattiContent.indirizzo || "Largo dell'Olgiata 15 - 00123 Roma";
+const instagramUrl = `https://instagram.com/${instagram.replace('@', '')}`;
 ---
 <BaseLayout title="Contatti">
   <section class="w-full px-[24px] tablet:px-bc-page overflow-hidden">
@@ -17,24 +33,24 @@ import { risolviImmagine } from '../utils/imagenes';
           </h1>
           <div class="flex flex-col gap-[16px]">
             <a
-              href="mailto:bb.costantini@gmail.com"
+              href={`mailto:${email}`}
               class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] leading-[1.5] hover:underline"
             >
-              bb.costantini@gmail.com
+              {email}
             </a>
             <a
-              href="https://instagram.com/barbara_costantini"
+              href={instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
               class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] leading-[1.5] hover:underline"
             >
-              @barbara_costantini
+              {instagram}
             </a>
             <p class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] leading-[1.5]">
-              +39 349 6718022
+              {telefono}
             </p>
             <p class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] leading-[1.5]">
-              Largo dell'Olgiata 15 -<br />00123 Roma
+              {indirizzo}
             </p>
           </div>
         </div>

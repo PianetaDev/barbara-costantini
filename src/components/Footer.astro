@@ -4,6 +4,16 @@
 // Tablet 590:2197: two-column (sx info, dx link)
 // Porta 1:1 da app/components/bc/Footer.vue — statico, nessuna interattività,
 // diventa Astro puro (NuxtLink -> <a>).
+// PIA-77: accetta `content` da BaseLayout (caricato da bc_page_content) con fallback
+// ai valori hardcoded originali — Footer rimane statico, nessuna idratazione client.
+interface Props {
+  content?: Record<string, string>;
+}
+const { content = {} } = Astro.props;
+const ragioneSociale = content.ragione_sociale || 'Barbara Costantini Restauro Srl';
+const piva = content.piva || '14529501000';
+const cf = content.cf || 'CSTBBR83M45H501C';
+const annoCorrente = content.anno_copyright || String(new Date().getFullYear());
 ---
 <footer class="w-full border-t border-bc-black mt-auto px-bc-page">
   <div class="max-w-bc-wrap mx-auto">
@@ -13,11 +23,11 @@
       <!-- Info legali -->
       <div class="flex flex-col gap-bc-xs text-center md:text-left">
         <p class="font-sans text-bc-nav font-normal text-bc-black tracking-[0.02em]">
-          Barbara Costantini Restauro Srl
+          {ragioneSociale}
         </p>
         <div class="flex flex-col gap-[8px]">
-          <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">P.IVA 14529501000</p>
-          <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">C.F. CSTBBR83M45H501C</p>
+          <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">P.IVA {piva}</p>
+          <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em]">C.F. {cf}</p>
         </div>
       </div>
       <!-- Link legali + copyright -->
@@ -28,7 +38,7 @@
           <a href="/privacy-policy" class="font-sans text-bc-label2 font-light text-bc-black underline tracking-[0.02em]">Privacy Policy</a>
         </div>
         <p class="font-sans text-bc-label2 font-light text-bc-black tracking-[0.02em] text-center md:text-right">
-          © 2026, Barbara Costantini Restauro Srl · All Rights Reserved
+          © {annoCorrente}, {ragioneSociale} · All Rights Reserved
         </p>
       </div>
     </div>
