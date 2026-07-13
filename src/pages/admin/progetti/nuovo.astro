@@ -1,0 +1,45 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+---
+<AdminLayout title="Nuovo lavoro" backHref="/admin/progetti" backLabel="Torna ai lavori">
+  <section class="max-w-[680px]">
+    <form id="nuovo-progetto-form" class="flex flex-col gap-bc-md">
+      <label>Slug <input name="slug" required class="border border-bc-black px-bc-md py-bc-xs w-full" /></label>
+      <label>Titolo <input name="titolo" required class="border border-bc-black px-bc-md py-bc-xs w-full" /></label>
+      <label>Tipo
+        <select name="tipo" class="border border-bc-black px-bc-md py-bc-xs w-full">
+          <option value="horizontal">Horizontal</option>
+          <option value="vertical">Vertical</option>
+        </select>
+      </label>
+      <button type="submit" class="bc-btn">Crea e continua</button>
+    </form>
+    <p id="nuovo-progetto-error" class="text-red-600 mt-bc-sm hidden"></p>
+  </section>
+  <script>
+    const form = document.getElementById('nuovo-progetto-form') as HTMLFormElement;
+    const errorEl = document.getElementById('nuovo-progetto-error')!;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorEl.classList.add('hidden');
+      const formData = new FormData(form);
+      const res = await fetch('/api/admin/progetti', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          slug: formData.get('slug'),
+          titolo: formData.get('titolo'),
+          tipo: formData.get('tipo'),
+        }),
+      });
+      const json = await res.json();
+      if (res.ok) {
+        window.location.href = `/admin/progetti/${json.id}`;
+      } else {
+        errorEl.textContent = typeof json.error === 'string' ? json.error : JSON.stringify(json.error);
+        errorEl.classList.remove('hidden');
+      }
+    });
+  </script>
+</AdminLayout>

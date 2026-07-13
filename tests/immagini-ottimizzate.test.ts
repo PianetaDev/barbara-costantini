@@ -21,11 +21,14 @@ function elencaFileRicorsivo(dir: string, estensioni: string[]): string[] {
 }
 
 describe('ottimizzazione immagini', () => {
-  it('lavori/[slug].astro usa il componente Image invece di <img> per le immagini progetto', () => {
+  it('lavori/[slug].astro pre-ottimizza il carosello e usa loading=lazy per i blocchi immagine storage', () => {
     const src = readFileSync('src/pages/lavori/[slug].astro', 'utf-8');
-    expect(src).toMatch(/import\s*\{[^}]*\bImage\b[^}]*\}\s*from\s*'astro:assets'/);
-    // immaginiContenuto (grande + due affiancate) passano da risolviImmagine() a <Image src=...>
-    expect(src).toMatch(/<Image[^>]+src=\{risolviImmagine\(/);
+    // Il carosello hero usa getImage() (asset locali ottimizzati via sharp lato server)
+    expect(src).toMatch(/import\s*\{[^}]*\bgetImage\b[^}]*\}\s*from\s*'astro:assets'/);
+    // I blocchi immagine (type:'image', type:'images2') sono URL runtime da Supabase Storage
+    // — non asset locali, quindi <Image> non porta ottimizzazione aggiuntiva.
+    // Verifichiamo almeno che abbiano loading="lazy".
+    expect(src).toContain('loading="lazy"');
   });
 
   it('lavori/[slug].astro pre-ottimizza le immagini del carosello Vue con getImage prima di passarle come prop', () => {
@@ -36,8 +39,14 @@ describe('ottimizzazione immagini', () => {
     expect(src).toContain('<CaroselloImmagini');
   });
 
-  it('nessun file .astro sotto src/ usa più <img> grezzo per immagini reali del sito', () => {
-    const fileAstro = elencaFileRicorsivo('src', ['.astro']);
+  it('nessun file .astro (eccetto il block renderer di [slug]) usa <img> grezzo per immagini locali del sito', () => {
+    // [slug].astro usa <img> solo per i blocchi immagine con URL runtime da Supabase Storage
+    // (type:'image', type:'images2') — questi non sono asset locali e non beneficiano di
+    // <Image>. Tutti gli altri file .astro devono usare <Image> per asset statici.
+    // SectionTeam.astro usa <img> per foto team da Supabase Storage (URL runtime)
+    const ESCLUSI = ['lavori/[slug].astro', 'SectionTeam.astro'];
+    const fileAstro = elencaFileRicorsivo('src', ['.astro'])
+      .filter((f) => !ESCLUSI.some((e) => f.includes(e)));
     const offenders: string[] = [];
     for (const file of fileAstro) {
       const contenuto = readFileSync(file, 'utf-8');

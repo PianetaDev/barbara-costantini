@@ -73,6 +73,28 @@ vi.mock('../src/lib/supabase-public', () => ({
   getProgetto: mockGetProgetto,
 }));
 
+// Query builder finto per '@supabase/supabase-js', usato SOLO dal describe block più
+// sotto che testa src/lib/supabase-public.ts vero (via vi.importActual, che ignora il
+// mock di '../src/lib/supabase-public' appena sopra ed esegue il codice reale del
+// modulo). eq() ritorna sempre il builder stesso per tollerare qualunque numero di
+// filtri incatenati (es. .eq('slug', slug).eq('archiviato', false)); single()/order()
+// sono i due punti terminali usati da getProgetto/getProgetti.
+const { mockSingle, mockOrder, mockFromReale } = vi.hoisted(() => {
+  const mockSingle = vi.fn();
+  const mockOrder = vi.fn();
+  const builder: any = {};
+  builder.eq = vi.fn(() => builder);
+  builder.single = mockSingle;
+  builder.order = mockOrder;
+  const mockSelect = vi.fn(() => builder);
+  const mockFromReale = vi.fn(() => ({ select: mockSelect }));
+  return { mockSingle, mockOrder, mockFromReale };
+});
+
+vi.mock('@supabase/supabase-js', () => ({
+  createClient: vi.fn(() => ({ from: mockFromReale })),
+}));
+
 import LavoriIndex from '../src/pages/lavori/index.astro';
 import LavoriSlug from '../src/pages/lavori/[slug].astro';
 import Pagina404 from '../src/pages/404.astro';
@@ -166,5 +188,38 @@ describe('lavori (da Supabase)', () => {
     await expect(
       container.renderToResponse(LavoriSlug, { params: { slug: 'progetto-uno' } }),
     ).rejects.toThrow('fetch failed');
+  });
+});
+
+describe('supabase-public.ts (codice reale, non mockato) mappa immagini_contenuto', () => {
+  it('getProgetto espone la riga Supabase come immaginiContenuto (non immagini_contenuto)', async () => {
+    const rigaSupabase = {
+      id: 'uuid-1',
+      slug: 'progetto-uno',
+      titolo: 'Progetto Uno',
+      committente: 'Cliente Uno',
+      anno: '2022–2023',
+      tipo: 'horizontal',
+      intro: 'Intro.',
+      sezioni: [],
+      metodo: null,
+      immagini: [],
+      ordine: 0,
+      immagini_contenuto: ['x.jpg'],
+      archiviato: false,
+    };
+    mockSingle.mockResolvedValueOnce({ data: rigaSupabase, error: null });
+
+    // vi.importActual ignora il vi.mock('../src/lib/supabase-public', ...) di sopra
+    // (che serve solo ai test "lavori (da Supabase)") ed esegue il modulo vero, che a
+    // sua volta usa il '@supabase/supabase-js' mockato qui sopra.
+    const { getProgetto: getProgettoReale } = await vi.importActual<
+      typeof import('../src/lib/supabase-public')
+    >('../src/lib/supabase-public');
+
+    const progetto = await getProgettoReale('progetto-uno');
+
+    expect(progetto.immaginiContenuto).toEqual(['x.jpg']);
+    expect((progetto as any).immagini_contenuto).toBeUndefined();
   });
 });
