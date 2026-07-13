@@ -16,10 +16,13 @@ const MEMBRI_MOCK = vi.hoisted(() => [
 const { mockGetTeamMembers } = vi.hoisted(() => ({ mockGetTeamMembers: vi.fn() }));
 // PIA-75: mock per getPageContent
 const { mockGetPageContent } = vi.hoisted(() => ({ mockGetPageContent: vi.fn() }));
+// PIA-78: mock per getProgettiInEvidenza
+const { mockGetProgettiInEvidenza } = vi.hoisted(() => ({ mockGetProgettiInEvidenza: vi.fn() }));
 
 vi.mock('../src/lib/supabase-public', () => ({
   getTeamMembers: mockGetTeamMembers,
   getPageContent: mockGetPageContent,
+  getProgettiInEvidenza: mockGetProgettiInEvidenza,
 }));
 
 import Home from '../src/pages/index.astro';
@@ -29,6 +32,9 @@ import Contatti from '../src/pages/contatti.astro';
 beforeEach(() => {
   mockGetTeamMembers.mockReset();
   mockGetTeamMembers.mockImplementation(async () => MEMBRI_MOCK);
+
+  mockGetProgettiInEvidenza.mockReset();
+  mockGetProgettiInEvidenza.mockResolvedValue([]);
 
   mockGetPageContent.mockReset();
   mockGetPageContent.mockImplementation(async (page: string) => {

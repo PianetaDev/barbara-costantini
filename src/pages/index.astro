@@ -5,15 +5,21 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionLavori from '../components/SectionLavori.astro';
 import SectionServizi from '../components/SectionServizi.astro';
-import { PROGETTI } from '../data/progetti';
-import { getPageContent } from '../lib/supabase-public';
+import { getPageContent, getProgettiInEvidenza } from '../lib/supabase-public';
 import { risolviImmagine } from '../utils/imagenes';
+
+let progettiEvidenza: Awaited<ReturnType<typeof getProgettiInEvidenza>> = [];
+try {
+  progettiEvidenza = await getProgettiInEvidenza();
+} catch {
+  progettiEvidenza = [];
+}
 
 // Sulla home BcSectionLavori.vue veniva usato senza prop `progetti` (v. app/pages/index.vue),
 // affidandosi ai suoi 3 progetti di default hardcoded (codice "01"/"02"/"03" = id progetto,
-// non "PRJ01" — quel prefisso è usato solo nella pagina di listing /lavori). Qui passiamo
-// gli stessi identici primi 3 progetti reali, ma dalla fonte dati condivisa.
-const progettiHome = PROGETTI.slice(0, 3).map((p) => ({
+// non "PRJ01" — quel prefisso è usato solo nella pagina di listing /lavori). Ora leggiamo
+// i progetti in evidenza da Supabase (colonna in_evidenza) invece dell'array statico.
+const progettiHome = progettiEvidenza.map((p) => ({
   slug: p.slug,
   titolo: p.titolo,
   codice: p.id,

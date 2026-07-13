@@ -56,6 +56,7 @@ export interface Progetto {
   ordine: number;
   immaginiContenuto: string[];
   archiviato: boolean;
+  in_evidenza: boolean;
 }
 
 export interface TeamMember {
@@ -73,7 +74,7 @@ type ProgettoRow = Omit<Progetto, 'immaginiContenuto'> & { immagini_contenuto: s
 
 function mapProgettoRow(row: ProgettoRow): Progetto {
   const { immagini_contenuto, ...resto } = row;
-  return { ...resto, immaginiContenuto: immagini_contenuto };
+  return { ...resto, immaginiContenuto: immagini_contenuto, in_evidenza: row.in_evidenza ?? false };
 }
 
 export async function getProgetti(): Promise<Progetto[]> {
@@ -92,6 +93,32 @@ export async function getProgetto(slug: string): Promise<Progetto> {
   const { data, error } = await supabase.from('bc_projects').select('*').eq('slug', slug).eq('archiviato', false).single();
   if (error) throw error;
   return mapProgettoRow(data);
+}
+
+export async function getProgettiInEvidenza(): Promise<Progetto[]> {
+  const { data, error } = await supabase
+    .from('bc_projects')
+    .select('*')
+    .eq('archiviato', false)
+    .eq('in_evidenza', true)
+    .order('ordine')
+    .limit(6);
+  if (error) {
+    console.error('[getProgettiInEvidenza]', error.message);
+  }
+  // Fallback: se nessun progetto è marcato in_evidenza, mostra i primi 3 per ordine
+  // (mantiene il comportamento precedente di PROGETTI.slice(0,3)).
+  if (!data || data.length === 0) {
+    const { data: fallback, error: fbErr } = await supabase
+      .from('bc_projects')
+      .select('*')
+      .eq('archiviato', false)
+      .order('ordine')
+      .limit(3);
+    if (fbErr) console.error('[getProgettiInEvidenza fallback]', fbErr.message);
+    return (fallback ?? []).map(mapProgettoRow);
+  }
+  return data.map(mapProgettoRow);
 }
 
 export async function getTeamMembers(): Promise<TeamMember[]> {

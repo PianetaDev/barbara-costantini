@@ -39,6 +39,7 @@ export const progettoSchema = z.object({
   ordine: z.number().optional(),
   immaginiContenuto: z.array(z.string()).max(2).optional(),
   archiviato: z.boolean().optional(),
+  in_evidenza: z.boolean().optional(),
 });
 
 export type Progetto = z.infer<typeof progettoSchema>;

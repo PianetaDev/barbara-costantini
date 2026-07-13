@@ -52,6 +52,12 @@ const blocks: any[] = (existingBlocks && existingBlocks.length > 0)
             <option value="vertical" selected={progetto.tipo === 'vertical'}>Vertical</option>
           </select>
         </label>
+        <label class="flex items-center gap-[12px] font-sans text-[14px] font-light cursor-pointer">
+          <input type="checkbox" name="in_evidenza"
+            checked={Boolean((progetto as any).in_evidenza)}
+            class="w-[16px] h-[16px] accent-bc-black cursor-pointer" />
+          Mostra in home (in evidenza)
+        </label>
         <div class="flex items-center gap-[16px]">
           <button type="submit" class="bc-btn">Salva info</button>
           <p id="info-success" class="font-sans text-[13px] text-bc-black hidden">Salvato.</p>
@@ -132,6 +138,7 @@ const blocks: any[] = (existingBlocks && existingBlocks.length > 0)
       committente: fd.get('committente'),
       anno: fd.get('anno') || undefined,
       tipo: fd.get('tipo'),
+      in_evidenza: fd.has('in_evidenza'),
     }, document.getElementById('info-success')!, document.getElementById('info-error')!);
   });
 
