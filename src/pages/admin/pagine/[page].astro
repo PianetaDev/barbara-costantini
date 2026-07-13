@@ -5,6 +5,7 @@ import { createSupabaseServerClient } from '../../../lib/supabase';
 import { pageContentSchema } from '../../../lib/validation/page-content';
 import ServiziGruppiEditor from '../../../components/admin/ServiziGruppiEditor.vue';
 import ServiziPartnerEditor from '../../../components/admin/ServiziPartnerEditor.vue';
+import LivePreviewPanel from '../../../components/admin/LivePreviewPanel.vue';
 
 // Riusa l'array della whitelist Zod invece di duplicarlo qui a mano (DRY con
 // src/lib/validation/page-content.ts, unica fonte di verità sulle pagine ammesse).
@@ -166,6 +167,9 @@ const serviziFlat: Record<string, string> = isServizi ? {
       </>
     )}
   </section>
+  {!paginaNonTrovata && (
+    <LivePreviewPanel client:load page={pageParam!} initialContent={content} />
+  )}
   <script define:vars={{ page: pageParam, isServizi }}>
     const form = document.getElementById('page-form');
     if (form) {
