@@ -44,6 +44,7 @@ function isOrizzontale(p: Progetto): boolean {
 }
 interface Props {
   progetti: Progetto[];
+  testo?: string;
   ctaLabel?: string;
   borderTop?: boolean;
   borderBottom?: boolean;
@@ -52,6 +53,7 @@ interface Props {
 }
 const {
   progetti,
+  testo = 'I lavori dello studio spaziano dal restauro di beni archivistici e librari alle opere su carta, con un approccio conservativo attento alla storia di ogni materiale.',
   ctaLabel = 'Esplora i lavori →',
   borderTop = false,
   borderBottom = true,
@@ -74,7 +76,7 @@ const {
           class:list={['font-sans font-light text-bc-black tracking-[0.02em]', !paragrafoSize && 'text-bc-body1']}
           style={paragrafoSize ? `font-size:${paragrafoSize}` : undefined}
         >
-          I lavori dello studio si destreggiano tra carta forbice sasso.... Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          {testo}
         </p>
         <a href="/lavori" class="bc-ghost">{ctaLabel}</a>
       </div>

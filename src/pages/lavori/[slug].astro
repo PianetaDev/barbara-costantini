@@ -23,7 +23,7 @@ import { Image, getImage } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SectionLavori from '../../components/SectionLavori.astro';
 import CaroselloImmagini from '../../components/CaroselloImmagini.vue';
-import { getProgetto, getProgetti, ERRORE_RIGA_NON_TROVATA } from '../../lib/supabase-public';
+import { getProgetto, getProgetti, getPageContent, ERRORE_RIGA_NON_TROVATA } from '../../lib/supabase-public';
 import type { Progetto } from '../../lib/supabase-public';
 import { risolviImmagine } from '../../utils/imagenes';
 import { sanitizeIntroHtml } from '../../lib/sanitize-intro';
@@ -59,6 +59,10 @@ try {
 if (!progetto) {
   return Astro.rewrite('/404');
 }
+
+let lavoriCms: Record<string, string> = {};
+try { lavoriCms = await getPageContent('lavori'); } catch {}
+const lavoriTesto = lavoriCms.hero_testo || '';
 
 const slugsCorrelati: string[] = (progetto as any).correlati ?? [];
 let progettiCorrelati: Progetto[] = [];
@@ -256,6 +260,7 @@ const introHtml = (existingBlocks.length === 0 && progetto.intro)
     <!-- Sfoglia altri lavori -->
     <SectionLavori
       progetti={progettiSuggeriti}
+      testo={lavoriTesto || undefined}
       ctaLabel="Vedi tutti"
       paragrafoSize="20px"
       cardTitoloSize="20px"

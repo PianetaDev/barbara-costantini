@@ -29,13 +29,17 @@ const progettiHome = progettiEvidenza.map((p) => ({
 }));
 
 let pageContent: Record<string, string> = {};
-try {
-  pageContent = await getPageContent('home');
-} catch {
-  // fallback: defaults used below
-}
+let lavoriContent: Record<string, string> = {};
+let serviziContent: Record<string, string> = {};
+try { pageContent = await getPageContent('home'); } catch {}
+try { lavoriContent = await getPageContent('lavori'); } catch {}
+try { serviziContent = await getPageContent('servizi'); } catch {}
+
 const heroTitolo = pageContent.hero_titolo || 'Barbara Costantini Restauro';
 const heroTesto = pageContent.hero_testo || '';
+const lavoriTesto = lavoriContent.hero_testo || '';
+const serviziTesto = (serviziContent as any).hero_testo || '';
+const serviziCta = (serviziContent as any).cta_testo || '';
 ---
 <BaseLayout title="Barbara Costantini Restauro" titleIsFull>
   <!-- Hero: testo sx + foto quadrata dx -->
@@ -54,6 +58,6 @@ const heroTesto = pageContent.hero_testo || '';
     </div>
   </section>
 
-  <SectionLavori progetti={progettiHome} borderTop />
-  <SectionServizi imageSrc="/images/bc-002.jpg" imageAlt="I servizi" />
+  <SectionLavori progetti={progettiHome} testo={lavoriTesto || undefined} borderTop />
+  <SectionServizi imageSrc="/images/bc-002.jpg" imageAlt="I servizi" body={serviziTesto || undefined} ctaLabel={serviziCta || undefined} />
 </BaseLayout>
