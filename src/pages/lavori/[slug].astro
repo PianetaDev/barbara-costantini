@@ -25,7 +25,7 @@ import SectionLavori from '../../components/SectionLavori.astro';
 import CaroselloImmagini from '../../components/CaroselloImmagini.vue';
 import { getProgetto, getProgetti, getPageContent, ERRORE_RIGA_NON_TROVATA } from '../../lib/supabase-public';
 import type { Progetto } from '../../lib/supabase-public';
-import { risolviImmagine } from '../../utils/imagenes';
+import { risolviImmagine, isRemote } from '../../utils/imagenes';
 import { sanitizeIntroHtml } from '../../lib/sanitize-intro';
 
 export const prerender = false;
@@ -113,6 +113,10 @@ const progettiSuggeriti = await (async () => {
 // gli URL già ottimizzati, invece dei path grezzi verso /images/bc-NNN.jpg.
 const immaginiCarosello = await Promise.all(
   progetto.immagini.map(async (img) => {
+    // Le immagini caricate dall'admin sono URL Supabase Storage, mai registrati in
+    // risolviImmagine(): passale al carosello così come sono, senza ottimizzazione
+    // sharp (che richiede un asset importato da src/, non un URL remoto).
+    if (isRemote(img.src)) return img;
     const ottimizzata = await getImage({
       src: risolviImmagine(img.src),
       width: img.aspetto === 'v' ? 700 : 1000,

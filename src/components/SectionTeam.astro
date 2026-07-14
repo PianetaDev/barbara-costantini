@@ -8,7 +8,7 @@
 // da uno scroll orizzontale nativo con overflow-x-auto + scroll-snap CSS,
 // senza isola JS (v. istruzioni Task 5).
 import { Image } from 'astro:assets';
-import { risolviImmagine } from '../utils/imagenes';
+import { risolviImmagine, isRemote } from '../utils/imagenes';
 
 interface Membro {
   nome: string;
@@ -27,8 +27,6 @@ const {
     { nome: 'Nome Cognome 3', ruolo: 'Ruolo', bio: BIO_PLACEHOLDER },
   ],
 } = Astro.props;
-
-const isRemote = (src?: string) => !!src && (src.startsWith('http://') || src.startsWith('https://'));
 ---
 <section class="w-full border-t border-bc-black px-[24px] tablet:px-bc-page">
 

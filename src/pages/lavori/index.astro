@@ -7,7 +7,7 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getProgetti, getPageContent } from '../../lib/supabase-public';
-import { risolviImmagine } from '../../utils/imagenes';
+import { risolviImmagine, isRemote } from '../../utils/imagenes';
 
 // output: 'server' (astro.config.mjs) rende già questa pagina SSR di default;
 // l'export esplicito documenta che NON va mai prerenderizzata, dato che i dati
@@ -79,15 +79,16 @@ const progetti = progettiDb.map((p) => ({
             class="w-full bg-bc-black/10 overflow-hidden ring-0 group-hover:ring-1 group-hover:ring-bc-black transition-shadow"
             style={p.tipo === 'vertical' ? 'aspect-ratio:209/260' : 'aspect-ratio:209/139'}
           >
-            {p.image && (
-              <Image
-                src={risolviImmagine(p.image)}
-                alt={p.titolo}
-                width={500}
-                format="webp"
-                quality={80}
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
+            {p.image && (isRemote(p.image)
+              ? <img src={p.image} alt={p.titolo} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+              : <Image
+                  src={risolviImmagine(p.image)}
+                  alt={p.titolo}
+                  width={500}
+                  format="webp"
+                  quality={80}
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
             )}
           </div>
           <div class="flex flex-col gap-[4px]">

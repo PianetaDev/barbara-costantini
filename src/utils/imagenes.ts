@@ -83,3 +83,13 @@ export function risolviImmagine(percorsoPublic: string): ImageMetadata {
   }
   return modulo;
 }
+
+/**
+ * Le immagini caricate dall'admin (upload-image.ts → Supabase Storage) arrivano come
+ * URL assoluti, mai registrati in `moduli` sopra: risolviImmagine() lancerebbe sempre.
+ * Chi renderizza contenuto potenzialmente caricato dall'admin deve controllare questo
+ * prima di scegliere tra <img src={...}> diretto e <Image src={risolviImmagine(...)}>.
+ */
+export function isRemote(src?: string): boolean {
+  return !!src && (src.startsWith('http://') || src.startsWith('https://'));
+}
