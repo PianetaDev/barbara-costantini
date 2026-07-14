@@ -93,3 +93,22 @@ export function risolviImmagine(percorsoPublic: string): ImageMetadata {
 export function isRemote(src?: string): boolean {
   return !!src && (src.startsWith('http://') || src.startsWith('https://'));
 }
+
+/**
+ * Variante di risolviImmagine() per campi CMS testo-libero non validati lato server
+ * (es. "Immagine" nell'editor gruppi/partner di /admin/pagine/servizi — vedi
+ * ServiziGruppiEditor.vue/ServiziPartnerEditor.vue, nessun controllo sul valore
+ * digitato). Un path vuoto, con un typo, o un URL incollato per sbaglio farebbe
+ * lanciare risolviImmagine() a ogni richiesta SSR — qui si preferisce non mostrare
+ * l'immagine piuttosto che far crashare l'intera pagina pubblica per tutti (stesso
+ * incidente di fix/servizi-immagine-vuota-500, ma per il caso "path sbagliato non
+ * vuoto" che quella fix non copriva).
+ */
+export function risolviImmagineSicura(src?: string): ImageMetadata | null {
+  if (!src || isRemote(src)) return null;
+  try {
+    return risolviImmagine(src);
+  } catch {
+    return null;
+  }
+}
