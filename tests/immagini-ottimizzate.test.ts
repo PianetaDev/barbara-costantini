@@ -43,8 +43,13 @@ describe('ottimizzazione immagini', () => {
     // [slug].astro usa <img> solo per i blocchi immagine con URL runtime da Supabase Storage
     // (type:'image', type:'images2') — questi non sono asset locali e non beneficiano di
     // <Image>. Tutti gli altri file .astro devono usare <Image> per asset statici.
-    // SectionTeam.astro usa <img> per foto team da Supabase Storage (URL runtime)
-    const ESCLUSI = ['lavori/[slug].astro', 'SectionTeam.astro'];
+    // SectionTeam.astro usa <img> per foto team da Supabase Storage (URL runtime).
+    // SectionLavori.astro e lavori/index.astro: stesso caso per le foto progetto
+    // caricate dall'admin (upload-image.ts → Supabase Storage) — risolviImmagine()
+    // lancerebbe su un URL remoto mai registrato in src/utils/imagenes.ts, quindi
+    // usano <img> via isRemote() esattamente come SectionTeam.astro (v. incidente
+    // fix/servizi-immagine-vuota-500: stessa classe di bug, file diversi).
+    const ESCLUSI = ['lavori/[slug].astro', 'SectionTeam.astro', 'SectionLavori.astro', 'lavori/index.astro'];
     const fileAstro = elencaFileRicorsivo('src', ['.astro'])
       .filter((f) => !ESCLUSI.some((e) => f.includes(e)));
     const offenders: string[] = [];
