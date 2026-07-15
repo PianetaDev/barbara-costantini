@@ -30,7 +30,7 @@ watch(menuOpen, (val) => {
     <div class="flex items-center justify-between h-[80px] max-w-bc-wrap mx-auto">
       <!-- Logo -->
       <a href="/" class="flex items-center" @click="menuOpen = false">
-        <span class="font-sans text-bc-nav font-normal tracking-[0.02em]">
+        <span class="font-sans text-bc-nav font-light tracking-[0.16em] uppercase">
           Barbara Costantini Restauro
         </span>
       </a>
@@ -42,7 +42,7 @@ watch(menuOpen, (val) => {
           :key="l.to"
           :href="l.to"
           :class="[
-            'font-sans text-bc-nav tracking-[0.02em] py-bc-sm hover:underline',
+            'font-sans text-bc-nav tracking-[0.16em] uppercase py-bc-sm hover:underline',
             props.currentPath === l.to ? 'font-normal underline' : 'font-light',
           ]"
         >
@@ -71,7 +71,7 @@ watch(menuOpen, (val) => {
         <!-- Header overlay: logo + X -->
         <div class="flex items-center justify-between px-bc-page h-[80px] border-b border-bc-black shrink-0">
           <a href="/" class="flex items-center" @click="menuOpen = false">
-            <span class="font-sans text-bc-nav font-normal tracking-[0.02em]">
+            <span class="font-sans text-bc-nav font-light tracking-[0.16em] uppercase">
               Barbara Costantini Restauro
             </span>
           </a>
@@ -89,7 +89,7 @@ watch(menuOpen, (val) => {
             :key="l.to"
             :href="l.to"
             :class="[
-              'font-sans font-light tracking-[0.02em] hover:underline',
+              'font-sans font-light tracking-[0.16em] uppercase hover:underline',
               props.currentPath === l.to ? 'underline' : '',
             ]"
             style="font-size:28px; line-height:1.5;"
