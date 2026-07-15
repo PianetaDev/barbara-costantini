@@ -61,6 +61,7 @@ const words = ['Barbara', 'Costantini', 'Restauro'];
 
   html.bc-l body > *:not(#bc-t) {
     opacity: 0;
+    transform: translateY(18px);
   }
 
   #bc-t {
@@ -141,12 +142,16 @@ const words = ['Barbara', 'Costantini', 'Restauro'];
 
       items.forEach(el => {
         el.style.opacity = '0';
-        el.style.transition = 'opacity 0.45s ease-in-out';
+        el.style.transform = 'translateY(18px)';
+        el.style.transition = 'opacity 0.55s ease-out, transform 0.55s ease-out';
       });
       document.documentElement.classList.remove('bc-l');
 
       items.forEach((el, i) => {
-        setTimeout(() => { el.style.opacity = '1'; }, i * 120 + 16);
+        setTimeout(() => {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }, i * 100 + 16);
       });
     }, { once: true });
   }
