@@ -1,7 +1,7 @@
 ---
 // src/components/PageTransition.astro
 // Overlay di transizione: griglia 3×3 di B tipografiche su bc-canvas.
-// Le B appaiono in sequenza (stagger 100ms, solo opacity), poi fade-out dell'intero overlay.
+// Flusso: B appaiono in stagger → overlay fa fade-out → UI entra in sequenza.
 const cells = [
   '/images/bc-b/b-01.png',
   '/images/bc-b/b-02.png',
@@ -31,6 +31,11 @@ const cells = [
     to   { opacity: 1; }
   }
 
+  /* Nasconde tutto il contenuto finché l'overlay è attivo */
+  html.bc-l body > *:not(#bc-t) {
+    opacity: 0;
+  }
+
   #bc-t {
     position: fixed;
     inset: 0;
@@ -39,7 +44,7 @@ const cells = [
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: opacity 0.7s ease-in-out;
+    transition: opacity 0.6s ease-in-out;
     will-change: opacity;
   }
   #bc-t.bc-out {
@@ -71,9 +76,30 @@ const cells = [
 </style>
 
 <script>
-  const el = document.getElementById('bc-t');
-  if (el) {
-    // ultima B: delay 800ms + durata 500ms = 1300ms — pausa 400ms → fade-out a 1700ms
-    setTimeout(() => el.classList.add('bc-out'), 1700);
+  const overlay = document.getElementById('bc-t');
+  if (overlay) {
+    // Overlay fa fade-out dopo che tutte le B sono apparse (ultima a ~900ms)
+    setTimeout(() => overlay.classList.add('bc-out'), 1300);
+
+    // Quando overlay è sparito, rivela i componenti UI in sequenza
+    overlay.addEventListener('transitionend', () => {
+      const nav = [...document.body.children]
+        .find(c => c.id !== 'bc-t' && c.tagName !== 'MAIN' && c.tagName !== 'FOOTER') as HTMLElement | undefined;
+      const sections = [...(document.querySelector('main')?.children ?? [])] as HTMLElement[];
+      const footer = document.querySelector('footer') as HTMLElement | null;
+      const items = [nav, ...sections, footer].filter((el): el is HTMLElement => el != null);
+
+      // Blocca opacity inline prima di rimuovere la classe CSS (evita flash)
+      items.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transition = 'opacity 0.45s ease-in-out';
+      });
+      document.documentElement.classList.remove('bc-l');
+
+      // Stagger: ogni elemento entra 120ms dopo il precedente
+      items.forEach((el, i) => {
+        setTimeout(() => { el.style.opacity = '1'; }, i * 120 + 16);
+      });
+    }, { once: true });
   }
 </script>
