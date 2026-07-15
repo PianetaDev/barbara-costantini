@@ -59,9 +59,37 @@ const words = ['Barbara', 'Costantini', 'Restauro'];
     to   { opacity: 1; }
   }
 
-  html.bc-l body > *:not(#bc-t) {
+  /* Nasconde nav, sezioni e footer prima che l'overlay esca */
+  html.bc-l #bc-nav,
+  html.bc-l main > *,
+  html.bc-l footer {
     opacity: 0;
     transform: translateY(18px);
+  }
+
+  /* Transitions CSS-only — il browser le usa all'uscita da bc-l, zero JS */
+  html.bc-l #bc-nav {
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+  html.bc-l main > *:nth-child(1) {
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    transition-delay: 80ms;
+  }
+  html.bc-l main > *:nth-child(2) {
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    transition-delay: 160ms;
+  }
+  html.bc-l main > *:nth-child(3) {
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    transition-delay: 240ms;
+  }
+  html.bc-l main > *:nth-child(4) {
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    transition-delay: 320ms;
+  }
+  html.bc-l footer {
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    transition-delay: 200ms;
   }
 
   #bc-t {
@@ -134,25 +162,8 @@ const words = ['Barbara', 'Costantini', 'Restauro'];
     setTimeout(() => overlay.classList.add('bc-out'), 2200);
 
     overlay.addEventListener('transitionend', () => {
-      const nav = [...document.body.children]
-        .find(c => c.id !== 'bc-t' && c.tagName !== 'MAIN' && c.tagName !== 'FOOTER') as HTMLElement | undefined;
-      const sections = [...(document.querySelector('main')?.children ?? [])] as HTMLElement[];
-      const footer = document.querySelector('footer') as HTMLElement | null;
-      const items = [nav, ...sections, footer].filter((el): el is HTMLElement => el != null);
-
-      items.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(18px)';
-        el.style.transition = 'opacity 0.55s ease-out, transform 0.55s ease-out';
-      });
+      // Il CSS gestisce tutto: transitions + stagger via transition-delay
       document.documentElement.classList.remove('bc-l');
-
-      items.forEach((el, i) => {
-        setTimeout(() => {
-          el.style.opacity = '1';
-          el.style.transform = 'translateY(0)';
-        }, i * 100 + 16);
-      });
     }, { once: true });
   }
 </script>

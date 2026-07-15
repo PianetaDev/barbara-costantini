@@ -64,7 +64,9 @@ try {
   </head>
   <body class="bg-bc-canvas text-bc-black font-sans">
     <PageTransition />
-    {!hideNav && <Nav client:load currentPath={Astro.url.pathname} />}
+    <div id="bc-nav">
+      {!hideNav && <Nav client:load currentPath={Astro.url.pathname} />}
+    </div>
     <main>
       <slot />
     </main>
