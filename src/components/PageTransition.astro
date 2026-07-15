@@ -1,8 +1,7 @@
 ---
 // src/components/PageTransition.astro
-// Overlay di transizione tra pagine: griglia 3×3 di B tipografiche su bc-canvas.
-// Appare al caricamento di ogni pagina, poi fa fade-out dopo 400ms.
-// Tutte le immagini sono precaricate nella <head> di BaseLayout.
+// Overlay di transizione: griglia 3×3 di B tipografiche su bc-canvas.
+// Le B appaiono una per una (stagger 90ms), poi l'overlay fa fade-out.
 const cells = [
   '/images/bc-b/b-01.png',
   '/images/bc-b/b-02.png',
@@ -18,8 +17,8 @@ const cells = [
 
 <div id="bc-t" aria-hidden="true">
   <div class="bc-t-grid">
-    {cells.map((src) => (
-      <div class="bc-t-cell">
+    {cells.map((src, i) => (
+      <div class="bc-t-cell" style={`--d:${i * 90}ms`}>
         <img src={src} alt="" width="47" height="47" draggable="false" />
       </div>
     ))}
@@ -27,6 +26,11 @@ const cells = [
 </div>
 
 <style is:global>
+  @keyframes bc-b-in {
+    from { opacity: 0; transform: translateY(5px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
   #bc-t {
     position: fixed;
     inset: 0;
@@ -36,7 +40,7 @@ const cells = [
     align-items: center;
     justify-content: center;
     opacity: 1;
-    transition: opacity 0.55s ease;
+    transition: opacity 0.6s ease;
     will-change: opacity;
   }
   #bc-t.bc-out {
@@ -61,13 +65,17 @@ const cells = [
     height: 47px;
     object-fit: contain;
     display: block;
+    opacity: 0;
+    animation: bc-b-in 0.35s ease forwards;
+    animation-delay: var(--d);
   }
 </style>
 
 <script>
   const el = document.getElementById('bc-t');
   if (el) {
-    setTimeout(() => el.classList.add('bc-out'), 400);
+    // ultima B appare a 720ms (8*90 + 350ms anim) — aspetto altri 300ms poi fade-out
+    setTimeout(() => el.classList.add('bc-out'), 1350);
     el.addEventListener('transitionend', () => { el.style.display = 'none'; }, { once: true });
   }
 </script>
