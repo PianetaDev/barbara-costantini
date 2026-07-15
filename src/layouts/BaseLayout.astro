@@ -84,9 +84,7 @@ try {
         });
       }
     </script>
-    <div id="bc-nav">
-      {!hideNav && <Nav client:load currentPath={Astro.url.pathname} />}
-    </div>
+    {!hideNav && <Nav client:load currentPath={Astro.url.pathname} />}
     <main>
       <slot />
     </main>

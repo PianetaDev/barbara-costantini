@@ -54,7 +54,7 @@ onUnmounted(() => {
 })
 </script>
 <template>
-  <header ref="headerRef" class="w-full border-b border-bc-black sticky top-0 z-40 bg-bc-canvas px-bc-page transition-transform duration-300 ease-out">
+  <header id="bc-nav" ref="headerRef" class="w-full border-b border-bc-black sticky top-0 z-40 bg-bc-canvas px-bc-page transition-transform duration-300 ease-out">
     <div class="flex items-center justify-between h-[80px] max-w-bc-wrap mx-auto">
       <!-- Logo -->
       <a href="/" class="flex items-center" @click="menuOpen = false">
