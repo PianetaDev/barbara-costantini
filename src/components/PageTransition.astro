@@ -1,37 +1,50 @@
 ---
 // src/components/PageTransition.astro
-// Overlay di transizione: griglia 3×3 di B tipografiche su bc-canvas.
-// Flusso: B appaiono in stagger → overlay fa fade-out → UI entra in sequenza.
-const cells = [
-  '/images/bc-b/b-01.png',
-  '/images/bc-b/b-02.png',
-  '/images/bc-b/b-03.svg',
-  '/images/bc-b/b-04.png',
-  '/images/bc-b/b-05.png',
-  '/images/bc-b/b-06.png',
-  '/images/bc-b/b-07.png',
-  '/images/bc-b/b-08.png',
-  '/images/bc-b/b-09.png',
+// Ogni cella ha 2 B in stack: la superiore scompare, quella sotto appare.
+// Le 9 celle sono sfalsate (stagger 100ms) → flusso organico nella griglia.
+const cells: [string, string][] = [
+  ['/images/bc-b/b-01.png', '/images/bc-b/b-05.png'],
+  ['/images/bc-b/b-02.png', '/images/bc-b/b-06.png'],
+  ['/images/bc-b/b-03.svg', '/images/bc-b/b-07.png'],
+  ['/images/bc-b/b-04.png', '/images/bc-b/b-08.png'],
+  ['/images/bc-b/b-05.png', '/images/bc-b/b-09.png'],
+  ['/images/bc-b/b-06.png', '/images/bc-b/b-01.png'],
+  ['/images/bc-b/b-07.png', '/images/bc-b/b-02.png'],
+  ['/images/bc-b/b-08.png', '/images/bc-b/b-03.svg'],
+  ['/images/bc-b/b-09.png', '/images/bc-b/b-04.png'],
 ];
 ---
 
 <div id="bc-t" aria-hidden="true">
   <div class="bc-t-grid">
-    {cells.map((src, i) => (
+    {cells.map(([a, b], i) => (
       <div class="bc-t-cell" style={`--d:${i * 100}ms`}>
-        <img src={src} alt="" width="47" height="47" draggable="false" />
+        <img class="bc-a" src={a} alt="" width="47" height="47" draggable="false" />
+        <img class="bc-b" src={b} alt="" width="47" height="47" draggable="false" />
       </div>
     ))}
   </div>
 </div>
 
 <style is:global>
-  @keyframes bc-b-in {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+  /* B superiore: appare → tiene → scompare */
+  @keyframes bc-a {
+    0%   { opacity: 0; }
+    8%   { opacity: 1; }
+    42%  { opacity: 1; }
+    54%  { opacity: 0; }
+    100% { opacity: 0; }
   }
 
-  /* Nasconde tutto il contenuto finché l'overlay è attivo */
+  /* B sotto: aspetta → appare → tiene → scompare */
+  @keyframes bc-b {
+    0%   { opacity: 0; }
+    50%  { opacity: 0; }
+    62%  { opacity: 1; }
+    92%  { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
   html.bc-l body > *:not(#bc-t) {
     opacity: 0;
   }
@@ -59,29 +72,34 @@ const cells = [
     row-gap: 14px;
   }
   .bc-t-cell {
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: relative;
+    width: 47px;
+    height: 47px;
   }
-  .bc-t-cell img {
+  .bc-t-cell .bc-a,
+  .bc-t-cell .bc-b {
+    position: absolute;
+    inset: 0;
     width: 47px;
     height: 47px;
     object-fit: contain;
     display: block;
-    opacity: 0;
-    animation: bc-b-in 0.5s ease-in-out forwards;
+    animation-duration: 1600ms;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-fill-mode: backwards;
     animation-delay: var(--d);
   }
+  .bc-t-cell .bc-a { animation-name: bc-a; }
+  .bc-t-cell .bc-b { animation-name: bc-b; }
 </style>
 
 <script>
   const overlay = document.getElementById('bc-t');
   if (overlay) {
-    // Overlay fa fade-out dopo che tutte le B sono apparse (ultima a ~900ms)
-    setTimeout(() => overlay.classList.add('bc-out'), 1300);
+    // Lascia ciclare ~1.5 volte poi fade-out
+    setTimeout(() => overlay.classList.add('bc-out'), 2200);
 
-    // Quando overlay è sparito, rivela i componenti UI in sequenza
     overlay.addEventListener('transitionend', () => {
       const nav = [...document.body.children]
         .find(c => c.id !== 'bc-t' && c.tagName !== 'MAIN' && c.tagName !== 'FOOTER') as HTMLElement | undefined;
@@ -89,14 +107,12 @@ const cells = [
       const footer = document.querySelector('footer') as HTMLElement | null;
       const items = [nav, ...sections, footer].filter((el): el is HTMLElement => el != null);
 
-      // Blocca opacity inline prima di rimuovere la classe CSS (evita flash)
       items.forEach(el => {
         el.style.opacity = '0';
         el.style.transition = 'opacity 0.45s ease-in-out';
       });
       document.documentElement.classList.remove('bc-l');
 
-      // Stagger: ogni elemento entra 120ms dopo il precedente
       items.forEach((el, i) => {
         setTimeout(() => { el.style.opacity = '1'; }, i * 120 + 16);
       });
