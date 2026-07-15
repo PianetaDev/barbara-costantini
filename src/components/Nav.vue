@@ -30,6 +30,7 @@ watch(menuOpen, (val) => {
 })
 
 function onScroll() {
+  if (document.documentElement.classList.contains('bc-l')) return
   const y = window.scrollY
   const delta = y - lastY
   lastY = y
@@ -44,10 +45,8 @@ function onScroll() {
 }
 
 onMounted(() => {
-  setTimeout(() => {
-    lastY = window.scrollY
-    window.addEventListener('scroll', onScroll, { passive: true })
-  }, 2400)
+  lastY = window.scrollY
+  window.addEventListener('scroll', onScroll, { passive: true })
 })
 
 onUnmounted(() => {
