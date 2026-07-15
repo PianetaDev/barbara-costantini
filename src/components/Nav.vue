@@ -24,51 +24,28 @@ const headerRef = ref<HTMLElement | null>(null)
 
 let lastY = 0
 let hidden = false
-let past = false   // true dopo aver superato REAPPEAR_AT — nav rimane visibile
-const HIDE_FROM = 80    // px da top prima di iniziare a nascondere
-const REAPPEAR_AT = 500 // px da top dopo i quali la nav ricompare automaticamente
 
 watch(menuOpen, (val) => {
   document.body.style.overflow = val ? 'hidden' : ''
 })
 
-function setVisible(show: boolean) {
-  if (!headerRef.value) return
-  hidden = !show
-  headerRef.value.style.transform = show ? '' : 'translateY(-100%)'
-}
-
 function onScroll() {
   const y = window.scrollY
   const delta = y - lastY
   lastY = y
-
-  // In cima: sempre visibile, reset stato
-  if (y < HIDE_FROM) {
-    past = false
-    if (hidden) setVisible(true)
-    return
+  if (!headerRef.value) return
+  if (y <= 0) {
+    if (hidden) { headerRef.value.style.transform = ''; hidden = false }
+  } else if (delta > 0 && !hidden) {
+    headerRef.value.style.transform = 'translateY(-100%)'; hidden = true
+  } else if (delta < 0 && hidden) {
+    headerRef.value.style.transform = ''; hidden = false
   }
-
-  // Superata soglia di ricomparsa: mostra e blocca (non nasconde più)
-  if (!past && y >= REAPPEAR_AT) {
-    past = true
-    if (hidden) setVisible(true)
-    return
-  }
-
-  // "Past" attivo: la nav rimane sempre visibile
-  if (past) return
-
-  // Zona intermedia: scroll giù = nascondi, scroll su = mostra
-  if (delta > 0 && !hidden) setVisible(false)
-  else if (delta < 0 && hidden) setVisible(true)
 }
 
 onMounted(() => {
-  lastY = window.scrollY
-  // Listener si attacca dopo la fine dell'animazione bc-l (1600ms + 600ms transizione)
   setTimeout(() => {
+    lastY = window.scrollY
     window.addEventListener('scroll', onScroll, { passive: true })
   }, 2400)
 })
