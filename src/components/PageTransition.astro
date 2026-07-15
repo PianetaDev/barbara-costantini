@@ -59,50 +59,58 @@ const words = ['Barbara', 'Costantini', 'Restauro'];
     to   { opacity: 1; }
   }
 
-  /* Nasconde nav, sezioni e footer prima che l'overlay esca */
-  html.bc-l #bc-nav,
+  /* Nav entra dall'alto, contenuto dal basso — B grid è lo sfondo */
+  html.bc-l #bc-nav {
+    opacity: 0;
+    transform: translateY(-84px); /* fuori viewport in alto */
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
   html.bc-l main > *,
   html.bc-l footer {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(40px); /* sale dal basso */
   }
 
-  /* Transitions CSS-only — il browser le usa all'uscita da bc-l, zero JS */
-  html.bc-l #bc-nav {
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-  }
   html.bc-l main > *:nth-child(1) {
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-    transition-delay: 80ms;
+    transition: opacity 0.55s ease-out, transform 0.55s ease-out;
+    transition-delay: 0ms;
   }
   html.bc-l main > *:nth-child(2) {
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-    transition-delay: 160ms;
+    transition: opacity 0.55s ease-out, transform 0.55s ease-out;
+    transition-delay: 80ms;
   }
   html.bc-l main > *:nth-child(3) {
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-    transition-delay: 240ms;
+    transition: opacity 0.55s ease-out, transform 0.55s ease-out;
+    transition-delay: 160ms;
   }
   html.bc-l main > *:nth-child(4) {
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-    transition-delay: 320ms;
+    transition: opacity 0.55s ease-out, transform 0.55s ease-out;
+    transition-delay: 240ms;
   }
   html.bc-l footer {
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-    transition-delay: 200ms;
+    transition: opacity 0.55s ease-out, transform 0.55s ease-out;
+    transition-delay: 80ms;
+  }
+
+  /* main e footer sopra la B grid (z-5) durante il loading */
+  html.bc-l main,
+  html.bc-l footer {
+    position: relative;
+    z-index: 10;
   }
 
   #bc-t {
     position: fixed;
     inset: 0;
-    z-index: 9999;
+    z-index: 5; /* sotto nav (z-40) e main/footer (z-10 durante bc-l) */
     background: #f7f6ef;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 36px;
-    transition: opacity 0.6s ease-in-out;
+    transition: opacity 0.7s ease-in-out;
     will-change: opacity;
   }
   #bc-t.bc-out {
@@ -159,11 +167,9 @@ const words = ['Barbara', 'Costantini', 'Restauro'];
 <script>
   const overlay = document.getElementById('bc-t');
   if (overlay) {
-    setTimeout(() => overlay.classList.add('bc-out'), 2200);
-
-    overlay.addEventListener('transitionend', () => {
-      // Il CSS gestisce tutto: transitions + stagger via transition-delay
-      document.documentElement.classList.remove('bc-l');
-    }, { once: true });
+    setTimeout(() => {
+      overlay.classList.add('bc-out');            // B grid sfuma
+      document.documentElement.classList.remove('bc-l'); // nav scende, contenuto sale
+    }, 1600);
   }
 </script>
