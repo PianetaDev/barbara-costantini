@@ -69,19 +69,21 @@ try {
     ></script>
   </head>
   <body class="bg-bc-canvas text-bc-black font-sans">
-    {isHome
-      ? <PageTransition />
-      : <script is:inline>
-          /* Altre pagine: niente B overlay, solo animazione entrata (translateY + fade).
-             Double RAF garantisce che il browser dipinga un frame con bc-l attivo
-             (elementi in stato iniziale nascosto) prima di rimuoverlo. */
+    {isHome && <PageTransition />}
+    <script is:inline>
+      /* Altre pagine: niente B overlay, solo animazione entrata (translateY + fade).
+         Double RAF garantisce che il browser dipinga un frame con bc-l attivo
+         (elementi in stato iniziale nascosto) prima di rimuoverlo.
+         NOTA: <script is:inline> nel ramo `:` di un ternario Astro rompe il parser
+         del template — usare blocchi separati. */
+      if (window.location.pathname !== '/') {
+        requestAnimationFrame(function() {
           requestAnimationFrame(function() {
-            requestAnimationFrame(function() {
-              document.documentElement.classList.remove('bc-l');
-            });
+            document.documentElement.classList.remove('bc-l');
           });
-        </script>
-    }
+        });
+      }
+    </script>
     <div id="bc-nav">
       {!hideNav && <Nav client:load currentPath={Astro.url.pathname} />}
     </div>
