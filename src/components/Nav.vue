@@ -31,14 +31,15 @@ function onScroll() {
   if (document.documentElement.classList.contains('bc-l')) return
   const y = window.scrollY
   if (!headerRef.value) return
+  const delta = y - lastY
+  lastY = y
   if (y <= 0) {
     headerRef.value.style.transform = ''
-  } else if (y > lastY) {
+  } else if (delta > 0) {
     headerRef.value.style.transform = 'translateY(-100%)'
-  } else {
+  } else if (delta < 0) {
     headerRef.value.style.transform = 'translateY(0)'
   }
-  lastY = y
 }
 
 onMounted(() => {
