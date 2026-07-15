@@ -70,10 +70,11 @@ const progetti = progettiDb.map((p) => ({
     <div class="max-w-bc-wrap mx-auto w-full
                 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 bc:grid-cols-6
                 gap-x-[16px] tablet:gap-x-[24px] gap-y-bc-2xl items-start">
-      {progetti.map((p) => (
+      {progetti.map((p, i) => (
         <a
           href={`/lavori/${p.slug}`}
-          class="flex flex-col gap-[16px] group text-left"
+          class="bc-reveal flex flex-col gap-[16px] group text-left"
+          style={`--bc-d:${(i % 4) * 80}ms`}
         >
           <div
             class="w-full bg-bc-black/10 overflow-hidden ring-0 group-hover:ring-1 group-hover:ring-bc-black transition-shadow"

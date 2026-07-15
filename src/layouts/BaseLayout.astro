@@ -83,5 +83,33 @@ try {
     </main>
     <Footer content={footerContent} />
     <CookieBanner client:load />
+    <script>
+      function initReveal() {
+        const io = new IntersectionObserver((entries) => {
+          for (const { target, isIntersecting } of entries) {
+            if (!isIntersecting) continue;
+            io.unobserve(target);
+            const reveal = () => target.classList.add('bc-in');
+            if (!document.documentElement.classList.contains('bc-l')) {
+              reveal();
+            } else {
+              const mo = new MutationObserver(() => {
+                if (!document.documentElement.classList.contains('bc-l')) {
+                  mo.disconnect();
+                  reveal();
+                }
+              });
+              mo.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+            }
+          }
+        }, { rootMargin: '0px 0px -40px 0px', threshold: 0.06 });
+        document.querySelectorAll('.bc-reveal').forEach(el => io.observe(el));
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initReveal);
+      } else {
+        initReveal();
+      }
+    </script>
   </body>
 </html>

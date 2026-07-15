@@ -70,7 +70,7 @@ const {
   <div class="grid grid-cols-1 tablet:grid-cols-2 gap-y-[40px] tablet:gap-y-0 py-[48px] tablet:py-[80px] max-w-bc-wrap mx-auto w-full">
 
     <!-- Testo + CTA: centrato nella colonna sx -->
-    <div class="flex items-center justify-center tablet:px-[40px] lg:px-0">
+    <div class="bc-reveal flex items-center justify-center tablet:px-[40px] lg:px-0">
       <div class="flex flex-col gap-bc-xl items-start lg:w-[442px]">
         <p
           class:list={['font-sans font-light text-bc-black tracking-[0.02em]', !paragrafoSize && 'text-bc-body1']}
@@ -84,10 +84,11 @@ const {
 
     <!-- Card desktop: fisse (lg+) -->
     <div class="hidden lg:flex gap-[24px] items-start">
-      {progetti.map((p) => (
+      {progetti.map((p, i) => (
         <a
           href={`/lavori/${p.slug}`}
-          class="flex-1 min-w-0 flex flex-col gap-bc-md items-start group"
+          class="bc-reveal flex-1 min-w-0 flex flex-col gap-bc-md items-start group"
+          style={`--bc-d:${(i + 1) * 80}ms`}
         >
           <div
             class:list={[

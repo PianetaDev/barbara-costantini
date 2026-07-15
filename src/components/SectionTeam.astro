@@ -35,7 +35,7 @@ const {
     {membri.map((m, i) => (
       <>
         {i > 0 && <div class="w-px bg-bc-black self-stretch shrink-0 mx-[40px]" />}
-        <div class="flex flex-col gap-bc-xl flex-1 py-[64px]">
+        <div class="bc-reveal flex flex-col gap-bc-xl flex-1 py-[64px]" style={`--bc-d:${i * 80}ms`}>
           <div class="w-full bg-bc-black/10 overflow-hidden" style="aspect-ratio: 327/407;">
             {m.image && (isRemote(m.image)
               ? <img src={m.image} alt={m.nome} width={700} class="w-full h-full object-cover" loading="lazy" />

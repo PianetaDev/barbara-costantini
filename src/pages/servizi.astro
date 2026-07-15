@@ -104,7 +104,7 @@ const partner: Partner[] = Array.isArray(cms.partner) ? cms.partner : defaultPar
 
   <!-- Gruppi accordion — layout SectionBio: immagine sx + divider + accordion dx -->
   {gruppi.map((gruppo) => (
-    <section class="w-full border-b border-bc-black px-[24px] tablet:px-bc-page overflow-hidden">
+    <section class="bc-reveal w-full border-b border-bc-black px-[24px] tablet:px-bc-page overflow-hidden">
       <div class="mx-auto max-w-bc-content w-full
                   flex flex-col tablet:flex-row tablet:items-center xl:justify-between
                   py-[48px] tablet:py-0
@@ -152,7 +152,7 @@ const partner: Partner[] = Array.isArray(cms.partner) ? cms.partner : defaultPar
   ))}
 
   <!-- Partner: 3 colonne desktop, scroll orizzontale con snap su mobile/tablet — come SectionTeam -->
-  <section class="w-full border-b border-bc-black px-[24px] tablet:px-bc-page">
+  <section class="bc-reveal w-full border-b border-bc-black px-[24px] tablet:px-bc-page">
 
     <!-- Desktop: 3 colonne con divider verticali -->
     <div class="hidden lg:flex lg:items-stretch mx-auto max-w-bc-content">
@@ -206,7 +206,7 @@ const partner: Partner[] = Array.isArray(cms.partner) ? cms.partner : defaultPar
   </section>
 
   <!-- CTA finale -->
-  <section class="w-full px-[24px] tablet:px-bc-page py-[64px] flex flex-col items-center gap-bc-2xl text-center">
+  <section class="bc-reveal w-full px-[24px] tablet:px-bc-page py-[64px] flex flex-col items-center gap-bc-2xl text-center">
     <p class="font-sans font-normal text-bc-body1 text-bc-black tracking-[0.02em] max-w-[442px]">
       {cms.cta_testo || ''}
     </p>
