@@ -1,0 +1,73 @@
+---
+// src/components/PageTransition.astro
+// Overlay di transizione tra pagine: griglia 3×3 di B tipografiche su bc-canvas.
+// Appare al caricamento di ogni pagina, poi fa fade-out dopo 400ms.
+// Tutte le immagini sono precaricate nella <head> di BaseLayout.
+const cells = [
+  '/images/bc-b/b-01.png',
+  '/images/bc-b/b-02.png',
+  '/images/bc-b/b-03.svg',
+  '/images/bc-b/b-04.png',
+  '/images/bc-b/b-05.png',
+  '/images/bc-b/b-06.png',
+  '/images/bc-b/b-07.png',
+  '/images/bc-b/b-08.png',
+  '/images/bc-b/b-09.png',
+];
+---
+
+<div id="bc-t" aria-hidden="true">
+  <div class="bc-t-grid">
+    {cells.map((src) => (
+      <div class="bc-t-cell">
+        <img src={src} alt="" width="47" height="47" draggable="false" />
+      </div>
+    ))}
+  </div>
+</div>
+
+<style is:global>
+  #bc-t {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #f7f6ef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: opacity 0.55s ease;
+    will-change: opacity;
+  }
+  #bc-t.bc-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .bc-t-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 47px);
+    grid-template-rows: repeat(3, 47px);
+    column-gap: 34px;
+    row-gap: 14px;
+  }
+  .bc-t-cell {
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .bc-t-cell img {
+    width: 47px;
+    height: 47px;
+    object-fit: contain;
+    display: block;
+  }
+</style>
+
+<script>
+  const el = document.getElementById('bc-t');
+  if (el) {
+    setTimeout(() => el.classList.add('bc-out'), 400);
+    el.addEventListener('transitionend', () => { el.style.display = 'none'; }, { once: true });
+  }
+</script>
