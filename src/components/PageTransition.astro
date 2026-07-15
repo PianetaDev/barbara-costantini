@@ -1,7 +1,7 @@
 ---
 // src/components/PageTransition.astro
-// Ogni cella ha 2 B in stack: la superiore scompare, quella sotto appare.
-// Le 9 celle sono sfalsate (stagger 100ms) → flusso organico nella griglia.
+// Ogni cella ha 2 B in stack che si alternano in cross-fade (stagger 100ms).
+// Sotto la griglia: "Barbara Costantini Restauro" appare parola per parola.
 const cells: [string, string][] = [
   ['/images/bc-b/b-01.png', '/images/bc-b/b-05.png'],
   ['/images/bc-b/b-02.png', '/images/bc-b/b-06.png'],
@@ -13,6 +13,8 @@ const cells: [string, string][] = [
   ['/images/bc-b/b-08.png', '/images/bc-b/b-03.svg'],
   ['/images/bc-b/b-09.png', '/images/bc-b/b-04.png'],
 ];
+
+const words = ['Barbara', 'Costantini', 'Restauro'];
 ---
 
 <div id="bc-t" aria-hidden="true">
@@ -24,6 +26,12 @@ const cells: [string, string][] = [
       </div>
     ))}
   </div>
+
+  <p class="bc-t-name">
+    {words.map((word, i) => (
+      <span style={`--wd:${600 + i * 160}ms`}>{word}</span>
+    ))}
+  </p>
 </div>
 
 <style is:global>
@@ -45,6 +53,12 @@ const cells: [string, string][] = [
     100% { opacity: 0; }
   }
 
+  /* Parole del titolo */
+  @keyframes bc-word {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
   html.bc-l body > *:not(#bc-t) {
     opacity: 0;
   }
@@ -55,8 +69,10 @@ const cells: [string, string][] = [
     z-index: 9999;
     background: #f7f6ef;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 36px;
     transition: opacity 0.6s ease-in-out;
     will-change: opacity;
   }
@@ -64,6 +80,7 @@ const cells: [string, string][] = [
     opacity: 0;
     pointer-events: none;
   }
+
   .bc-t-grid {
     display: grid;
     grid-template-columns: repeat(3, 47px);
@@ -92,12 +109,27 @@ const cells: [string, string][] = [
   }
   .bc-t-cell .bc-a { animation-name: bc-a; }
   .bc-t-cell .bc-b { animation-name: bc-b; }
+
+  .bc-t-name {
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #1a1a18;
+    display: flex;
+    gap: 0.6em;
+  }
+  .bc-t-name span {
+    opacity: 0;
+    animation: bc-word 0.5s ease-in-out forwards;
+    animation-delay: var(--wd);
+  }
 </style>
 
 <script>
   const overlay = document.getElementById('bc-t');
   if (overlay) {
-    // Lascia ciclare ~1.5 volte poi fade-out
     setTimeout(() => overlay.classList.add('bc-out'), 2200);
 
     overlay.addEventListener('transitionend', () => {
