@@ -1,7 +1,7 @@
 ---
 // src/components/PageTransition.astro
 // Overlay di transizione: griglia 3×3 di B tipografiche su bc-canvas.
-// Le B appaiono una per una (stagger 90ms), poi l'overlay fa fade-out.
+// Le B appaiono in sequenza (stagger 100ms, solo opacity), poi fade-out dell'intero overlay.
 const cells = [
   '/images/bc-b/b-01.png',
   '/images/bc-b/b-02.png',
@@ -18,7 +18,7 @@ const cells = [
 <div id="bc-t" aria-hidden="true">
   <div class="bc-t-grid">
     {cells.map((src, i) => (
-      <div class="bc-t-cell" style={`--d:${i * 90}ms`}>
+      <div class="bc-t-cell" style={`--d:${i * 100}ms`}>
         <img src={src} alt="" width="47" height="47" draggable="false" />
       </div>
     ))}
@@ -27,8 +27,8 @@ const cells = [
 
 <style is:global>
   @keyframes bc-b-in {
-    from { opacity: 0; transform: translateY(5px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; }
+    to   { opacity: 1; }
   }
 
   #bc-t {
@@ -39,8 +39,7 @@ const cells = [
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 1;
-    transition: opacity 0.6s ease;
+    transition: opacity 0.7s ease-in-out;
     will-change: opacity;
   }
   #bc-t.bc-out {
@@ -66,7 +65,7 @@ const cells = [
     object-fit: contain;
     display: block;
     opacity: 0;
-    animation: bc-b-in 0.35s ease forwards;
+    animation: bc-b-in 0.5s ease-in-out forwards;
     animation-delay: var(--d);
   }
 </style>
@@ -74,8 +73,7 @@ const cells = [
 <script>
   const el = document.getElementById('bc-t');
   if (el) {
-    // ultima B appare a 720ms (8*90 + 350ms anim) — aspetto altri 300ms poi fade-out
-    setTimeout(() => el.classList.add('bc-out'), 1350);
-    el.addEventListener('transitionend', () => { el.style.display = 'none'; }, { once: true });
+    // ultima B: delay 800ms + durata 500ms = 1300ms — pausa 400ms → fade-out a 1700ms
+    setTimeout(() => el.classList.add('bc-out'), 1700);
   }
 </script>
