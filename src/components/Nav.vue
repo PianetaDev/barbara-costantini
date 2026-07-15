@@ -55,7 +55,7 @@ onUnmounted(() => {
     <div class="flex items-center justify-between h-[80px] max-w-bc-wrap mx-auto">
       <!-- Logo -->
       <a href="/" class="flex items-center" @click="menuOpen = false">
-        <span class="font-sans text-bc-nav font-light tracking-[0.16em] uppercase">
+        <span class="font-sans text-[12.8px] font-light tracking-[0.16em] uppercase">
           Barbara Costantini Restauro
         </span>
       </a>
@@ -96,7 +96,7 @@ onUnmounted(() => {
         <!-- Header overlay: logo + X -->
         <div class="flex items-center justify-between px-bc-page h-[80px] border-b border-bc-black shrink-0">
           <a href="/" class="flex items-center" @click="menuOpen = false">
-            <span class="font-sans text-bc-nav font-light tracking-[0.16em] uppercase">
+            <span class="font-sans text-[12.8px] font-light tracking-[0.16em] uppercase">
               Barbara Costantini Restauro
             </span>
           </a>
