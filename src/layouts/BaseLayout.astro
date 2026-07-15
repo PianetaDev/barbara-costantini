@@ -85,24 +85,37 @@ try {
     <CookieBanner client:load />
     <script>
       function initReveal() {
+        const html = document.documentElement;
+
+        function addBcIn(target: Element) {
+          if (!html.classList.contains('bc-l')) {
+            target.classList.add('bc-in');
+          } else {
+            const mo = new MutationObserver(() => {
+              if (!html.classList.contains('bc-l')) { mo.disconnect(); target.classList.add('bc-in'); }
+            });
+            mo.observe(html, { attributes: true, attributeFilter: ['class'] });
+          }
+        }
+
         const io = new IntersectionObserver((entries) => {
           for (const { target, isIntersecting } of entries) {
             if (!isIntersecting) continue;
             io.unobserve(target);
-            const reveal = () => target.classList.add('bc-in');
-            if (!document.documentElement.classList.contains('bc-l')) {
-              reveal();
+            if ((target as HTMLElement).dataset.waitForImg !== undefined) {
+              const img = target.querySelector('img');
+              if (!img || img.complete) {
+                addBcIn(target);
+              } else {
+                img.addEventListener('load',  () => addBcIn(target), { once: true });
+                img.addEventListener('error', () => addBcIn(target), { once: true });
+              }
             } else {
-              const mo = new MutationObserver(() => {
-                if (!document.documentElement.classList.contains('bc-l')) {
-                  mo.disconnect();
-                  reveal();
-                }
-              });
-              mo.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+              addBcIn(target);
             }
           }
         }, { rootMargin: '0px 0px -40px 0px', threshold: 0.06 });
+
         document.querySelectorAll('.bc-reveal').forEach(el => io.observe(el));
       }
       if (document.readyState === 'loading') {

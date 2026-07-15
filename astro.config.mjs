@@ -7,7 +7,11 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   server: { port: 3456 },
   output: 'server',
-  adapter: vercel(),
+  adapter: vercel({
+    isr: {
+      expiration: 60 * 60, // 1h: pagine prerender servite da CDN, rivalidate ogni ora
+    },
+  }),
   integrations: [
     vue(),
     sitemap(),

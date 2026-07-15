@@ -31,7 +31,7 @@ const {
               gap-y-bc-xl tablet:gap-y-0">
 
     <!-- Immagine: flex-1 a tablet, 443px fissi da lg -->
-    <div class="bc-reveal flex items-center tablet:flex-1 lg:flex-none lg:shrink-0 tablet:py-[80px]">
+    <div class="bc-reveal flex items-center tablet:flex-1 lg:flex-none lg:shrink-0 tablet:py-[80px]" data-wait-for-img>
       <div class="w-full lg:w-[443px] aspect-[443/553] bg-bc-black/10 overflow-hidden">
         {imageSrc && <Image src={risolviImmagine(imageSrc)} alt={imageAlt} width={900} format="webp" quality={80} class="w-full h-full object-cover" />}
       </div>

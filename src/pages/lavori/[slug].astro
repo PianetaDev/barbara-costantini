@@ -32,6 +32,10 @@ export const prerender = false;
 
 const { slug } = Astro.params;
 
+// Edge cache 1h, stale-while-revalidate 24h: Vercel serve dalla CDN dopo il primo hit.
+// Lo slug può essere aggiunto dall'admin → SSR obbligatorio, non prerender.
+Astro.response.headers.set('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
+
 // getProgetto usa `.single()`: se lo slug non corrisponde a nessuna riga, Supabase
 // lancia un errore con code === ERRORE_RIGA_NON_TROVATA ("PGRST116") — a differenza
 // della versione statica (12 slug noti e validi via getStaticPaths), qui chiunque

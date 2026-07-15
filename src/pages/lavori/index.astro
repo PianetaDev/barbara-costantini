@@ -12,7 +12,9 @@ import { risolviImmagine, isRemote } from '../../utils/imagenes';
 // output: 'server' (astro.config.mjs) rende già questa pagina SSR di default;
 // l'export esplicito documenta che NON va mai prerenderizzata, dato che i dati
 // arrivano da Supabase ad ogni richiesta e non sono noti a build-time.
-export const prerender = false;
+// ISR: pre-render a build-time, servita da CDN Vercel, rivalidata ogni ora.
+// Nuovi progetti aggiunti dall'admin compaiono entro 1h senza redeploy.
+export const prerender = true;
 
 // Fix code review Task 17: senza try/catch, un errore Supabase (rete, downtime,
 // rate limit) qui produceva un 500 grezzo per qualunque visitatore pubblico.
@@ -66,7 +68,7 @@ const progetti = progettiDb.map((p) => ({
   </section>
 
   <!-- Griglia progetti — Figma 780:5243 -->
-  <section class="bc-reveal w-full px-[24px] tablet:px-bc-page pt-[48px] tablet:pt-[64px] pb-[64px] tablet:pb-[80px]">
+  <section class="bc-reveal w-full px-[24px] tablet:px-bc-page pt-[48px] tablet:pt-[64px] pb-[64px] tablet:pb-[80px]" data-wait-for-img>
     <div class="max-w-bc-wrap mx-auto w-full
                 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 bc:grid-cols-6
                 gap-x-[16px] tablet:gap-x-[24px] gap-y-bc-2xl items-start">
