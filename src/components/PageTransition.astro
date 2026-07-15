@@ -59,47 +59,6 @@ const words = ['Barbara', 'Costantini', 'Restauro'];
     to   { opacity: 1; }
   }
 
-  /* Nav entra dall'alto, contenuto dal basso — B grid è lo sfondo */
-  html.bc-l #bc-nav {
-    opacity: 0;
-    transform: translateY(-84px); /* fuori viewport in alto */
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-  }
-
-  html.bc-l main > *,
-  html.bc-l footer {
-    opacity: 0;
-    transform: translateY(40px); /* sale dal basso */
-  }
-
-  html.bc-l main > *:nth-child(1) {
-    transition: opacity 0.55s ease-out, transform 0.55s ease-out;
-    transition-delay: 0ms;
-  }
-  html.bc-l main > *:nth-child(2) {
-    transition: opacity 0.55s ease-out, transform 0.55s ease-out;
-    transition-delay: 80ms;
-  }
-  html.bc-l main > *:nth-child(3) {
-    transition: opacity 0.55s ease-out, transform 0.55s ease-out;
-    transition-delay: 160ms;
-  }
-  html.bc-l main > *:nth-child(4) {
-    transition: opacity 0.55s ease-out, transform 0.55s ease-out;
-    transition-delay: 240ms;
-  }
-  html.bc-l footer {
-    transition: opacity 0.55s ease-out, transform 0.55s ease-out;
-    transition-delay: 80ms;
-  }
-
-  /* main e footer sopra la B grid (z-5) durante il loading */
-  html.bc-l main,
-  html.bc-l footer {
-    position: relative;
-    z-index: 10;
-  }
-
   #bc-t {
     position: fixed;
     inset: 0;

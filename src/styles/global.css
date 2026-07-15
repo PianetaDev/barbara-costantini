@@ -111,6 +111,28 @@
   h1, h2, h3 { font-family: 'Public Sans', system-ui, sans-serif; }
 }
 
+/* ─── Animazione entrata pagina (tutte le pagine) ─────────────────────────── */
+/* Nav dall'alto, contenuto dal basso. bc-l viene rimosso da PageTransition (home)
+   o da uno script inline (altre pagine), triggering le transition CSS. */
+html.bc-l #bc-nav {
+  opacity: 0;
+  transform: translateY(-84px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+html.bc-l main > *,
+html.bc-l footer {
+  opacity: 0;
+  transform: translateY(40px);
+}
+html.bc-l main > *:nth-child(1) { transition: opacity 0.55s ease-out, transform 0.55s ease-out; }
+html.bc-l main > *:nth-child(2) { transition: opacity 0.55s ease-out, transform 0.55s ease-out; transition-delay: 80ms; }
+html.bc-l main > *:nth-child(3) { transition: opacity 0.55s ease-out, transform 0.55s ease-out; transition-delay: 160ms; }
+html.bc-l main > *:nth-child(4) { transition: opacity 0.55s ease-out, transform 0.55s ease-out; transition-delay: 240ms; }
+html.bc-l footer                 { transition: opacity 0.55s ease-out, transform 0.55s ease-out; transition-delay: 80ms; }
+html.bc-l main,
+html.bc-l footer { position: relative; z-index: 10; }
+/* ─────────────────────────────────────────────────────────────────────────── */
+
 @layer components {
   .bc-btn {
     @apply inline-flex items-center w-fit

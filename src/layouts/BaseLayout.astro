@@ -21,6 +21,8 @@ const {
   hideNav = false,
 } = Astro.props;
 
+const isHome = Astro.url.pathname === '/';
+
 // Widget segnalazioni "Segnale" → crea GitHub Issue su PianetaDev/barbara-costantini.
 // data-source distingue chi segnala (pubblico del sito vs. team che lavora nell'admin),
 // stessa convenzione già usata su Apotheke (vedi apotheke-cms-improvements).
@@ -45,15 +47,19 @@ try {
     <meta name="description" content={description} />
     <link rel="icon" href="/logo.svg" />
     <script is:inline>document.documentElement.classList.add('bc-l')</script>
-    <link rel="preload" as="image" href="/images/bc-b/b-01.png" />
-    <link rel="preload" as="image" href="/images/bc-b/b-02.png" />
-    <link rel="preload" as="image" href="/images/bc-b/b-03.svg" type="image/svg+xml" />
-    <link rel="preload" as="image" href="/images/bc-b/b-04.png" />
-    <link rel="preload" as="image" href="/images/bc-b/b-05.png" />
-    <link rel="preload" as="image" href="/images/bc-b/b-06.png" />
-    <link rel="preload" as="image" href="/images/bc-b/b-07.png" />
-    <link rel="preload" as="image" href="/images/bc-b/b-08.png" />
-    <link rel="preload" as="image" href="/images/bc-b/b-09.png" />
+    {isHome && (
+      <Fragment>
+        <link rel="preload" as="image" href="/images/bc-b/b-01.png" />
+        <link rel="preload" as="image" href="/images/bc-b/b-02.png" />
+        <link rel="preload" as="image" href="/images/bc-b/b-03.svg" type="image/svg+xml" />
+        <link rel="preload" as="image" href="/images/bc-b/b-04.png" />
+        <link rel="preload" as="image" href="/images/bc-b/b-05.png" />
+        <link rel="preload" as="image" href="/images/bc-b/b-06.png" />
+        <link rel="preload" as="image" href="/images/bc-b/b-07.png" />
+        <link rel="preload" as="image" href="/images/bc-b/b-08.png" />
+        <link rel="preload" as="image" href="/images/bc-b/b-09.png" />
+      </Fragment>
+    )}
     <script
       is:inline
       src="https://segnale-phi.vercel.app/widget.js"
@@ -63,7 +69,19 @@ try {
     ></script>
   </head>
   <body class="bg-bc-canvas text-bc-black font-sans">
-    <PageTransition />
+    {isHome
+      ? <PageTransition />
+      : <script is:inline>
+          /* Altre pagine: niente B overlay, solo animazione entrata (translateY + fade).
+             Double RAF garantisce che il browser dipinga un frame con bc-l attivo
+             (elementi in stato iniziale nascosto) prima di rimuoverlo. */
+          requestAnimationFrame(function() {
+            requestAnimationFrame(function() {
+              document.documentElement.classList.remove('bc-l');
+            });
+          });
+        </script>
+    }
     <div id="bc-nav">
       {!hideNav && <Nav client:load currentPath={Astro.url.pathname} />}
     </div>
