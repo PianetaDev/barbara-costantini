@@ -42,8 +42,8 @@ const serviziTesto = (serviziContent as any).hero_testo || '';
 const serviziCta = (serviziContent as any).cta_testo || '';
 ---
 <BaseLayout title="Barbara Costantini Restauro" titleIsFull>
-  <!-- Hero: testo sx + foto quadrata dx -->
-  <section class="w-full px-[24px] tablet:px-bc-page overflow-hidden">
+  <!-- Hero: testo sx + foto quadrata dx — min-h lascia vedere 64px della sezione sotto -->
+  <section class="w-full px-[24px] tablet:px-bc-page overflow-hidden tablet:min-h-[calc(100vh-80px-64px)] tablet:flex tablet:flex-col tablet:justify-center">
     <div class="grid grid-cols-1 tablet:grid-cols-2 tablet:items-center max-w-bc-wrap mx-auto w-full">
       <div class="pt-[48px] pb-0 tablet:py-[80px] tablet:pr-[80px] flex flex-col gap-bc-xl justify-center">
         <h1 class="font-sans text-[28px] lg:text-bc-h1 font-normal text-bc-black tracking-[0.02em] leading-[1.5]">

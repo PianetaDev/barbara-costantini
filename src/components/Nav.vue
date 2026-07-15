@@ -3,7 +3,7 @@
 <!-- Porta 1:1 da app/components/bc/Nav.vue — resta Vue island (stato hamburger mobile).
      NuxtLink -> <a>, useRoute() -> prop currentPath passata dal layout Astro. -->
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 
 interface Props {
   currentPath?: string
@@ -20,13 +20,38 @@ const links = [
 ]
 
 const menuOpen = ref(false)
+const headerRef = ref<HTMLElement | null>(null)
+let lastY = 0
 
 watch(menuOpen, (val) => {
   document.body.style.overflow = val ? 'hidden' : ''
 })
+
+function onScroll() {
+  if (document.documentElement.classList.contains('bc-l')) return
+  const y = window.scrollY
+  if (!headerRef.value) return
+  if (y <= 0) {
+    headerRef.value.style.transform = ''
+  } else if (y > lastY) {
+    headerRef.value.style.transform = 'translateY(-100%)'
+  } else {
+    headerRef.value.style.transform = 'translateY(0)'
+  }
+  lastY = y
+}
+
+onMounted(() => {
+  lastY = window.scrollY
+  window.addEventListener('scroll', onScroll, { passive: true })
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', onScroll)
+})
 </script>
 <template>
-  <header class="w-full border-b border-bc-black sticky top-0 z-40 bg-bc-canvas px-bc-page">
+  <header ref="headerRef" class="w-full border-b border-bc-black sticky top-0 z-40 bg-bc-canvas px-bc-page transition-transform duration-300 ease-out">
     <div class="flex items-center justify-between h-[80px] max-w-bc-wrap mx-auto">
       <!-- Logo -->
       <a href="/" class="flex items-center" @click="menuOpen = false">
@@ -42,7 +67,7 @@ watch(menuOpen, (val) => {
           :key="l.to"
           :href="l.to"
           :class="[
-            'font-sans text-bc-nav tracking-[0.16em] uppercase py-bc-sm hover:underline',
+            'font-sans text-bc-nav tracking-[0.16em] py-bc-sm hover:underline',
             props.currentPath === l.to ? 'font-normal underline' : 'font-light',
           ]"
         >
@@ -89,7 +114,7 @@ watch(menuOpen, (val) => {
             :key="l.to"
             :href="l.to"
             :class="[
-              'font-sans font-light tracking-[0.16em] uppercase hover:underline',
+              'font-sans font-light tracking-[0.16em] hover:underline',
               props.currentPath === l.to ? 'underline' : '',
             ]"
             style="font-size:28px; line-height:1.5;"
