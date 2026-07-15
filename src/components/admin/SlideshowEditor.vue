@@ -5,7 +5,8 @@
     <div v-if="images.length" class="flex flex-col divide-y divide-bc-black border border-bc-black">
       <div v-for="(img, i) in images" :key="img._id"
            class="flex items-center gap-[12px] px-[16px] py-[12px]">
-        <img :src="img.src" class="w-[64px] h-[48px] object-cover shrink-0 bg-black/10" />
+        <img v-if="isRemote(img.src)" :src="img.src" class="w-[64px] h-[48px] object-cover shrink-0 bg-black/10" />
+        <div v-else class="w-[64px] h-[48px] shrink-0 bg-black/10 flex items-center justify-center font-sans text-[10px] text-black/30 leading-tight text-center px-1">locale</div>
         <div class="flex-1 min-w-0">
           <select v-model="img.aspetto"
                   class="border border-bc-black px-[8px] py-[4px] font-sans text-[13px] font-light">
@@ -39,6 +40,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { isRemote } from '../../utils/imagenes';
 
 const props = defineProps<{
   name: string;
