@@ -83,12 +83,11 @@ const {
     </div>
 
     <!-- Card desktop: fisse (lg+) -->
-    <div class="hidden lg:flex gap-[24px] items-start">
-      {progetti.map((p, i) => (
+    <div class="bc-reveal hidden lg:flex gap-[24px] items-start" style="--bc-d:80ms">
+      {progetti.map((p) => (
         <a
           href={`/lavori/${p.slug}`}
-          class="bc-reveal flex-1 min-w-0 flex flex-col gap-bc-md items-start group"
-          style={`--bc-d:${(i + 1) * 80}ms`}
+          class="flex-1 min-w-0 flex flex-col gap-bc-md items-start group"
         >
           <div
             class:list={[
