@@ -38,6 +38,10 @@ const studioHeroTitolo = studioContent.hero_titolo || 'Lo studio';
 const studioHeroTesto = studioContent.hero_testo || '';
 const bioTesto = studioContent.bio_testo;
 const bioRuolo = studioContent.bio_ruolo;
+// Foto modificabili dall'admin (Admin → Pagine → Studio, campi bio_immagine / hero_immagine).
+// Fallback alle immagini storiche hardcoded.
+const bioImmagine = studioContent.bio_immagine || '/images/bc-030.jpg';
+const heroImmagine = studioContent.hero_immagine || '/images/bc-097.jpg';
 const membri = membriDb.map((m) => ({
   nome: m.nome,
   ruolo: m.ruolo ?? '',
@@ -59,11 +63,11 @@ const membri = membriDb.map((m) => ({
         </h1>
       </div>
       <div class="aspect-square overflow-hidden my-[32px]">
-        <Image src={risolviImmagine('/images/bc-097.jpg')} alt="Lo studio di restauro" width={1000} format="webp" quality={80} class="w-full h-full object-cover" />
+        <Image src={risolviImmagine(heroImmagine)} alt="Lo studio di restauro" width={1000} format="webp" quality={80} class="w-full h-full object-cover" />
       </div>
     </div>
   </section>
 
-  <SectionBio imageSrc="/images/bc-030.jpg" imageAlt="Barbara Costantini" ruolo={bioRuolo} bio={bioTesto} />
+  <SectionBio imageSrc={bioImmagine} imageAlt="Barbara Costantini" ruolo={bioRuolo} bio={bioTesto} />
   <SectionTeam membri={membri} />
 </BaseLayout>

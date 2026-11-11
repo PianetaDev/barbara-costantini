@@ -17,12 +17,16 @@ const FIELD_LABELS: Record<string, Record<string, string>> = {
   home: {
     hero_titolo: 'Titolo pagina',
     hero_testo: 'Testo sotto il titolo',
+    lavori_intro: 'Testo introduttivo sezione Lavori (homepage)',
+    servizi_intro: 'Testo introduttivo sezione Servizi (homepage)',
   },
   studio: {
     hero_titolo: 'Titolo pagina Studio',
     hero_testo: 'Testo sotto il titolo',
     bio_ruolo: 'Ruolo di Barbara',
     bio_testo: 'Bio di Barbara',
+    bio_immagine: 'Foto bio (URL — usa il pulsante Carica)',
+    hero_immagine: 'Foto hero (URL — usa il pulsante Carica)',
   },
   contatti: {
     email: 'Email di contatto',
@@ -56,8 +60,16 @@ const labelsForPage = FIELD_LABELS[pageParam ?? ''] ?? {};
 
 // Campi che usano textarea invece di input (testi lunghi).
 function isTextarea(chiave: string): boolean {
-  return chiave.endsWith('_testo') || chiave.endsWith('_corpo') || chiave === 'html_body';
+  return chiave.endsWith('_testo') || chiave.endsWith('_corpo') || chiave.endsWith('_intro') || chiave === 'html_body';
 }
+
+// Campi che sono URL di immagini: mostrano un file-upload accanto all'input testo.
+function isImageField(chiave: string): boolean {
+  return chiave.endsWith('_immagine') || chiave.endsWith('_foto');
+}
+
+// Bucket Supabase da usare per l'upload di immagini non-progetto (bio, hero, ecc.)
+const IMAGE_BUCKET = 'barbara-costantini-team';
 
 const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
 const { data: pagina } = isPaginaValida
@@ -138,26 +150,63 @@ const serviziFlat: Record<string, string> = isServizi ? {
               </div>
             </>
           ) : (
-            Object.entries(content).map(([chiave, valore]) => (
-              <label class="flex flex-col gap-[4px]">
-                <span class="font-sans text-[13px] font-normal text-bc-black tracking-[0.02em]">
-                  {labelsForPage[chiave] ?? chiave}
-                </span>
-                {isTextarea(chiave) ? (
-                  <textarea
-                    name={chiave}
-                    rows={chiave === 'html_body' ? 20 : 4}
-                    class={`border border-bc-black px-bc-md py-bc-xs w-full font-light resize-y${chiave === 'html_body' ? ' font-mono text-[12px]' : ' font-sans text-[14px]'}`}
-                  >{String(valore)}</textarea>
-                ) : (
-                  <input
-                    name={chiave}
-                    value={String(valore)}
-                    class="border border-bc-black px-bc-md py-bc-xs w-full font-sans text-[14px] font-light"
-                  />
-                )}
-              </label>
-            ))
+            // Itera sulle chiavi definite in labelsForPage (non su content),
+            // così i campi nuovi compaiono anche se non ancora salvati in DB.
+            Object.keys(labelsForPage).map((chiave) => {
+              const valore = String(content[chiave] ?? '');
+              return (
+                <div class="flex flex-col gap-[4px]">
+                  <span class="font-sans text-[13px] font-normal text-bc-black tracking-[0.02em]">
+                    {labelsForPage[chiave]}
+                  </span>
+                  {isTextarea(chiave) ? (
+                    <textarea
+                      name={chiave}
+                      rows={chiave === 'html_body' ? 20 : 4}
+                      class={`border border-bc-black px-bc-md py-bc-xs w-full font-light resize-y${chiave === 'html_body' ? ' font-mono text-[12px]' : ' font-sans text-[14px]'}`}
+                    >{valore}</textarea>
+                  ) : isImageField(chiave) ? (
+                    <>
+                      <div class="flex gap-[8px] items-center">
+                        <input
+                          name={chiave}
+                          id={`img-input-${chiave}`}
+                          value={valore}
+                          class="border border-bc-black px-bc-md py-bc-xs flex-1 min-w-0 font-mono text-[12px] font-light"
+                        />
+                        <label class="bc-btn cursor-pointer shrink-0 text-[12px] py-[6px] px-[10px]">
+                          Carica
+                          <input
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp"
+                            class="hidden"
+                            data-upload-target={`img-input-${chiave}`}
+                            data-upload-preview={`img-preview-${chiave}`}
+                          />
+                        </label>
+                      </div>
+                      {valore && (
+                        <img
+                          id={`img-preview-${chiave}`}
+                          src={valore}
+                          alt=""
+                          width={80}
+                          height={60}
+                          class="mt-[4px] w-[80px] h-[60px] object-cover border border-bc-black/20"
+                        />
+                      )}
+                      {!valore && <div id={`img-preview-${chiave}`} class="hidden" />}
+                    </>
+                  ) : (
+                    <input
+                      name={chiave}
+                      value={valore}
+                      class="border border-bc-black px-bc-md py-bc-xs w-full font-sans text-[14px] font-light"
+                    />
+                  )}
+                </div>
+              );
+            })
           )}
           <button type="submit" class="bc-btn">Salva</button>
         </form>
@@ -199,5 +248,46 @@ const serviziFlat: Record<string, string> = isServizi ? {
         }
       });
     }
+
+    // Gestione upload immagini per i campi _immagine / _foto
+    document.querySelectorAll('[data-upload-target]').forEach((fileInput) => {
+      fileInput.addEventListener('change', async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const targetId = fileInput.dataset.uploadTarget;
+        const previewId = fileInput.dataset.uploadPreview;
+        const targetInput = document.getElementById(targetId);
+        const label = fileInput.closest('label');
+        if (label) label.textContent = '…';
+        try {
+          const fd = new FormData();
+          fd.append('file', file);
+          fd.append('bucket', 'barbara-costantini-team');
+          const res = await fetch('/api/admin/upload-image', { method: 'POST', body: fd });
+          const json = await res.json();
+          if (res.ok && targetInput) {
+            targetInput.value = json.url;
+            const previewEl = document.getElementById(previewId);
+            if (previewEl) {
+              previewEl.classList.remove('hidden');
+              if (previewEl.tagName === 'IMG') {
+                previewEl.src = json.url;
+              } else {
+                // Replace placeholder div with actual img
+                const img = document.createElement('img');
+                img.src = json.url; img.alt = ''; img.width = 80; img.height = 60;
+                img.className = 'mt-[4px] w-[80px] h-[60px] object-cover border border-bc-black/20';
+                previewEl.replaceWith(img);
+              }
+            }
+          } else {
+            alert('Errore upload: ' + json.error);
+          }
+        } finally {
+          if (label) label.textContent = 'Carica';
+          e.target.value = '';
+        }
+      });
+    });
   </script>
 </AdminLayout>
