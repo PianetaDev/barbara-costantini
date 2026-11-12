@@ -7,11 +7,12 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   server: { port: 3456 },
   output: 'server',
-  adapter: vercel({
-    isr: {
-      expiration: 60 * 60, // 1h: pagine prerender servite da CDN, rivalidate ogni ora
-    },
-  }),
+  // ISR rimosso: con output:'server' il Vercel adapter instradava TUTTE le pagine
+  // (incluse quelle CMS-editabili come la home) attraverso la funzione ISR con cache
+  // CDN 1h — le modifiche admin non apparivano in tempo reale (Segnale #55, PIA-2868).
+  // Le pagine /lavori/[slug] gestiscono il proprio cache con Cache-Control s-maxage
+  // impostato direttamente in risposta (src/pages/lavori/[slug].astro:37).
+  adapter: vercel(),
   integrations: [
     vue(),
     sitemap(),
