@@ -24,7 +24,12 @@ export default defineConfig({
     // è il ref del progetto Supabase condiviso "pianeta-xp" (vedi supabase/README.md) — le
     // foto team caricate su Storage (bucket barbara-costantini-team) sono servite da questo
     // host.
-    domains: ['fmplfkzqexaposaamgwi.supabase.co'],
+    // fmplfkzqexaposaamgwi = dev Supabase; lqnwtmmhgmnxxtduvugh = prod Supabase.
+    // Entrambi necessari: le foto caricate dall'admin su Storage (bucket
+    // barbara-costantini-team / barbara-costantini-progetti) vengono servite dal
+    // progetto attivo nell'env corrente. Senza la whitelist, <Image src={remoteUrl}>
+    // lancia un errore "hostname not allowed" in SSR.
+    domains: ['fmplfkzqexaposaamgwi.supabase.co', 'lqnwtmmhgmnxxtduvugh.supabase.co'],
   },
   vite: {
     plugins: [tailwindcss()],
