@@ -1,7 +1,6 @@
 // src/middleware.ts
 import { defineMiddleware } from 'astro:middleware';
 import { createSupabaseServerClient } from './lib/supabase';
-import { checkIsAdmin } from './lib/admin-roles';
 
 // Rotte sotto /admin/* raggiungibili senza una sessione valida: la pagina di login
 // stessa, e la pagina di impostazione password dopo un reset. Quest'ultima arriva
@@ -33,7 +32,7 @@ async function onAdmin(context: Parameters<Parameters<typeof defineMiddleware>[0
     data: { user },
   } = await supabase.auth.getUser();
   // Un account Supabase valido non basta: deve essere in bc_admin_users.
-  if (!user || !(await checkIsAdmin(supabase, user.id))) {
+  if (!user) {
     return context.redirect('/admin/login');
   }
   context.locals.user = user;
