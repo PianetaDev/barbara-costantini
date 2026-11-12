@@ -33,7 +33,7 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
 
   const { error } = await supabase
     .from('bc_page_content')
-    .upsert({ page: parsed.data.page, content: parsed.data.content });
+    .upsert({ page: parsed.data.page, bozza: parsed.data.content });
   if (error) {
     return new Response(JSON.stringify({ error: error.message }), { status: 400 });
   }
