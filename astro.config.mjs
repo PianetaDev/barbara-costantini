@@ -7,11 +7,10 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   server: { port: 3456 },
   output: 'server',
-  adapter: vercel({
-    isr: {
-      expiration: 60 * 60, // 1h: pagine prerender servite da CDN, rivalidate ogni ora
-    },
-  }),
+  // Nessuna ISR: tutte le pagine sono SSR (prerender = false) e leggono Supabase a ogni
+  // richiesta. Con isr attivo il CDN di Vercel teneva in cache l'HTML per 1h, ignorando
+  // Cache-Control: no-store, e i salvataggi dell'admin non comparivano sul sito.
+  adapter: vercel(),
   integrations: [
     vue(),
     sitemap(),
