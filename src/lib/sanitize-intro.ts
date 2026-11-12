@@ -42,7 +42,8 @@ const LEGAL_TAGS = [
 export function sanitizeLegalHtml(html: string): string {
   return sanitizeHtml(html, {
     allowedTags: LEGAL_TAGS,
-    allowedAttributes: { a: ['href', 'title', 'target', 'rel'], th: ['colspan', 'rowspan'], td: ['colspan', 'rowspan'] },
+    // id sui titoli: servono ai link interni (#sezione) dentro la policy.
+    allowedAttributes: { h1: ['id'], h2: ['id'], h3: ['id'], h4: ['id'], a: ['href', 'title', 'target', 'rel'], th: ['colspan', 'rowspan'], td: ['colspan', 'rowspan'] },
     allowedSchemes: ['http', 'https', 'mailto', 'tel'],
     transformTags: {
       a: sanitizeHtml.simpleTransform('a', { rel: 'noopener noreferrer' }, true),

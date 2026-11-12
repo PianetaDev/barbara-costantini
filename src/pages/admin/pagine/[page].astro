@@ -269,7 +269,12 @@ const serviziFlat: Record<string, string> = isServizi ? {
       // Il confronto periodico (invece dei soli eventi `input`) cattura anche gli editor
       // Vue e le immagini appena caricate, che cambiano il form senza eventi di tastiera.
       let ultimoSalvato = JSON.stringify(leggiForm());
-      let inCorso = false;
+      let inCorso: Promise<void> | null = null;
+      // Da quando si preme «Salva e pubblica» o «Annulla modifiche» il salvataggio in bozza
+      // si ferma: una bozza che arriva dopo la pubblicazione la farebbe sembrare non pubblicata
+      // (o, peggio, rimetterebbe nel form un testo vecchio).
+      let fermo = false;
+      let erroriDiFila = 0;
       let timer: number | undefined;
       // Gli editor Vue (gruppi, partner) riscrivono i loro campi nascosti appena montati:
       // finché non tocchi nulla, quello stato è il punto di partenza, non una modifica.
@@ -278,11 +283,16 @@ const serviziFlat: Record<string, string> = isServizi ? {
 
       async function salvaBozza() {
         const attuale = JSON.stringify(leggiForm());
-        if (attuale === ultimoSalvato || inCorso) return;
-        inCorso = true;
+        if (fermo || attuale === ultimoSalvato || inCorso) return;
         statoEl.textContent = 'Aggiorno l\'anteprima…';
-        const ok = await invia(false);
-        inCorso = false;
+        let ok = false;
+        inCorso = invia(false).then((esito) => { ok = esito; });
+        await inCorso;
+        inCorso = null;
+        if (fermo) return;
+        erroriDiFila = ok ? 0 : erroriDiFila + 1;
+        // Dopo tre errori di fila (es. sessione scaduta) si smette di riprovare da soli.
+        if (erroriDiFila >= 3) window.clearInterval(intervallo);
         if (ok) {
           ultimoSalvato = attuale;
           scartaBtn.classList.remove('hidden');
@@ -294,36 +304,48 @@ const serviziFlat: Record<string, string> = isServizi ? {
       }
       function pianifica() {
         toccato = true;
+        if (fermo) return;
         window.clearTimeout(timer);
         timer = window.setTimeout(salvaBozza, 700);
       }
       form.addEventListener('input', pianifica);
       form.addEventListener('change', pianifica);
       form.addEventListener('pointerdown', () => { toccato = true; });
-      window.setInterval(() => {
+      const intervallo = window.setInterval(() => {
         if (toccato && JSON.stringify(leggiForm()) !== ultimoSalvato) pianifica();
       }, 1500);
+
+      /** Ferma il salvataggio automatico e aspetta quello eventualmente in corso. */
+      async function fermaBozza() {
+        fermo = true;
+        window.clearTimeout(timer);
+        if (inCorso) await inCorso;
+      }
+      function riprendiBozza() {
+        fermo = false;
+      }
 
       // ── Salva e pubblica ──────────────────────────────────────────────────
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        window.clearTimeout(timer);
+        await fermaBozza();
         statoEl.textContent = 'Pubblicazione…';
         if (await invia(true)) {
           // Ricarica dal server: i valori mostrati sono quelli letti dal database.
           window.location.reload();
         } else {
           statoEl.textContent = '';
+          riprendiBozza();
         }
       });
 
       // ── Annulla modifiche (scarta la bozza) ───────────────────────────────
       scartaBtn.addEventListener('click', async () => {
         if (!confirm('Annullare le modifiche non pubblicate? Il form torna ai testi che sono ora sul sito.')) return;
-        window.clearTimeout(timer);
+        await fermaBozza();
         const res = await fetch(`/api/admin/pagine/${page}`, { method: 'DELETE' });
         const errore = await erroreRisposta(res);
-        if (errore) mostraErrore(errore);
+        if (errore) { mostraErrore(errore); riprendiBozza(); }
         else window.location.reload();
       });
     }

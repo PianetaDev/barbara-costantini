@@ -156,6 +156,20 @@ describe('PATCH /api/admin/pagine/[page]', () => {
     expect(mockUpsert).not.toHaveBeenCalled();
   });
 
+  it('pubblicazione parziale (modifica sul posto): pubblica il campo e conserva la bozza aperta nel pannello', async () => {
+    mockGetUser.mockResolvedValue({ data: { user: { id: 'user-1' } } });
+    mockUpsert.mockResolvedValue({ error: null });
+    mockMaybeSingle.mockResolvedValue({ data: { content: { hero_titolo: 'Online', lavori_intro: 'Vecchia' }, bozza: { hero_titolo: 'In lavorazione', lavori_intro: 'Vecchia' } }, error: null });
+    const res = await PATCH({ params: { page: 'home' }, request: buildRequest('home', { content: { lavori_intro: 'Nuova' }, pubblica: true, parziale: true }), cookies: {} } as any);
+
+    expect(res.status).toBe(200);
+    expect(mockUpsert).toHaveBeenCalledWith({
+      page: 'home',
+      content: { hero_titolo: 'Online', lavori_intro: 'Nuova' },
+      bozza: { hero_titolo: 'In lavorazione', lavori_intro: 'Nuova' },
+    });
+  });
+
   it('DELETE scarta la bozza senza toccare il contenuto pubblicato', async () => {
     mockGetUser.mockResolvedValue({ data: { user: { id: 'user-1' } } });
     const res = await DELETE({ params: { page: 'home' }, request: new Request('http://localhost/api/admin/pagine/home', { method: 'DELETE' }), cookies: {} } as any);

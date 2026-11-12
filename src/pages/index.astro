@@ -100,7 +100,7 @@ Astro.response.headers.set('Cache-Control', 'no-store');
           const res = await fetch('/api/admin/pagine/home', {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: { [campo]: valore }, pubblica: true }),
+            body: JSON.stringify({ content: { [campo]: valore }, pubblica: true, parziale: true }),
           });
           stato.textContent = res.ok ? 'Salvato' : 'Non salvato (' + res.status + ')';
           setTimeout(() => { stato.hidden = true; }, 1500);

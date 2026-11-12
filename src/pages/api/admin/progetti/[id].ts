@@ -7,7 +7,8 @@ import { sanitizeIntroHtml } from '../../../../lib/sanitize-intro';
 import { requireAdmin, jsonResponse } from '../../../../lib/admin-guard';
 import { rimuoviFileStorage } from '../../../../lib/storage-cleanup';
 
-const idSchema = z.uuid();
+// guid: qualunque uuid ben formato, non solo quelli con versione RFC (z.uuid li rifiuterebbe).
+const idSchema = z.guid();
 
 export const PATCH: APIRoute = async ({ params, request, cookies }) => {
   const ctx = await requireAdmin(cookies, request);

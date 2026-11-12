@@ -5,6 +5,7 @@
 // PATCH { content, pubblica?: boolean }
 //   - pubblica assente/false → salva in bozza (l'anteprima si aggiorna, il sito no)
 //   - pubblica true          → scrive sul sito e cancella la bozza
+//   - pubblica + parziale    → scrive sul sito solo i campi inviati e conserva la bozza
 // DELETE → scarta la bozza (annulla le modifiche non pubblicate)
 // I campi inviati vengono UNITI a quelli esistenti: un salvataggio parziale (un solo
 // campo, una scheda rimasta aperta con dati vecchi) non cancella gli altri campi.
@@ -36,6 +37,9 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
   const parsed = pageContentSchema.safeParse({ page: params.page, content: (body as Contenuto).content });
   if (!parsed.success) return jsonResponse({ error: z.flattenError(parsed.error) }, 400);
   const pubblica = (body as Contenuto).pubblica === true;
+  // parziale: pubblica solo i campi inviati (modifica sul posto in home) senza buttare la
+  // bozza aperta nel pannello; i campi pubblicati entrano anche nella bozza.
+  const parziale = (body as Contenuto).parziale === true;
   const { page } = parsed.data;
   const nuovo = pulisci(parsed.data.content);
 
@@ -50,7 +54,7 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
   const bozzaAttuale = (riga?.bozza ?? null) as Contenuto | null;
 
   const valori: Record<string, unknown> = pubblica
-    ? { page, content: { ...pubblicato, ...nuovo }, bozza: null }
+    ? { page, content: { ...pubblicato, ...nuovo }, bozza: parziale && bozzaAttuale ? { ...bozzaAttuale, ...nuovo } : null }
     : { page, bozza: { ...(bozzaAttuale ?? pubblicato), ...nuovo } };
 
   const { error } = await supabase.from('bc_page_content').upsert(valori);

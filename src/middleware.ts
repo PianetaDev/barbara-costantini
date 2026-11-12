@@ -12,7 +12,8 @@ import { checkIsAdmin } from './lib/admin-roles';
 const PUBLIC_ADMIN_PATHS = ['/admin/login', '/admin/imposta-password'];
 
 // Endpoint che devono funzionare senza sessione (login, richiesta reset password).
-const PUBLIC_API_PATHS = ['/api/admin/auth/login', '/api/admin/auth/reset-password'];
+// Il logout deve funzionare anche a sessione scaduta (altrimenti «Esci» mostra un errore).
+const PUBLIC_API_PATHS = ['/api/admin/auth/login', '/api/admin/auth/reset-password', '/api/admin/auth/logout'];
 
 const METODI_SICURI = ['GET', 'HEAD', 'OPTIONS'];
 

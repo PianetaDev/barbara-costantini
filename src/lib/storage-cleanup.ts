@@ -13,7 +13,12 @@ export function percorsoStorage(url: unknown): { bucket: string; path: string } 
   if (!m) return null;
   const [, bucket, path] = m;
   if (!(BUCKET_GESTITI as readonly string[]).includes(bucket)) return null;
-  const decoded = decodeURIComponent(path);
+  let decoded: string;
+  try {
+    decoded = decodeURIComponent(path);
+  } catch {
+    return null; // sequenza % non valida: non è un nostro file
+  }
   if (decoded.includes('..')) return null;
   return { bucket, path: decoded };
 }

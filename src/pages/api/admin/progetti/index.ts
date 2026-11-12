@@ -28,7 +28,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const { supabase } = ctx;
 
   const body = await parseJsonBody(request);
-  if (!body) {
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
     return new Response(JSON.stringify({ error: 'Body JSON mancante o non valido' }), { status: 400 });
   }
 

@@ -27,8 +27,9 @@ async function ridimensiona(file: File): Promise<File> {
   canvas.height = Math.round(bitmap.height * scala);
   canvas.getContext('2d')!.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
   bitmap.close();
-  // PNG resta PNG solo se piccolo (loghi con trasparenza); le foto diventano JPEG.
-  const tipo = file.type === 'image/png' && file.size <= PESO_SENZA_RITOCCO ? 'image/png' : 'image/jpeg';
+  // Un PNG resta PNG (può avere la trasparenza: in JPEG lo sfondo diventerebbe nero);
+  // JPEG e WebP diventano JPEG.
+  const tipo = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
   const blob: Blob | null = await new Promise((ok) => canvas.toBlob(ok, tipo, QUALITA));
   if (!blob || blob.size >= file.size) return file;
   const estensione = tipo === 'image/png' ? 'png' : 'jpg';

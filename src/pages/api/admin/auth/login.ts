@@ -20,7 +20,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   // Il progetto Supabase è condiviso con altri siti: un account valido altrove non deve
   // ottenere una sessione sull'admin di questo sito.
   if (!(await checkIsAdmin(supabase as any, data.user.id))) {
-    await supabase.auth.signOut();
+    // scope local: chiude solo questa sessione, non quelle dell'utente sugli altri siti.
+    await supabase.auth.signOut({ scope: 'local' });
     return new Response(JSON.stringify({ error: 'Email o password non corrette.' }), { status: 401 });
   }
   return new Response(JSON.stringify({ ok: true }), { status: 200 });

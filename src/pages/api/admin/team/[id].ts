@@ -52,7 +52,7 @@ export const DELETE: APIRoute = async ({ params, request, cookies }) => {
   if (ctx instanceof Response) return ctx;
   const { supabase } = ctx;
 
-  if (!z.uuid().safeParse(params.id).success) return jsonResponse({ error: 'Membro non trovato' }, 404);
+  if (!z.guid().safeParse(params.id).success) return jsonResponse({ error: 'Membro non trovato' }, 404);
 
   const { data: membro, error: errLettura } = await supabase
     .from('bc_team_members')
