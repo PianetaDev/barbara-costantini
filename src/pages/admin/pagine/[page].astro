@@ -68,8 +68,6 @@ function isImageField(chiave: string): boolean {
   return chiave.endsWith('_immagine') || chiave.endsWith('_foto');
 }
 
-// Bucket Supabase da usare per l'upload di immagini non-progetto (bio, hero, ecc.)
-const IMAGE_BUCKET = 'barbara-costantini-team';
 
 const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
 const { data: pagina } = isPaginaValida

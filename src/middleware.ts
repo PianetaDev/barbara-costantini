@@ -1,6 +1,7 @@
 // src/middleware.ts
 import { defineMiddleware } from 'astro:middleware';
 import { createSupabaseServerClient } from './lib/supabase';
+import { checkIsAdmin } from './lib/admin-roles';
 
 // Rotte sotto /admin/* raggiungibili senza una sessione valida: la pagina di login
 // stessa, e la pagina di impostazione password dopo un reset. Quest'ultima arriva
@@ -13,16 +14,28 @@ import { createSupabaseServerClient } from './lib/supabase';
 const PUBLIC_ADMIN_PATHS = ['/admin/login', '/admin/imposta-password'];
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  if (!context.url.pathname.startsWith('/admin') || PUBLIC_ADMIN_PATHS.includes(context.url.pathname)) {
+  if (!context.url.pathname.startsWith('/admin')) {
+    return next();
+  }
+  // Le pagine admin contengono i contenuti in bozza: non devono mai finire nella cache
+  // pubblica del CDN (in produzione una pagina admin era servita a chi non era loggato).
+  const response = await onAdmin(context, next);
+  response.headers.set('Cache-Control', 'private, no-store');
+  return response;
+});
+
+async function onAdmin(context: Parameters<Parameters<typeof defineMiddleware>[0]>[0], next: () => Promise<Response>) {
+  if (PUBLIC_ADMIN_PATHS.includes(context.url.pathname)) {
     return next();
   }
   const supabase = createSupabaseServerClient(context.cookies, context.request);
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) {
+  // Un account Supabase valido non basta: deve essere in bc_admin_users.
+  if (!user || !(await checkIsAdmin(supabase, user.id))) {
     return context.redirect('/admin/login');
   }
   context.locals.user = user;
   return next();
-});
+}

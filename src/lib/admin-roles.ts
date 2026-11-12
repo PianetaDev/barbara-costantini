@@ -10,3 +10,13 @@ export async function checkIsSuperadmin(supabase: SupabaseClient, userId: string
   const { data } = await supabase.from('bc_admin_users').select('role').eq('id', userId).single();
   return data?.role === 'superadmin';
 }
+
+/**
+ * Verifica che l'utente `userId` sia in bc_admin_users (admin o superadmin).
+ * Usata per proteggere endpoint e pagine admin: un account Supabase qualsiasi
+ * (anche condiviso con altre app del progetto) non basta.
+ */
+export async function checkIsAdmin(supabase: SupabaseClient, userId: string): Promise<boolean> {
+  const { data } = await supabase.from('bc_admin_users').select('id').eq('id', userId).maybeSingle();
+  return !!data;
+}
