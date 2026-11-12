@@ -25,7 +25,14 @@ export function createSupabaseServerClient(cookies: AstroCookies, request: Reque
       },
       setAll(cookiesToSet) {
         cookiesToSet.forEach(({ name, value, options }) =>
-          cookies.set(name, value, { ...options, path: '/' })
+          cookies.set(name, value, {
+            ...options,
+            path: '/',
+            httpOnly: true,
+            secure: true,
+            sameSite: 'lax',
+            maxAge: options?.maxAge ?? 60 * 60 * 24 * 30,
+          })
         );
       },
     },
