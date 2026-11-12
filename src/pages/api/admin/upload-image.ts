@@ -22,7 +22,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user || !(await checkIsAdmin(supabase, user.id))) {
+  if (!user) {
+    return new Response(JSON.stringify({ error: 'Non autenticato' }), { status: 401 });
+  }
+  if (!(await checkIsAdmin(supabase, user.id))) {
     return new Response(JSON.stringify({ error: 'Non autorizzato' }), { status: 403 });
   }
 
@@ -36,6 +39,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   if (!file || !ALLOWED_TYPES.includes(file.type)) {
     return new Response(JSON.stringify({ error: 'Tipo file non valido' }), { status: 400 });
   }
+  if (file.size > MAX_SIZE_BYTES) {
+    return new Response(JSON.stringify({ error: 'File troppo grande (max 10MB)' }), { status: 400 });
+  }
   // Il MIME arriva dal client: controllo anche la firma binaria del file.
   const head = new Uint8Array(await file.slice(0, 12).arrayBuffer());
   const isJpeg = head[0] === 0xff && head[1] === 0xd8 && head[2] === 0xff;
@@ -43,9 +49,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const isWebp = head[0] === 0x52 && head[1] === 0x49 && head[8] === 0x57 && head[9] === 0x45;
   if (!(isJpeg || isPng || isWebp)) {
     return new Response(JSON.stringify({ error: 'File non è un\'immagine valida' }), { status: 400 });
-  }
-  if (file.size > MAX_SIZE_BYTES) {
-    return new Response(JSON.stringify({ error: 'File troppo grande (max 10MB)' }), { status: 400 });
   }
 
   // Lo storage ha RLS attiva senza policy: il client dell'utente non può scrivere.
