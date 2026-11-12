@@ -30,9 +30,12 @@ async function onAdmin(context: Parameters<Parameters<typeof defineMiddleware>[0
   const supabase = createSupabaseServerClient(context.cookies, context.request);
   const {
     data: { user },
+    error,
   } = await supabase.auth.getUser();
-  // Un account Supabase valido non basta: deve essere in bc_admin_users.
+  // Diagnostica sessione (solo log, nessun token né dato personale).
   if (!user) {
+    const hasCookie = (context.request.headers.get('Cookie') ?? '').includes('auth-token');
+    console.warn('[admin-session] no user', { path: context.url.pathname, hasAuthCookie: hasCookie, error: error?.message ?? null });
     return context.redirect('/admin/login');
   }
   context.locals.user = user;
