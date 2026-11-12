@@ -14,7 +14,18 @@ import { checkIsAdmin } from './lib/admin-roles';
 const PUBLIC_ADMIN_PATHS = ['/admin/login', '/admin/imposta-password'];
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  if (!context.url.pathname.startsWith('/admin') || PUBLIC_ADMIN_PATHS.includes(context.url.pathname)) {
+  if (!context.url.pathname.startsWith('/admin')) {
+    return next();
+  }
+  // Le pagine admin contengono i contenuti in bozza: non devono mai finire nella cache
+  // pubblica del CDN (in produzione una pagina admin era servita a chi non era loggato).
+  const response = await onAdmin(context, next);
+  response.headers.set('Cache-Control', 'private, no-store');
+  return response;
+});
+
+async function onAdmin(context: Parameters<Parameters<typeof defineMiddleware>[0]>[0], next: () => Promise<Response>) {
+  if (PUBLIC_ADMIN_PATHS.includes(context.url.pathname)) {
     return next();
   }
   const supabase = createSupabaseServerClient(context.cookies, context.request);
@@ -27,4 +38,4 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
   context.locals.user = user;
   return next();
-});
+}
