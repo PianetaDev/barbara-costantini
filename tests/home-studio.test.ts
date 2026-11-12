@@ -19,6 +19,16 @@ const { mockGetPageContent } = vi.hoisted(() => ({ mockGetPageContent: vi.fn() }
 // PIA-78: mock per getProgettiInEvidenza
 const { mockGetProgettiInEvidenza } = vi.hoisted(() => ({ mockGetProgettiInEvidenza: vi.fn() }));
 
+// Sessione admin: nei test nessun utente è loggato (la home mostra la versione pubblica).
+vi.mock('../src/lib/supabase', () => ({
+  createSupabaseServerClient: vi.fn(() => ({
+    auth: { getUser: vi.fn(async () => ({ data: { user: null } })) },
+  })),
+}));
+vi.mock('../src/lib/admin-roles', () => ({
+  checkIsAdmin: vi.fn(async () => false),
+}));
+
 vi.mock('../src/lib/supabase-public', () => ({
   getTeamMembers: mockGetTeamMembers,
   getPageContent: mockGetPageContent,
