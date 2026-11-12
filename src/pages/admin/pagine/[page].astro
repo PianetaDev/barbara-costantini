@@ -238,7 +238,8 @@ const serviziFlat: Record<string, string> = isServizi ? {
         });
         if (res.ok) {
           successEl.classList.remove('hidden');
-          window.dispatchEvent(new CustomEvent('preview-refresh'));
+          // Ricarica dal server: i valori mostrati sono quelli letti dal database.
+          window.location.reload();
         } else {
           const { error } = await res.json();
           errorEl.textContent = typeof error === 'string' ? error : JSON.stringify(error);
