@@ -29,3 +29,24 @@ export function sanitizeIntroHtml(html: string): string {
     allowedAttributes: {},
   });
 }
+
+// Privacy e Cookie Policy: l'admin incolla HTML (campo html_body) che finisce in un
+// `set:html` pubblico. Più permissivo dell'intro (link, tabelle, titoli) ma senza script,
+// stili, iframe, attributi on* né URL javascript:.
+const LEGAL_TAGS = [
+  ...ALLOWED_TAGS,
+  'h4', 'h5', 'h6', 'a', 'b', 'i', 'u', 'span', 'div',
+  'table', 'thead', 'tbody', 'tr', 'th', 'td',
+];
+
+export function sanitizeLegalHtml(html: string): string {
+  return sanitizeHtml(html, {
+    allowedTags: LEGAL_TAGS,
+    // id sui titoli: servono ai link interni (#sezione) dentro la policy.
+    allowedAttributes: { h1: ['id'], h2: ['id'], h3: ['id'], h4: ['id'], a: ['href', 'title', 'target', 'rel'], th: ['colspan', 'rowspan'], td: ['colspan', 'rowspan'] },
+    allowedSchemes: ['http', 'https', 'mailto', 'tel'],
+    transformTags: {
+      a: sanitizeHtml.simpleTransform('a', { rel: 'noopener noreferrer' }, true),
+    },
+  });
+}

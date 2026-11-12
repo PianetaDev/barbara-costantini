@@ -1,46 +1,70 @@
-// src/lib/validation/progetto.ts
 import { z } from 'zod';
 
+const testo = (max: number) => z.string().max(max);
+
 export const sezioneSchema = z.object({
-  titolo: z.string(),
-  sottotitolo: z.string(),
-  testi: z.array(z.string()),
+  titolo: testo(300),
+  sottotitolo: testo(300),
+  testi: z.array(testo(20_000)).max(50),
 });
 
-// Blocchi corpo pagina — formato flessibile, validazione loose (jsonb libero)
-export const blockSchema = z.record(z.any());
+// I blocchi del corpo pagina sono oggetti liberi (testo, immagine, citazione...): si
+// limita solo il peso complessivo, il rendering pubblico li tratta come testo (mai HTML).
+export const blockSchema = z.record(z.string(), z.any());
+
+// Un'immagine è un percorso del sito (/images/...) oppure un URL https (Storage).
+// Niente javascript:, data: o http in chiaro.
+export const srcImmagineSchema = z
+  .string()
+  .max(2000)
+  .refine((s) => s === '' || s.startsWith('/') || s.startsWith('https://'), {
+    message: 'Immagine non valida: usa il pulsante Carica',
+  });
 
 export const immagineSchema = z.object({
-  src: z.string(),
-  label: z.string(),
+  src: srcImmagineSchema,
+  label: testo(300),
   aspetto: z.enum(['h', 'v']).optional(),
 });
 
+// Lo slug finisce nell'indirizzo della pagina (/lavori/<slug>): solo minuscole, numeri e trattini.
+export const slugSchema = z
+  .string()
+  .min(1, 'Slug obbligatorio')
+  .max(120)
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Indirizzo non valido: solo lettere minuscole, numeri e trattini (es. restauro-codice)');
+
+/** Trasforma un titolo in uno slug valido ("Lavoro test 2" → "lavoro-test-2"). */
+export function slugify(input: string): string {
+  return input
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 120);
+}
+
 export const progettoSchema = z.object({
-  slug: z.string().min(1, 'Slug obbligatorio'),
-  titolo: z.string().min(1, 'Titolo obbligatorio'),
-  committente: z.string().optional(),
-  anno: z.string().optional(),
+  slug: slugSchema,
+  titolo: z.string().min(1, 'Titolo obbligatorio').max(300),
+  committente: testo(300).optional(),
+  anno: testo(40).optional(),
   tipo: z.enum(['horizontal', 'vertical']),
-  intro: z.string().optional(),
-  sezioni: z.array(sezioneSchema),
-  blocks: z.array(blockSchema).optional(),
-  metodo: z.object({ testi: z.array(z.string()), citazione: z.string() }).optional(),
-  immagini: z.array(immagineSchema),
-  // NOTA: `.optional()`, non `.default(0)`. Questo schema viene usato sia per un
-  // eventuale futuro insert (dove un default avrebbe senso) sia per l'update parziale
-  // dell'endpoint PATCH (`progettoSchema.partial().safeParse(body)`). `.default()` in
-  // Zod si applica anche quando il campo è assente dall'input, PRIMA che `.partial()`
-  // lo renda "opzionale e ignorabile" — un PATCH che non tocca `ordine` finirebbe
-  // comunque con `ordine: 0` in `parsed.data`, sovrascrivendo silenziosamente il
-  // valore esistente in bc_projects (bug verificato dal vivo: una riga con
-  // ordine=999 è stata azzerata da un PATCH che non menzionava affatto `ordine`).
-  // La tabella ha già `default 0` a livello di colonna, che copre il caso insert.
-  ordine: z.number().optional(),
-  immaginiContenuto: z.array(z.string()).max(2).optional(),
+  intro: testo(50_000).optional(),
+  sezioni: z.array(sezioneSchema).max(50),
+  blocks: z
+    .array(blockSchema)
+    .max(200)
+    .refine((b) => JSON.stringify(b).length <= 500_000, { message: 'Corpo pagina troppo grande' })
+    .optional(),
+  metodo: z.object({ testi: z.array(testo(20_000)).max(50), citazione: testo(2000) }).optional(),
+  immagini: z.array(immagineSchema).max(100),
+  ordine: z.number().int().min(0).max(10_000).optional(),
+  immaginiContenuto: z.array(srcImmagineSchema).max(2).optional(),
   archiviato: z.boolean().optional(),
   in_evidenza: z.boolean().optional(),
-  correlati: z.array(z.string()).max(3).optional(),
+  correlati: z.array(z.string().max(120)).max(3).optional(),
 });
 
 export type Progetto = z.infer<typeof progettoSchema>;

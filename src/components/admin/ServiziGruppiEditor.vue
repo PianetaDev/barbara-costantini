@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { caricaImmagine } from '../../lib/client/upload-immagine'
 
 interface Servizio { titolo: string; corpo: string }
 interface Gruppo { titolo: string; immagine: string; servizi: Servizio[] }
@@ -37,17 +38,10 @@ async function uploadImg(gi: number, event: Event) {
   if (!file) return
   uploading.value = { ...uploading.value, [gi]: true }
   try {
-    const fd = new FormData()
-    fd.append('file', file)
-    fd.append('bucket', 'barbara-costantini-progetti')
-    const res = await fetch('/api/admin/upload-image', { method: 'POST', body: fd })
-    const json = await res.json()
-    if (res.ok) {
-      gruppi.value[gi].immagine = json.url
-      update()
-    } else {
-      alert('Errore upload: ' + json.error)
-    }
+    gruppi.value[gi].immagine = await caricaImmagine(file, 'barbara-costantini-progetti')
+    update()
+  } catch (err) {
+    alert((err as Error).message)
   } finally {
     uploading.value = { ...uploading.value, [gi]: false }
   }

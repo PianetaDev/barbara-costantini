@@ -1,7 +1,7 @@
 // src/pages/api/admin/team/index.ts
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
-import { createSupabaseServerClient } from '../../../../lib/supabase';
+import { requireAdmin } from '../../../../lib/admin-guard';
 import { teamMemberSchema } from '../../../../lib/validation/team';
 import { parseJsonBody } from '../../../../lib/parse-json-body';
 
@@ -14,13 +14,9 @@ const teamMemberCreateSchema = teamMemberSchema.partial({
 });
 
 export const POST: APIRoute = async ({ request, cookies }) => {
-  const supabase = createSupabaseServerClient(cookies, request);
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    return new Response(JSON.stringify({ error: 'Non autenticato' }), { status: 401 });
-  }
+  const ctx = await requireAdmin(cookies, request);
+  if (ctx instanceof Response) return ctx;
+  const { supabase } = ctx;
 
   const body = await parseJsonBody(request);
   if (!body) {

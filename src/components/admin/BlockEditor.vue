@@ -113,6 +113,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { caricaImmagine } from '../../lib/client/upload-immagine';
 
 const props = defineProps<{ name: string; modelValue: any[] }>();
 
@@ -170,27 +171,27 @@ async function uploadSingle(i: number, e: Event) {
   const file = (e.target as HTMLInputElement).files?.[0];
   if (!file) return;
   blocks.value[i]._uploading = true;
-  const fd = new FormData();
-  fd.append('file', file);
-  fd.append('bucket', 'barbara-costantini-progetti');
-  const res = await fetch('/api/admin/upload-image', { method: 'POST', body: fd });
-  const json = await res.json();
-  if (res.ok) blocks.value[i].src = json.url;
+  try {
+    blocks.value[i].src = await caricaImmagine(file, 'barbara-costantini-progetti');
+  } catch (err) {
+    // Prima un caricamento fallito non diceva nulla: l'immagine semplicemente non compariva.
+    alert((err as Error).message);
+  }
   blocks.value[i]._uploading = false;
+  (e.target as HTMLInputElement).value = '';
 }
 
 async function uploadDouble(i: number, side: 1 | 2, e: Event) {
   const file = (e.target as HTMLInputElement).files?.[0];
   if (!file) return;
-  const fd = new FormData();
-  fd.append('file', file);
-  fd.append('bucket', 'barbara-costantini-progetti');
-  const res = await fetch('/api/admin/upload-image', { method: 'POST', body: fd });
-  const json = await res.json();
-  if (res.ok) {
-    if (side === 1) blocks.value[i].src1 = json.url;
-    else blocks.value[i].src2 = json.url;
+  try {
+    const url = await caricaImmagine(file, 'barbara-costantini-progetti');
+    if (side === 1) blocks.value[i].src1 = url;
+    else blocks.value[i].src2 = url;
+  } catch (err) {
+    alert((err as Error).message);
   }
+  (e.target as HTMLInputElement).value = '';
 }
 
 const clean = computed(() =>

@@ -17,6 +17,13 @@ export async function checkIsSuperadmin(supabase: SupabaseClient, userId: string
  * (anche condiviso con altre app del progetto) non basta.
  */
 export async function checkIsAdmin(supabase: SupabaseClient, userId: string): Promise<boolean> {
-  const { data } = await supabase.from('bc_admin_users').select('id').eq('id', userId).maybeSingle();
+  let { data, error } = await supabase.from('bc_admin_users').select('id').eq('id', userId).maybeSingle();
+  if (error) {
+    // Un errore passeggero del database non deve far sembrare «non abilitato» un admin vero:
+    // si riprova una volta e si lascia traccia nei log.
+    console.error('[checkIsAdmin] errore, riprovo:', error.message);
+    ({ data, error } = await supabase.from('bc_admin_users').select('id').eq('id', userId).maybeSingle());
+    if (error) console.error('[checkIsAdmin] errore anche al secondo tentativo:', error.message);
+  }
   return !!data;
 }

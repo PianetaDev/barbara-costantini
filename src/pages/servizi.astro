@@ -16,11 +16,11 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { risolviImmagineSicura } from '../utils/imagenes';
-import { getPageContent } from '../lib/supabase-public';
+import { leggiContenuto } from '../lib/page-content';
 
 export const prerender = false;
 
-const cms = await getPageContent('servizi') as Record<string, any>;
+const cms = await leggiContenuto(Astro, 'servizi') as Record<string, any>;
 
 interface Servizio { titolo: string; corpo: string }
 interface Gruppo { titolo: string; immagine: string; servizi: Servizio[] }

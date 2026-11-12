@@ -7,7 +7,8 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionBio from '../components/SectionBio.astro';
 import SectionTeam from '../components/SectionTeam.astro';
-import { getTeamMembers, getPageContent } from '../lib/supabase-public';
+import { getTeamMembers } from '../lib/supabase-public';
+import { leggiContenuto } from '../lib/page-content';
 import { risolviImmagine, isRemote } from '../utils/imagenes';
 
 export const prerender = false;
@@ -30,7 +31,7 @@ try {
 // Fallback ai valori di default se Supabase non risponde.
 let studioContent: Record<string, string> = {};
 try {
-  studioContent = await getPageContent('studio');
+  studioContent = await leggiContenuto(Astro, 'studio');
 } catch {
   // fallback: defaults used below
 }

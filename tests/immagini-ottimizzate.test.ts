@@ -49,7 +49,8 @@ describe('ottimizzazione immagini', () => {
     // lancerebbe su un URL remoto mai registrato in src/utils/imagenes.ts, quindi
     // usano <img> via isRemote() esattamente come SectionTeam.astro (v. incidente
     // fix/servizi-immagine-vuota-500: stessa classe di bug, file diversi).
-    const ESCLUSI = ['lavori/[slug].astro', 'SectionTeam.astro', 'SectionLavori.astro', 'lavori/index.astro'];
+    // PageTransition.astro: icone 47px dell'animazione d'ingresso, servite da /public (niente da ottimizzare).
+    const ESCLUSI = ['lavori/[slug].astro', 'SectionTeam.astro', 'SectionLavori.astro', 'lavori/index.astro', 'PageTransition.astro'];
     const fileAstro = elencaFileRicorsivo('src', ['.astro'])
       .filter((f) => !ESCLUSI.some((e) => f.includes(e)));
     const offenders: string[] = [];

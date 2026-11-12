@@ -15,14 +15,23 @@ const { mockGetUser, mockStorageFrom } = vi.hoisted(() => ({
   mockGetUser: vi.fn(),
   mockStorageFrom: vi.fn(),
 }));
+vi.mock('../src/lib/admin-roles', () => ({
+  checkIsAdmin: vi.fn(async () => true),
+  checkIsSuperadmin: vi.fn(async () => true),
+}));
 vi.mock('../src/lib/supabase', () => ({
   createSupabaseServerClient: vi.fn(() => ({
     auth: { getUser: mockGetUser },
+  })),
+  createSupabaseAdminClient: vi.fn(() => ({
     storage: { from: mockStorageFrom },
   })),
 }));
 
 import { POST } from '../src/pages/api/admin/upload-image';
+
+// Firma reale di un PNG: l'endpoint controlla i primi byte del file, non solo il tipo dichiarato.
+const PNG_HEADER = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0]);
 
 function buildRequest(fields: Record<string, FormDataEntryValue>) {
   const formData = new FormData();
@@ -83,9 +92,10 @@ describe('POST /api/admin/upload-image', () => {
     expect(mockStorageFrom).not.toHaveBeenCalled();
   });
 
-  it('ritorna 400 se il file supera i 10MB', async () => {
+  it('ritorna 400 se il file supera i 4MB', async () => {
     mockGetUser.mockResolvedValue({ data: { user: { id: 'user-1' } } });
-    const contenutoGrande = new Uint8Array(10 * 1024 * 1024 + 1);
+    const contenutoGrande = new Uint8Array(4 * 1024 * 1024 + 1);
+    contenutoGrande.set(PNG_HEADER);
     const file = new File([contenutoGrande], 'foto-grande.png', { type: 'image/png' });
     const request = buildRequest({ file, bucket: 'barbara-costantini-team' });
 
@@ -93,7 +103,7 @@ describe('POST /api/admin/upload-image', () => {
 
     expect(res.status).toBe(400);
     const body = await res.json();
-    expect(body.error).toBe('File troppo grande (max 10MB)');
+    expect(body.error).toBe('File troppo grande (max 4MB)');
     expect(mockStorageFrom).not.toHaveBeenCalled();
   });
 
@@ -105,7 +115,7 @@ describe('POST /api/admin/upload-image', () => {
     });
     mockStorageFrom.mockReturnValue({ upload: mockUpload, getPublicUrl: mockGetPublicUrl });
 
-    const file = new File(['contenuto'], 'foto.png', { type: 'image/png' });
+    const file = new File([PNG_HEADER, 'contenuto'], 'foto.png', { type: 'image/png' });
     const request = buildRequest({ file, bucket: 'barbara-costantini-team' });
 
     const res = await POST({ request, cookies: {} } as any);
@@ -124,5 +134,13 @@ describe('POST /api/admin/upload-image', () => {
     expect(calledFile).toBeInstanceOf(File);
     expect(calledFile.name).toBe('foto.png');
     expect(calledFile.type).toBe('image/png');
+  });
+
+  it('rifiuta un file che dichiara image/png ma non lo è (controllo sui primi byte)', async () => {
+    mockGetUser.mockResolvedValue({ data: { user: { id: 'user-1' } } });
+    const file = new File(['<script>alert(1)</script>'], 'finta.png', { type: 'image/png' });
+    const res = await POST({ request: buildRequest({ file, bucket: 'barbara-costantini-team' }), cookies: {} } as any);
+    expect(res.status).toBe(400);
+    expect(mockStorageFrom).not.toHaveBeenCalled();
   });
 });

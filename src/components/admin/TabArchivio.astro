@@ -1,0 +1,32 @@
+---
+// src/components/admin/TabArchivio.astro
+// Schede "Attivi / Archiviati" in cima agli elenchi (Lavori, Team). Gli archiviati
+// hanno una scheda propria con il conteggio: prima stavano in fondo alla pagina,
+// senza nessun collegamento, e non si trovavano.
+interface Props {
+  base: string;
+  vista: 'attivi' | 'archiviati';
+  attivi: number;
+  archiviati: number;
+}
+const { base, vista, attivi, archiviati } = Astro.props;
+const schede = [
+  { id: 'attivi', label: 'Sul sito', n: attivi, href: base },
+  { id: 'archiviati', label: 'Archiviati', n: archiviati, href: `${base}?vista=archiviati` },
+];
+---
+<nav class="flex gap-[24px] border-b border-bc-black mb-bc-md" aria-label="Filtra elenco">
+  {schede.map((s) => (
+    <a
+      href={s.href}
+      aria-current={vista === s.id ? 'page' : undefined}
+      class:list={[
+        'py-[10px] font-sans text-[14px] tracking-[0.02em] -mb-px border-b-2',
+        vista === s.id ? 'font-normal border-bc-black' : 'font-light border-transparent text-bc-black/60 hover:text-bc-black',
+      ]}
+    >
+      {s.label} <span class="text-bc-black/50">({s.n})</span>
+    </a>
+  ))}
+</nav>
+<p id="azione-errore" role="alert" class="hidden mb-bc-md border border-red-600 text-red-600 px-bc-md py-bc-xs font-sans text-[14px]"></p>

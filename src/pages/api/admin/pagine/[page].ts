@@ -1,41 +1,75 @@
 // src/pages/api/admin/pagine/[page].ts
+// Contenuti delle pagine (bc_page_content). Due colonne:
+//   - content: quello che vede il sito pubblico
+//   - bozza:   quello che l'admin sta scrivendo, mostrato solo nell'anteprima
+// PATCH { content, pubblica?: boolean }
+//   - pubblica assente/false → salva in bozza (l'anteprima si aggiorna, il sito no)
+//   - pubblica true          → scrive sul sito e cancella la bozza
+//   - pubblica + parziale    → scrive sul sito solo i campi inviati e conserva la bozza
+// DELETE → scarta la bozza (annulla le modifiche non pubblicate)
+// I campi inviati vengono UNITI a quelli esistenti: un salvataggio parziale (un solo
+// campo, una scheda rimasta aperta con dati vecchi) non cancella gli altri campi.
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
-import { createSupabaseServerClient } from '../../../../lib/supabase';
 import { pageContentSchema } from '../../../../lib/validation/page-content';
 import { parseJsonBody } from '../../../../lib/parse-json-body';
+import { requireAdmin, jsonResponse } from '../../../../lib/admin-guard';
+import { sanitizeLegalHtml } from '../../../../lib/sanitize-intro';
 
-// Client legato ai cookie della richiesta (NON service_role): la RLS
-// `page_content_admin_write` su bc_page_content già permette la scrittura a qualunque
-// utente presente in bc_admin_users (stesso pattern di src/pages/api/admin/progetti/[id].ts
-// e src/pages/api/admin/team/[id].ts, Task 13/14) — il controllo `getUser()` qui sotto
-// è solo per rispondere con un 401 pulito prima di toccare il DB, non l'unica difesa.
-export const PATCH: APIRoute = async ({ params, request, cookies }) => {
-  const supabase = createSupabaseServerClient(cookies, request);
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    return new Response(JSON.stringify({ error: 'Non autenticato' }), { status: 401 });
+type Contenuto = Record<string, unknown>;
+
+function pulisci(content: Contenuto): Contenuto {
+  // html_body (privacy/cookie policy) finisce in un set:html pubblico: si ripulisce in scrittura.
+  if (typeof content.html_body === 'string') {
+    return { ...content, html_body: sanitizeLegalHtml(content.html_body) };
   }
+  return content;
+}
+
+export const PATCH: APIRoute = async ({ params, request, cookies }) => {
+  const ctx = await requireAdmin(cookies, request);
+  if (ctx instanceof Response) return ctx;
+  const { supabase } = ctx;
 
   const body = await parseJsonBody(request);
-  if (!body) {
-    return new Response(JSON.stringify({ error: 'Body JSON mancante o non valido' }), { status: 400 });
-  }
+  if (!body) return jsonResponse({ error: 'Body JSON mancante o non valido' }, 400);
 
-  const parsed = pageContentSchema.safeParse({ page: params.page, content: (body as Record<string, unknown>).content });
-  if (!parsed.success) {
-    // z.flattenError (funzione top-level) sostituisce il deprecato metodo `.flatten()`
-    // sull'istanza dell'errore in Zod v4 — stesso pattern di progetti/team (Task 13/14).
-    return new Response(JSON.stringify({ error: z.flattenError(parsed.error) }), { status: 400 });
-  }
+  const parsed = pageContentSchema.safeParse({ page: params.page, content: (body as Contenuto).content });
+  if (!parsed.success) return jsonResponse({ error: z.flattenError(parsed.error) }, 400);
+  const pubblica = (body as Contenuto).pubblica === true;
+  // parziale: pubblica solo i campi inviati (modifica sul posto in home) senza buttare la
+  // bozza aperta nel pannello; i campi pubblicati entrano anche nella bozza.
+  const parziale = (body as Contenuto).parziale === true;
+  const { page } = parsed.data;
+  const nuovo = pulisci(parsed.data.content);
 
-  const { error } = await supabase
+  const { data: riga, error: errLettura } = await supabase
     .from('bc_page_content')
-    .upsert({ page: parsed.data.page, bozza: parsed.data.content });
-  if (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 400 });
-  }
-  return new Response(JSON.stringify({ ok: true }), { status: 200 });
+    .select('content, bozza')
+    .eq('page', page)
+    .maybeSingle();
+  if (errLettura) return jsonResponse({ error: errLettura.message }, 400);
+
+  const pubblicato = (riga?.content ?? {}) as Contenuto;
+  const bozzaAttuale = (riga?.bozza ?? null) as Contenuto | null;
+
+  const valori: Record<string, unknown> = pubblica
+    ? { page, content: { ...pubblicato, ...nuovo }, bozza: parziale && bozzaAttuale ? { ...bozzaAttuale, ...nuovo } : null }
+    : { page, bozza: { ...(bozzaAttuale ?? pubblicato), ...nuovo } };
+
+  const { error } = await supabase.from('bc_page_content').upsert(valori);
+  if (error) return jsonResponse({ error: error.message }, 400);
+  return jsonResponse({ ok: true, pubblicato: pubblica });
+};
+
+export const DELETE: APIRoute = async ({ params, request, cookies }) => {
+  const ctx = await requireAdmin(cookies, request);
+  if (ctx instanceof Response) return ctx;
+
+  const parsed = pageContentSchema.shape.page.safeParse(params.page);
+  if (!parsed.success) return jsonResponse({ error: 'Pagina non valida' }, 400);
+
+  const { error } = await ctx.supabase.from('bc_page_content').update({ bozza: null }).eq('page', parsed.data);
+  if (error) return jsonResponse({ error: error.message }, 400);
+  return jsonResponse({ ok: true });
 };

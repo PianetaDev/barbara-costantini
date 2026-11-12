@@ -101,7 +101,9 @@ const navGroups = [
       <script>
         window.addEventListener('preview-refresh', () => {
           const iframe = document.getElementById('admin-preview-iframe') as HTMLIFrameElement | null;
-          if (iframe) iframe.src = iframe.src;
+          if (!iframe) return;
+          // Ricarica la pagina su cui si trova l'anteprima (anche se ci si è spostati con un link).
+          try { iframe.contentWindow!.location.reload(); } catch { iframe.src = iframe.src; }
         });
       </script>
     )}

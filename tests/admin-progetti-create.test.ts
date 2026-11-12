@@ -7,6 +7,10 @@ const { mockGetUser, mockSelect, mockInsert, mockFrom } = vi.hoisted(() => ({
   mockInsert: vi.fn(),
   mockFrom: vi.fn(),
 }));
+vi.mock('../src/lib/admin-roles', () => ({
+  checkIsAdmin: vi.fn(async () => true),
+  checkIsSuperadmin: vi.fn(async () => true),
+}));
 vi.mock('../src/lib/supabase', () => ({
   createSupabaseServerClient: vi.fn(() => ({
     auth: { getUser: mockGetUser },
@@ -45,10 +49,25 @@ describe('POST /api/admin/progetti', () => {
     expect(mockInsert).toHaveBeenCalledWith(expect.objectContaining({ sezioni: [], immagini: [] }));
   });
 
-  it('rifiuta senza slug', async () => {
-    const request = buildRequest({ titolo: 'Senza slug', tipo: 'horizontal' });
+  it('senza slug lo ricava dal titolo, ripulito (minuscole, trattini, niente accenti)', async () => {
+    const request = buildRequest({ titolo: 'Lavoro di Prova è 2', tipo: 'horizontal' });
+    const res = await POST({ request, cookies: {} } as any);
+    expect(res.status).toBe(200);
+    expect(mockInsert).toHaveBeenCalledWith(expect.objectContaining({ slug: 'lavoro-di-prova-e-2' }));
+  });
+
+  it('ripulisce uno slug scritto a mano con spazi e maiuscole', async () => {
+    const request = buildRequest({ slug: 'Lavoro test2', titolo: 'Lavoro test2', tipo: 'horizontal' });
+    const res = await POST({ request, cookies: {} } as any);
+    expect(res.status).toBe(200);
+    expect(mockInsert).toHaveBeenCalledWith(expect.objectContaining({ slug: 'lavoro-test2' }));
+  });
+
+  it('rifiuta senza titolo né slug', async () => {
+    const request = buildRequest({ tipo: 'horizontal' });
     const res = await POST({ request, cookies: {} } as any);
     expect(res.status).toBe(400);
+    expect(mockInsert).not.toHaveBeenCalled();
   });
 
   it('ritorna 401 se non autenticato', async () => {

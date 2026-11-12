@@ -58,6 +58,9 @@ const FIELD_LABELS: Record<string, Record<string, string>> = {
 };
 const labelsForPage = FIELD_LABELS[pageParam ?? ''] ?? {};
 
+// Pagina pubblica mostrata nell'anteprima (il footer non ha una pagina sua: si vede in home).
+const PERCORSO_PUBBLICO: Record<string, string> = { home: '/', footer: '/' };
+
 // Campi che usano textarea invece di input (testi lunghi).
 function isTextarea(chiave: string): boolean {
   return chiave.endsWith('_testo') || chiave.endsWith('_corpo') || chiave.endsWith('_intro') || chiave === 'html_body';
@@ -96,7 +99,7 @@ const serviziFlat: Record<string, string> = isServizi ? {
   cta_testo: String(content.cta_testo ?? ''),
 } : {};
 ---
-<AdminLayout title={paginaNonTrovata ? 'Pagina non trovata' : `Pagina: ${pageParam}`} previewSrc={paginaNonTrovata ? undefined : (pageParam === 'home' ? '/' : `/${pageParam}`)}>
+<AdminLayout title={paginaNonTrovata ? 'Pagina non trovata' : `Pagina: ${pageParam}`} previewSrc={paginaNonTrovata ? undefined : `${PERCORSO_PUBBLICO[pageParam ?? ''] ?? `/${pageParam}`}?anteprima=1`}>
   <section class="max-w-[680px]">
     {paginaNonTrovata ? (
       <>
@@ -108,7 +111,10 @@ const serviziFlat: Record<string, string> = isServizi ? {
     ) : (
       <>
         <h1 class="text-bc-h1">Pagina: {pageParam}</h1>
-        <form id="page-form" class="flex flex-col gap-bc-md mt-bc-md">
+        <p class="mt-bc-sm font-sans text-[13px] font-light text-bc-black/60">
+          Mentre scrivi, l'anteprima a destra si aggiorna da sola. Il sito cambia solo quando premi «Salva e pubblica».
+        </p>
+        <form id="page-form" class="flex flex-col gap-bc-md mt-bc-md" data-page={pageParam} data-servizi={isServizi ? '1' : undefined} data-bozza={haBozza ? '1' : undefined}>
           {isServizi ? (
             <>
               {/* Campi flat: hero + cta */}
@@ -175,7 +181,7 @@ const serviziFlat: Record<string, string> = isServizi ? {
                           class="border border-bc-black px-bc-md py-bc-xs flex-1 min-w-0 font-mono text-[12px] font-light"
                         />
                         <label class="bc-btn cursor-pointer shrink-0 text-[12px] py-[6px] px-[10px]">
-                          Carica
+                          <span data-upload-label>Carica</span>
                           <input
                             type="file"
                             accept="image/jpeg,image/png,image/webp"
@@ -185,17 +191,8 @@ const serviziFlat: Record<string, string> = isServizi ? {
                           />
                         </label>
                       </div>
-                      {valore && (
-                        <img
-                          id={`img-preview-${chiave}`}
-                          src={valore}
-                          alt=""
-                          width={80}
-                          height={60}
-                          class="mt-[4px] w-[80px] h-[60px] object-cover border border-bc-black/20"
-                        />
-                      )}
-                      {!valore && <div id={`img-preview-${chiave}`} class="hidden" />}
+                      {/* Miniatura costruita dallo script (URL remoto dello Storage). */}
+                      <div id={`img-preview-${chiave}`} data-miniatura={valore || undefined} class="hidden" />
                     </>
                   ) : (
                     <input
@@ -208,98 +205,184 @@ const serviziFlat: Record<string, string> = isServizi ? {
               );
             })
           )}
-          <button type="submit" class="bc-btn">Salva bozza</button>
-          {haBozza && <p class="font-sans text-[13px] text-bc-black/60">Modifiche salvate in bozza, non ancora pubblicate.</p>}
-          <button type="button" id="pubblica-pagina" class="bc-btn">Pubblica sul sito</button>
-          <span id="pubblica-stato" class="font-sans text-[13px]"></span>
+          <div class="sticky bottom-0 -mx-[40px] px-[40px] py-[16px] bg-bc-canvas border-t border-bc-black flex flex-wrap items-center gap-[16px]">
+            <button type="submit" class="bc-btn">Salva e pubblica</button>
+            <button type="button" id="scarta-bozza" class:list={['font-sans text-[13px] font-light underline underline-offset-2 hover:no-underline', !haBozza && 'hidden']}>
+              Annulla modifiche
+            </button>
+            <span id="page-stato" role="status" class="font-sans text-[13px] font-light text-bc-black/70">
+              {haBozza ? 'Hai modifiche non ancora pubblicate (si vedono solo nell\'anteprima).' : ''}
+            </span>
+          </div>
         </form>
-        <p id="page-success" class="text-bc-black mt-bc-sm hidden">Salvato.</p>
-        <p id="page-error" class="text-red-600 mt-bc-sm hidden"></p>
+        <p id="page-error" role="alert" class="text-red-600 mt-bc-sm hidden"></p>
       </>
     )}
   </section>
-  <script define:vars={{ page: pageParam, isServizi }}>
-    document.getElementById('pubblica-pagina')?.addEventListener('click', async () => {
-      const stato = document.getElementById('pubblica-stato');
-      if (stato) stato.textContent = 'Pubblicazione...';
-      const res = await fetch('/api/admin/pubblica-pagina', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ page }),
-      });
-      if (res.ok) { location.reload(); } else { const j = await res.json().catch(() => ({})); if (stato) stato.textContent = 'Non pubblicato: ' + (j.error || res.status); }
-    });
-    const form = document.getElementById('page-form');
-    if (form) {
-      const errorEl = document.getElementById('page-error');
-      const successEl = document.getElementById('page-success');
+  <script>
+    import { caricaImmagine, erroreRisposta } from '../../../lib/client/upload-immagine';
 
+    const form = document.getElementById('page-form') as HTMLFormElement | null;
+    if (form) {
+      const page = form.dataset.page!;
+      const isServizi = form.dataset.servizi === '1';
+      const errorEl = document.getElementById('page-error')!;
+      const statoEl = document.getElementById('page-stato')!;
+      const scartaBtn = document.getElementById('scarta-bozza')!;
+
+      // Legge i valori del form. Per la pagina servizi i componenti Vue tengono gruppi e
+      // partner come JSON dentro input nascosti: qui tornano oggetti.
+      function leggiForm(): Record<string, unknown> {
+        const content: Record<string, unknown> = Object.fromEntries(new FormData(form!).entries());
+        if (isServizi) {
+          try { content.gruppi = JSON.parse(String(content.gruppi)); } catch { content.gruppi = []; }
+          try { content.partner = JSON.parse(String(content.partner)); } catch { content.partner = []; }
+        }
+        return content;
+      }
+
+      function mostraErrore(msg: string) {
+        errorEl.textContent = msg;
+        errorEl.classList.toggle('hidden', !msg);
+      }
+
+      async function invia(pubblica: boolean): Promise<boolean> {
+        let res: Response;
+        try {
+          res = await fetch(`/api/admin/pagine/${page}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content: leggiForm(), pubblica }),
+          });
+        } catch {
+          mostraErrore('Salvataggio non riuscito: controlla la connessione e riprova.');
+          return false;
+        }
+        const errore = await erroreRisposta(res);
+        mostraErrore(errore);
+        return !errore;
+      }
+
+      // ── Anteprima dal vivo ────────────────────────────────────────────────
+      // Ogni modifica viene salvata in bozza poco dopo che smetti di scrivere, poi
+      // l'anteprima si ricarica: quello che vedi a destra è la pagina vera con i testi nuovi.
+      // Il confronto periodico (invece dei soli eventi `input`) cattura anche gli editor
+      // Vue e le immagini appena caricate, che cambiano il form senza eventi di tastiera.
+      let ultimoSalvato = JSON.stringify(leggiForm());
+      let inCorso: Promise<void> | null = null;
+      // Da quando si preme «Salva e pubblica» o «Annulla modifiche» il salvataggio in bozza
+      // si ferma: una bozza che arriva dopo la pubblicazione la farebbe sembrare non pubblicata
+      // (o, peggio, rimetterebbe nel form un testo vecchio).
+      let fermo = false;
+      let erroriDiFila = 0;
+      let timer: number | undefined;
+      // Gli editor Vue (gruppi, partner) riscrivono i loro campi nascosti appena montati:
+      // finché non tocchi nulla, quello stato è il punto di partenza, non una modifica.
+      let toccato = false;
+      window.setTimeout(() => { if (!toccato) ultimoSalvato = JSON.stringify(leggiForm()); }, 1200);
+
+      async function salvaBozza() {
+        const attuale = JSON.stringify(leggiForm());
+        if (fermo || attuale === ultimoSalvato || inCorso) return;
+        statoEl.textContent = 'Aggiorno l\'anteprima…';
+        let ok = false;
+        inCorso = invia(false).then((esito) => { ok = esito; });
+        await inCorso;
+        inCorso = null;
+        if (fermo) return;
+        erroriDiFila = ok ? 0 : erroriDiFila + 1;
+        // Dopo tre errori di fila (es. sessione scaduta) si smette di riprovare da soli.
+        if (erroriDiFila >= 3) window.clearInterval(intervallo);
+        if (ok) {
+          ultimoSalvato = attuale;
+          scartaBtn.classList.remove('hidden');
+          statoEl.textContent = 'Anteprima aggiornata. Il sito non è ancora cambiato: premi «Salva e pubblica».';
+          window.dispatchEvent(new CustomEvent('preview-refresh'));
+        } else {
+          statoEl.textContent = '';
+        }
+      }
+      function pianifica() {
+        toccato = true;
+        if (fermo) return;
+        window.clearTimeout(timer);
+        timer = window.setTimeout(salvaBozza, 700);
+      }
+      form.addEventListener('input', pianifica);
+      form.addEventListener('change', pianifica);
+      form.addEventListener('pointerdown', () => { toccato = true; });
+      const intervallo = window.setInterval(() => {
+        if (toccato && JSON.stringify(leggiForm()) !== ultimoSalvato) pianifica();
+      }, 1500);
+
+      /** Ferma il salvataggio automatico e aspetta quello eventualmente in corso. */
+      async function fermaBozza() {
+        fermo = true;
+        window.clearTimeout(timer);
+        if (inCorso) await inCorso;
+      }
+      function riprendiBozza() {
+        fermo = false;
+      }
+
+      // ── Salva e pubblica ──────────────────────────────────────────────────
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        errorEl.classList.add('hidden');
-        successEl.classList.add('hidden');
-        const formData = new FormData(form);
-        const content = Object.fromEntries(formData.entries());
-        // Per la pagina servizi, i Vue components serializzano gruppi/partner come
-        // JSON string nei hidden inputs. Li parsiamo in oggetti prima di inviare.
-        if (isServizi) {
-          try { content.gruppi = JSON.parse(content.gruppi); } catch { content.gruppi = []; }
-          try { content.partner = JSON.parse(content.partner); } catch { content.partner = []; }
-        }
-        const res = await fetch(`/api/admin/pagine/${page}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ content }),
-        });
-        if (res.ok) {
-          successEl.classList.remove('hidden');
+        await fermaBozza();
+        statoEl.textContent = 'Pubblicazione…';
+        if (await invia(true)) {
           // Ricarica dal server: i valori mostrati sono quelli letti dal database.
           window.location.reload();
         } else {
-          const { error } = await res.json();
-          errorEl.textContent = typeof error === 'string' ? error : JSON.stringify(error);
-          errorEl.classList.remove('hidden');
+          statoEl.textContent = '';
+          riprendiBozza();
         }
+      });
+
+      // ── Annulla modifiche (scarta la bozza) ───────────────────────────────
+      scartaBtn.addEventListener('click', async () => {
+        if (!confirm('Annullare le modifiche non pubblicate? Il form torna ai testi che sono ora sul sito.')) return;
+        await fermaBozza();
+        const res = await fetch(`/api/admin/pagine/${page}`, { method: 'DELETE' });
+        const errore = await erroreRisposta(res);
+        if (errore) { mostraErrore(errore); riprendiBozza(); }
+        else window.location.reload();
       });
     }
 
-    // Gestione upload immagini per i campi _immagine / _foto
-    document.querySelectorAll('[data-upload-target]').forEach((fileInput) => {
-      fileInput.addEventListener('change', async (e) => {
-        const file = e.target.files?.[0];
+    function miniatura(segnaposto: HTMLElement, url: string) {
+      // Costruita via DOM (non markup nel sorgente .astro): è un URL remoto dello Storage,
+      // fuori dalla pipeline di ottimizzazione delle immagini del sito. Solo https o percorsi interni.
+      if (!(url.startsWith('https://') || url.startsWith('/'))) return;
+      const img = document.createElement('img');
+      img.id = segnaposto.id;
+      img.src = url; img.alt = ''; img.width = 80; img.height = 60;
+      img.className = 'mt-[4px] w-[80px] h-[60px] object-cover border border-bc-black/20';
+      segnaposto.replaceWith(img);
+    }
+    document.querySelectorAll<HTMLElement>('[data-miniatura]').forEach((el) => miniatura(el, el.dataset.miniatura!));
+
+    // Caricamento immagini per i campi _immagine / _foto
+    document.querySelectorAll<HTMLInputElement>('[data-upload-target]').forEach((fileInput) => {
+      fileInput.addEventListener('change', async () => {
+        const file = fileInput.files?.[0];
         if (!file) return;
-        const targetId = fileInput.dataset.uploadTarget;
-        const previewId = fileInput.dataset.uploadPreview;
-        const targetInput = document.getElementById(targetId);
-        const label = fileInput.closest('label');
-        if (label) label.textContent = '…';
+        const targetInput = document.getElementById(fileInput.dataset.uploadTarget!) as HTMLInputElement | null;
+        const previewEl = document.getElementById(fileInput.dataset.uploadPreview!);
+        const etichetta = fileInput.parentElement?.querySelector('[data-upload-label]');
+        if (etichetta) etichetta.textContent = 'Carico…';
         try {
-          const fd = new FormData();
-          fd.append('file', file);
-          fd.append('bucket', 'barbara-costantini-team');
-          const res = await fetch('/api/admin/upload-image', { method: 'POST', body: fd });
-          const json = await res.json();
-          if (res.ok && targetInput) {
-            targetInput.value = json.url;
-            const previewEl = document.getElementById(previewId);
-            if (previewEl) {
-              previewEl.classList.remove('hidden');
-              if (previewEl.tagName === 'IMG') {
-                previewEl.src = json.url;
-              } else {
-                // Replace placeholder div with actual img
-                const img = document.createElement('img');
-                img.src = json.url; img.alt = ''; img.width = 80; img.height = 60;
-                img.className = 'mt-[4px] w-[80px] h-[60px] object-cover border border-bc-black/20';
-                previewEl.replaceWith(img);
-              }
-            }
-          } else {
-            alert('Errore upload: ' + json.error);
+          const url = await caricaImmagine(file, 'barbara-costantini-team');
+          if (targetInput) {
+            targetInput.value = url;
+            targetInput.dispatchEvent(new Event('input', { bubbles: true }));
           }
+          if (previewEl) miniatura(previewEl, url);
+        } catch (err) {
+          alert((err as Error).message);
         } finally {
-          if (label) label.textContent = 'Carica';
-          e.target.value = '';
+          if (etichetta) etichetta.textContent = 'Carica';
+          fileInput.value = '';
         }
       });
     });

@@ -5,7 +5,7 @@ import Nav from '../components/Nav.vue';
 import Footer from '../components/Footer.astro';
 import CookieBanner from '../components/CookieBanner.vue';
 import PageTransition from '../components/PageTransition.astro';
-import { getPageContent } from '../lib/supabase-public';
+import { leggiContenuto, inAnteprima } from '../lib/page-content';
 
 interface Props {
   title: string;
@@ -22,6 +22,10 @@ const {
 } = Astro.props;
 
 const isHome = Astro.url.pathname === '/';
+// Anteprima del pannello admin (iframe accanto al form): niente animazioni d'ingresso,
+// niente banner cookie né widget segnalazioni, e la posizione di scroll si conserva
+// tra un aggiornamento e l'altro mentre si scrive.
+const anteprima = await inAnteprima(Astro);
 
 // Widget segnalazioni "Segnale" → crea GitHub Issue su PianetaDev/barbara-costantini.
 // data-source distingue chi segnala (pubblico del sito vs. team che lavora nell'admin),
@@ -33,7 +37,7 @@ const segnaleSource = Astro.url.pathname.startsWith('/admin') ? 'admin' : 'publi
 // (ritorna {}); il try/catch è difesa extra contro eccezioni impreviste.
 let footerContent: Record<string, string> = {};
 try {
-  footerContent = await getPageContent('footer');
+  footerContent = await leggiContenuto(Astro, 'footer');
 } catch {
   // fallback: Footer usa i valori hardcoded di default
 }
@@ -46,7 +50,13 @@ try {
     <title>{titleIsFull ? title : `${title} — Barbara Costantini Restauro`}</title>
     <meta name="description" content={description} />
     <link rel="icon" href="/logo.svg" />
-    <script is:inline>document.documentElement.classList.add('bc-l')</script>
+    {!anteprima && <script is:inline>document.documentElement.classList.add('bc-l')</script>}
+    {anteprima && (
+      <Fragment>
+        <meta name="robots" content="noindex" />
+        <style is:inline>*,*::before,*::after{animation:none!important;transition:none!important}.bc-reveal{opacity:1!important;transform:none!important}</style>
+      </Fragment>
+    )}
     {isHome && (
       <Fragment>
         <link rel="preload" as="image" href="/images/bc-b/b-01.png" />
@@ -60,16 +70,36 @@ try {
         <link rel="preload" as="image" href="/images/bc-b/b-09.png" />
       </Fragment>
     )}
-    <script
+    {!anteprima && <script
       is:inline
       src="https://segnale-phi.vercel.app/widget.js"
       defer
       data-project="barbara-costantini"
       data-source={segnaleSource}
-    ></script>
+    ></script>}
   </head>
   <body class="bg-bc-canvas text-bc-black font-sans">
-    {isHome && <PageTransition />}
+    {isHome && !anteprima && <PageTransition />}
+    {anteprima && (
+      <script is:inline>
+        (function () {
+          var k = 'bc-anteprima-scroll:' + location.pathname;
+          try {
+            var y = Number(sessionStorage.getItem(k) || 0);
+            if (y) window.addEventListener('load', function () { window.scrollTo(0, y); });
+            window.addEventListener('scroll', function () { sessionStorage.setItem(k, String(window.scrollY)); }, { passive: true });
+          } catch (e) {}
+          // I link interni restano in anteprima (altrimenti al primo clic si esce dalla bozza).
+          document.addEventListener('click', function (e) {
+            var a = e.target && e.target.closest ? e.target.closest('a[href^="/"]') : null;
+            if (!a || a.getAttribute('href').indexOf('anteprima=1') !== -1) return;
+            var u = new URL(a.href);
+            u.searchParams.set('anteprima', '1');
+            a.href = u.toString();
+          }, true);
+        })();
+      </script>
+    )}
     <script is:inline>
       if (window.location.pathname !== '/') {
         setTimeout(function() {
@@ -82,7 +112,7 @@ try {
       <slot />
     </main>
     <Footer content={footerContent} />
-    <CookieBanner client:load />
+    {!anteprima && <CookieBanner client:load />}
     <script>
       function initReveal() {
         const html = document.documentElement;

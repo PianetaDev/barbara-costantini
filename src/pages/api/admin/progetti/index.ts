@@ -1,8 +1,8 @@
 // src/pages/api/admin/progetti/index.ts
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
-import { createSupabaseServerClient } from '../../../../lib/supabase';
-import { progettoSchema } from '../../../../lib/validation/progetto';
+import { requireAdmin } from '../../../../lib/admin-guard';
+import { progettoSchema, slugify } from '../../../../lib/validation/progetto';
 import { parseJsonBody } from '../../../../lib/parse-json-body';
 
 // Schema di creazione: slug/titolo/tipo obbligatori (come nello schema pieno), tutto
@@ -23,18 +23,19 @@ const progettoCreateSchema = progettoSchema.partial({
 });
 
 export const POST: APIRoute = async ({ request, cookies }) => {
-  const supabase = createSupabaseServerClient(cookies, request);
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    return new Response(JSON.stringify({ error: 'Non autenticato' }), { status: 401 });
-  }
+  const ctx = await requireAdmin(cookies, request);
+  if (ctx instanceof Response) return ctx;
+  const { supabase } = ctx;
 
   const body = await parseJsonBody(request);
-  if (!body) {
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
     return new Response(JSON.stringify({ error: 'Body JSON mancante o non valido' }), { status: 400 });
   }
+
+  // L'indirizzo della pagina si ricava da quello scritto (o dal titolo) ripulendolo:
+  // "Lavoro test 2" diventa "lavoro-test-2" invece di dare errore.
+  const b = body as Record<string, unknown>;
+  b.slug = slugify(String(b.slug || b.titolo || ''));
 
   const parsed = progettoCreateSchema.safeParse(body);
   if (!parsed.success) {
@@ -59,7 +60,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     .select('id')
     .single();
   if (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 400 });
+    const messaggio = (error as { code?: string }).code === '23505' ? 'Esiste già un lavoro con questo indirizzo (slug)' : error.message;
+    return new Response(JSON.stringify({ error: messaggio }), { status: 400 });
   }
   return new Response(JSON.stringify({ id: data.id }), { status: 200 });
 };

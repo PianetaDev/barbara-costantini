@@ -8,7 +8,19 @@ const { data: membro } = await supabase.from('bc_team_members').select('*').eq('
 if (!membro) return Astro.redirect('/admin/team');
 ---
 <AdminLayout title={membro.nome} backHref="/admin/team" backLabel="Torna al team">
-  <section class="max-w-[680px]">
+  <section class="max-w-[680px] flex flex-col gap-bc-md">
+
+    {membro.archiviato && (
+      <div class="border border-bc-black px-bc-md py-bc-sm flex flex-wrap items-center gap-[16px]">
+        <span class="border border-bc-black/40 px-[8px] py-[2px] font-sans text-[11px] uppercase tracking-widest">Archiviato</span>
+        <span class="font-sans text-[14px] font-light flex-1">Non compare sul sito.</span>
+        <button type="button" data-azione="ripristina" data-endpoint={`/api/admin/team/${membro.id}`} data-nome={membro.nome}
+          class="font-sans text-[13px] font-light underline underline-offset-2 hover:no-underline">Ripristina</button>
+        <button type="button" data-azione="elimina" data-endpoint={`/api/admin/team/${membro.id}`} data-nome={membro.nome} data-dopo="/admin/team?vista=archiviati"
+          class="font-sans text-[13px] font-light text-red-600 underline underline-offset-2 hover:no-underline">Elimina definitivamente</button>
+      </div>
+    )}
+    <p id="azione-errore" role="alert" class="hidden border border-red-600 text-red-600 px-bc-md py-bc-xs font-sans text-[14px]"></p>
     <form id="team-form" class="flex flex-col gap-bc-md" data-id={membro.id}>
       <label class="flex flex-col gap-[4px]">
         Ordine di visualizzazione
@@ -41,13 +53,24 @@ if (!membro) return Astro.redirect('/admin/team');
     <p id="team-success" class="text-bc-black mt-bc-sm hidden">Salvato.</p>
     <p id="team-error" class="text-red-600 mt-bc-sm hidden"></p>
 
-    <div class="mt-[64px] pt-[32px] border-t border-bc-black">
-      <button id="archivia-membro" data-id={membro.id} class="font-sans text-[14px] font-light text-red-600 underline underline-offset-2 hover:no-underline">
-        Archivia questo membro
-      </button>
-    </div>
+    {!membro.archiviato && (
+      <div class="mt-[64px] pt-[32px] border-t border-bc-black">
+        <button type="button" data-azione="archivia" data-endpoint={`/api/admin/team/${membro.id}`}
+                data-nome={membro.nome} data-dopo="/admin/team?vista=archiviati"
+                class="font-sans text-[14px] font-light text-red-600 underline underline-offset-2 hover:no-underline">
+          Archivia questo membro
+        </button>
+        <p class="mt-[8px] font-sans text-[13px] font-light text-bc-black/60">
+          Sparisce dal sito ma resta in «Archiviati», da dove si può ripristinare o eliminare definitivamente.
+        </p>
+      </div>
+    )}
   </section>
   <script>
+    import { attivaAzioniArchivio } from '../../../lib/client/archivio';
+    import { caricaImmagine, erroreRisposta } from '../../../lib/client/upload-immagine';
+    attivaAzioniArchivio();
+
     const form = document.getElementById('team-form') as HTMLFormElement;
     const errorEl = document.getElementById('team-error')!;
     const successEl = document.getElementById('team-success')!;
@@ -63,15 +86,10 @@ if (!membro) return Astro.redirect('/admin/team');
 
       let foto_url: string | undefined;
       if (fotoFile && fotoFile.size > 0) {
-        const uploadData = new FormData();
-        uploadData.append('file', fotoFile);
-        uploadData.append('bucket', 'barbara-costantini-team');
-        const uploadRes = await fetch('/api/admin/upload-image', { method: 'POST', body: uploadData });
-        const uploadJson = await uploadRes.json();
-        if (uploadRes.ok) {
-          foto_url = uploadJson.url;
-        } else {
-          errorEl.textContent = 'Errore upload: ' + uploadJson.error;
+        try {
+          foto_url = await caricaImmagine(fotoFile, 'barbara-costantini-team');
+        } catch (err) {
+          errorEl.textContent = (err as Error).message;
           errorEl.classList.remove('hidden');
           return;
         }
@@ -105,25 +123,7 @@ if (!membro) return Astro.redirect('/admin/team');
           previewWrap.appendChild(el);
         }
       } else {
-        const { error } = await res.json();
-        errorEl.textContent = typeof error === 'string' ? error : JSON.stringify(error);
-        errorEl.classList.remove('hidden');
-      }
-    });
-
-    document.getElementById('archivia-membro')?.addEventListener('click', async (e) => {
-      const id = (e.currentTarget as HTMLElement).dataset.id;
-      if (!confirm('Archiviare questo membro? Sparirà dal sito pubblico ma potrà essere ripristinato dalla lista Team.')) return;
-      const res = await fetch(`/api/admin/team/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ archiviato: true }),
-      });
-      if (res.ok) {
-        window.location.href = '/admin/team';
-      } else {
-        const { error } = await res.json();
-        errorEl.textContent = typeof error === 'string' ? error : JSON.stringify(error);
+        errorEl.textContent = await erroreRisposta(res);
         errorEl.classList.remove('hidden');
       }
     });

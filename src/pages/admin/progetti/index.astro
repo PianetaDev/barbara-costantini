@@ -1,59 +1,92 @@
 ---
 import AdminLayout from '../../../layouts/AdminLayout.astro';
+import TabArchivio from '../../../components/admin/TabArchivio.astro';
 import { createSupabaseServerClient } from '../../../lib/supabase';
 
 const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
-const { data: progetti } = await supabase.from('bc_projects').select('id, slug, titolo, committente, ordine').eq('archiviato', false).order('ordine');
-const { data: archiviati } = await supabase.from('bc_projects').select('id, titolo, committente').eq('archiviato', true).order('titolo');
+const vista = Astro.url.searchParams.get('vista') === 'archiviati' ? 'archiviati' : 'attivi';
+const { data: tutti } = await supabase
+  .from('bc_projects')
+  .select('id, slug, titolo, committente, ordine, archiviato')
+  .order('ordine');
+const progetti = (tutti ?? []).filter((p) => !p.archiviato);
+const archiviati = (tutti ?? []).filter((p) => p.archiviato).sort((a, b) => a.titolo.localeCompare(b.titolo));
 ---
 <AdminLayout title="Lavori">
   <a href="/admin/progetti/nuovo" class="bc-btn inline-block mb-bc-md">+ Nuovo progetto</a>
-  <ul id="progetti-list" class="flex flex-col divide-y divide-bc-black border-t border-bc-black">
-    {progetti?.map((p) => (
-      <li
-        draggable="true"
-        data-id={p.id}
-        data-ordine={p.ordine}
-        class="group flex items-center gap-[16px] cursor-default select-none"
-      >
-        <span class="drag-handle shrink-0 flex items-center justify-center w-[24px] text-bc-black/30 group-hover:text-bc-black/60 cursor-grab active:cursor-grabbing">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="2" y="2" width="4" height="4" rx="1" fill="currentColor"/>
-            <rect x="8" y="2" width="4" height="4" rx="1" fill="currentColor"/>
-            <rect x="2" y="8" width="4" height="4" rx="1" fill="currentColor"/>
-            <rect x="8" y="8" width="4" height="4" rx="1" fill="currentColor"/>
-          </svg>
-        </span>
-        <a href={`/admin/progetti/${p.id}`} class="flex items-center gap-[16px] flex-1 py-[14px] font-sans text-[15px] font-light text-bc-black tracking-[0.02em] hover:underline">
-          <span class="prj-num text-bc-black/40 text-[13px] font-light shrink-0 w-[48px]">PRJ{String((p.ordine ?? 0) + 1).padStart(2, '0')}</span>
-          <span class="flex-1">{p.titolo}</span>
-          <span class="text-bc-black/50 text-[13px]">{p.committente}</span>
-        </a>
-      </li>
-    ))}
-  </ul>
-  {archiviati && archiviati.length > 0 && (
-    <div class="mt-bc-2xl">
-      <p class="font-sans text-[14px] font-normal mb-bc-sm">Archiviati</p>
-      <ul class="flex flex-col divide-y divide-bc-black border-t border-bc-black">
-        {archiviati.map((p) => (
-          <li class="flex items-center justify-between py-[14px]">
-            <span class="font-sans text-[15px] font-light text-bc-black/60">{p.titolo} — {p.committente}</span>
-            <span class="flex gap-bc-sm">
-              <button data-action="ripristina" data-id={p.id} class="bc-ghost text-[13px]">Ripristina</button>
-              <button data-action="elimina" data-id={p.id} class="bc-ghost text-[13px] text-red-600">Elimina definitivamente</button>
+  <TabArchivio base="/admin/progetti" vista={vista} attivi={progetti.length} archiviati={archiviati.length} />
+
+  {vista === 'attivi' ? (
+    <>
+      <p class="font-sans text-[13px] font-light text-bc-black/60 mb-bc-sm">
+        Trascina le righe per cambiare l'ordine sul sito. Per togliere un lavoro dal sito usa «Archivia».
+      </p>
+      <ul id="progetti-list" class="flex flex-col divide-y divide-bc-black border-t border-bc-black">
+        {progetti.map((p) => (
+          <li
+            draggable="true"
+            data-id={p.id}
+            data-ordine={p.ordine}
+            class="group flex items-center gap-[16px] cursor-default select-none"
+          >
+            <span class="drag-handle shrink-0 flex items-center justify-center w-[24px] text-bc-black/30 group-hover:text-bc-black/60 cursor-grab active:cursor-grabbing">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="2" width="4" height="4" rx="1" fill="currentColor"/>
+                <rect x="8" y="2" width="4" height="4" rx="1" fill="currentColor"/>
+                <rect x="2" y="8" width="4" height="4" rx="1" fill="currentColor"/>
+                <rect x="8" y="8" width="4" height="4" rx="1" fill="currentColor"/>
+              </svg>
             </span>
+            <a href={`/admin/progetti/${p.id}`} class="flex items-center gap-[16px] flex-1 py-[14px] font-sans text-[15px] font-light text-bc-black tracking-[0.02em] hover:underline">
+              <span class="prj-num text-bc-black/40 text-[13px] font-light shrink-0 w-[48px]">PRJ{String((p.ordine ?? 0) + 1).padStart(2, '0')}</span>
+              <span class="flex-1">{p.titolo}</span>
+              <span class="text-bc-black/50 text-[13px]">{p.committente}</span>
+            </a>
+            <button
+              type="button"
+              data-azione="archivia"
+              data-endpoint={`/api/admin/progetti/${p.id}`}
+              data-nome={p.titolo}
+              class="shrink-0 font-sans text-[13px] font-light underline underline-offset-2 hover:no-underline"
+            >Archivia</button>
           </li>
         ))}
       </ul>
-    </div>
+      {progetti.length === 0 && <p class="py-[14px] font-sans text-[14px] font-light">Nessun lavoro sul sito.</p>}
+    </>
+  ) : (
+    <>
+      <p class="font-sans text-[13px] font-light text-bc-black/60 mb-bc-sm">
+        I lavori archiviati non compaiono sul sito. «Ripristina» li rimette online; «Elimina definitivamente» li cancella per sempre.
+      </p>
+      <ul class="flex flex-col divide-y divide-bc-black border-t border-bc-black">
+        {archiviati.map((p) => (
+          <li class="flex items-center gap-[16px] py-[14px]">
+            <span class="shrink-0 border border-bc-black/40 px-[8px] py-[2px] font-sans text-[11px] uppercase tracking-widest text-bc-black/60">Archiviato</span>
+            <a href={`/admin/progetti/${p.id}`} class="flex-1 font-sans text-[15px] font-light text-bc-black/70 hover:underline">
+              {p.titolo}{p.committente ? ` — ${p.committente}` : ''}
+            </a>
+            <button type="button" data-azione="ripristina" data-endpoint={`/api/admin/progetti/${p.id}`} data-nome={p.titolo}
+              class="shrink-0 font-sans text-[13px] font-light underline underline-offset-2 hover:no-underline">Ripristina</button>
+            <button type="button" data-azione="elimina" data-endpoint={`/api/admin/progetti/${p.id}`} data-nome={p.titolo}
+              class="shrink-0 font-sans text-[13px] font-light text-red-600 underline underline-offset-2 hover:no-underline">Elimina definitivamente</button>
+          </li>
+        ))}
+      </ul>
+      {archiviati.length === 0 && <p class="py-[14px] font-sans text-[14px] font-light">Nessun lavoro archiviato.</p>}
+    </>
   )}
   <p id="reorder-status" class="mt-[16px] font-sans text-[13px] text-bc-black/50 hidden"></p>
 </AdminLayout>
 
 <script>
-  const list = document.getElementById('progetti-list')!;
+  import { attivaAzioniArchivio } from '../../../lib/client/archivio';
+
+  const list = document.getElementById('progetti-list');
   const status = document.getElementById('reorder-status')!;
+  if (list) attivaRiordino(list);
+
+  function attivaRiordino(list: HTMLElement) {
   let dragging: HTMLElement | null = null;
 
   list.addEventListener('dragstart', (e) => {
@@ -104,25 +137,7 @@ const { data: archiviati } = await supabase.from('bc_projects').select('id, tito
     status.textContent = res.ok ? 'Ordine salvato.' : 'Errore nel salvataggio.';
     setTimeout(() => status.classList.add('hidden'), 2000);
   });
+  }
 
-  document.querySelectorAll('[data-action="ripristina"]').forEach((btn) => {
-    btn.addEventListener('click', async () => {
-      const id = (btn as HTMLElement).dataset.id;
-      const res = await fetch(`/api/admin/progetti/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ archiviato: false }),
-      });
-      if (res.ok) window.location.reload();
-    });
-  });
-
-  document.querySelectorAll('[data-action="elimina"]').forEach((btn) => {
-    btn.addEventListener('click', async () => {
-      const id = (btn as HTMLElement).dataset.id;
-      if (!confirm('Cancellazione irreversibile. Continuare?')) return;
-      const res = await fetch(`/api/admin/progetti/${id}`, { method: 'DELETE' });
-      if (res.ok) window.location.reload();
-    });
-  });
+  attivaAzioniArchivio();
 </script>

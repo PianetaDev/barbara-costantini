@@ -7,6 +7,10 @@ const { mockGetUser, mockSelect, mockInsert, mockFrom } = vi.hoisted(() => ({
   mockInsert: vi.fn(),
   mockFrom: vi.fn(),
 }));
+vi.mock('../src/lib/admin-roles', () => ({
+  checkIsAdmin: vi.fn(async () => true),
+  checkIsSuperadmin: vi.fn(async () => true),
+}));
 vi.mock('../src/lib/supabase', () => ({
   createSupabaseServerClient: vi.fn(() => ({
     auth: { getUser: mockGetUser },

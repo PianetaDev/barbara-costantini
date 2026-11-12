@@ -2,12 +2,14 @@
 // src/pages/cookie-policy.astro
 export const prerender = false;
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getPageContent } from '../lib/supabase-public';
+import { leggiContenuto } from '../lib/page-content';
+import { sanitizeLegalHtml } from '../lib/sanitize-intro';
 
 let htmlBody = '';
 try {
-  const content = await getPageContent('cookie-policy');
-  htmlBody = (content.html_body as string) ?? '';
+  const content = await leggiContenuto(Astro, 'cookie-policy');
+  // Ripulito anche in lettura (oltre che al salvataggio): questo HTML finisce in un set:html.
+  htmlBody = sanitizeLegalHtml(String(content.html_body ?? ''));
 } catch {
   // fallback: html_body vuoto → renderizza il markup statico sotto
 }

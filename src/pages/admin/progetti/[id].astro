@@ -36,15 +36,27 @@ const blocks: any[] = (existingBlocks && existingBlocks.length > 0)
         : []),
     ];
 ---
-<AdminLayout title={progetto.titolo} backHref="/admin/progetti" backLabel="Torna ai lavori" previewSrc={`/lavori/${progetto.slug}`}>
+<AdminLayout title={progetto.titolo} backHref="/admin/progetti" backLabel="Torna ai lavori" previewSrc={progetto.archiviato ? undefined : `/lavori/${progetto.slug}`}>
   <div class="max-w-[720px] flex flex-col gap-[56px]">
+
+    {progetto.archiviato && (
+      <div class="border border-bc-black px-bc-md py-bc-sm flex flex-wrap items-center gap-[16px]">
+        <span class="border border-bc-black/40 px-[8px] py-[2px] font-sans text-[11px] uppercase tracking-widest">Archiviato</span>
+        <span class="font-sans text-[14px] font-light flex-1">Non compare sul sito.</span>
+        <button type="button" data-azione="ripristina" data-endpoint={`/api/admin/progetti/${progetto.id}`} data-nome={progetto.titolo}
+          class="font-sans text-[13px] font-light underline underline-offset-2 hover:no-underline">Ripristina</button>
+        <button type="button" data-azione="elimina" data-endpoint={`/api/admin/progetti/${progetto.id}`} data-nome={progetto.titolo} data-dopo="/admin/progetti?vista=archiviati"
+          class="font-sans text-[13px] font-light text-red-600 underline underline-offset-2 hover:no-underline">Elimina definitivamente</button>
+      </div>
+    )}
+    <p id="azione-errore" role="alert" class="hidden border border-red-600 text-red-600 px-bc-md py-bc-xs font-sans text-[14px]"></p>
 
     <!-- INFO BASE -->
     <section>
       <h2 class="font-sans text-[13px] uppercase tracking-widest text-bc-black/50 mb-[24px]">Info base</h2>
-      <form id="info-form" class="flex flex-col gap-bc-md" data-id={progetto.id}>
+      <form id="info-form" class="flex flex-col gap-bc-md" data-id={progetto.id} data-slug={progetto.slug}>
         <label class="flex flex-col gap-[6px] font-sans text-[14px] font-light">
-          Slug (URL: /lavori/<strong>{progetto.slug}</strong>)
+          Indirizzo della pagina: /lavori/<strong>{progetto.slug}</strong> (solo minuscole, numeri e trattini)
           <input name="slug" value={progetto.slug} class="border border-bc-black px-bc-md py-bc-xs w-full font-mono text-[13px]" />
         </label>
         <label class="flex flex-col gap-[6px] font-sans text-[14px] font-light">
@@ -135,17 +147,27 @@ const blocks: any[] = (existingBlocks && existingBlocks.length > 0)
     </section>
 
     <!-- ARCHIVIA -->
-    <section class="pt-[32px] border-t border-bc-black">
-      <button id="archivia-progetto" data-id={progetto.id}
-              class="font-sans text-[14px] font-light text-red-600 underline underline-offset-2 hover:no-underline">
-        Archivia questo lavoro
-      </button>
-    </section>
+    {!progetto.archiviato && (
+      <section class="pt-[32px] border-t border-bc-black">
+        <button type="button" data-azione="archivia" data-endpoint={`/api/admin/progetti/${progetto.id}`}
+                data-nome={progetto.titolo} data-dopo="/admin/progetti?vista=archiviati"
+                class="font-sans text-[14px] font-light text-red-600 underline underline-offset-2 hover:no-underline">
+          Archivia questo lavoro
+        </button>
+        <p class="mt-[8px] font-sans text-[13px] font-light text-bc-black/60">
+          Sparisce dal sito ma resta in «Archiviati», da dove si può ripristinare o eliminare definitivamente.
+        </p>
+      </section>
+    )}
 
   </div>
 </AdminLayout>
 
 <script>
+  import { attivaAzioniArchivio } from '../../../lib/client/archivio';
+  import { erroreRisposta } from '../../../lib/client/upload-immagine';
+  attivaAzioniArchivio();
+
   async function patch(id: string, payload: object, successEl: HTMLElement, errorEl: HTMLElement) {
     errorEl.classList.add('hidden');
     successEl.classList.add('hidden');
@@ -159,8 +181,7 @@ const blocks: any[] = (existingBlocks && existingBlocks.length > 0)
       setTimeout(() => successEl.classList.add('hidden'), 2000);
       window.dispatchEvent(new CustomEvent('preview-refresh'));
     } else {
-      const { error } = await res.json();
-      errorEl.textContent = typeof error === 'string' ? error : JSON.stringify(error);
+      errorEl.textContent = await erroreRisposta(res);
       errorEl.classList.remove('hidden');
     }
   }
@@ -179,6 +200,12 @@ const blocks: any[] = (existingBlocks && existingBlocks.length > 0)
       tipo: fd.get('tipo'),
       in_evidenza: fd.has('in_evidenza'),
     }, document.getElementById('info-success')!, document.getElementById('info-error')!);
+    // L'indirizzo (slug) viene ripulito dal server: se è cambiato, ricarica per mostrare
+    // quello vero e far puntare l'anteprima alla pagina giusta.
+    const slugIniziale = form.dataset.slug;
+    if (document.getElementById('info-error')!.classList.contains('hidden') && fd.get('slug') !== slugIniziale) {
+      window.location.reload();
+    }
   });
 
   // Slideshow
@@ -234,22 +261,9 @@ const blocks: any[] = (existingBlocks && existingBlocks.length > 0)
         setTimeout(() => successEl!.classList.add('hidden'), 2000);
         window.dispatchEvent(new CustomEvent('preview-refresh'));
       } else {
-        const { error } = await res.json();
-        errorEl!.textContent = typeof error === 'string' ? error : JSON.stringify(error);
+        errorEl!.textContent = await erroreRisposta(res);
         errorEl!.classList.remove('hidden');
       }
     });
   })();
-
-  // Archivia
-  document.getElementById('archivia-progetto')?.addEventListener('click', async (e) => {
-    const id = (e.currentTarget as HTMLElement).dataset.id!;
-    if (!confirm('Archiviare questo lavoro? Sparirà dal sito pubblico ma potrà essere ripristinato dalla lista Lavori.')) return;
-    const res = await fetch(`/api/admin/progetti/${id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ archiviato: true }),
-    });
-    if (res.ok) window.location.href = '/admin/progetti';
-  });
 </script>

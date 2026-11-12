@@ -1,18 +1,21 @@
 // src/pages/api/admin/progetti/reorder.ts
 import type { APIRoute } from 'astro';
-import { createSupabaseServerClient } from '../../../../lib/supabase';
+import { requireAdmin } from '../../../../lib/admin-guard';
 import { parseJsonBody } from '../../../../lib/parse-json-body';
 
 export const POST: APIRoute = async ({ request, cookies }) => {
-  const supabase = createSupabaseServerClient(cookies, request);
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    return new Response(JSON.stringify({ error: 'Non autenticato' }), { status: 401 });
-  }
+  const ctx = await requireAdmin(cookies, request);
+  if (ctx instanceof Response) return ctx;
+  const { supabase } = ctx;
 
   const body = await parseJsonBody(request);
   // body: Array<{ id: string; ordine: number }>
-  if (!Array.isArray(body) || body.some((r) => !r.id || typeof r.ordine !== 'number')) {
+  const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (
+    !Array.isArray(body) ||
+    body.length > 500 ||
+    body.some((r) => typeof r?.id !== 'string' || !UUID.test(r.id) || !Number.isInteger(r.ordine) || r.ordine < 0)
+  ) {
     return new Response(JSON.stringify({ error: 'Payload non valido' }), { status: 400 });
   }
 

@@ -1,7 +1,8 @@
 // src/pages/api/admin/team/[id].ts
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
-import { createSupabaseServerClient } from '../../../../lib/supabase';
+import { requireAdmin, jsonResponse } from '../../../../lib/admin-guard';
+import { rimuoviFileStorage } from '../../../../lib/storage-cleanup';
 import { teamMemberSchema } from '../../../../lib/validation/team';
 import { parseJsonBody } from '../../../../lib/parse-json-body';
 
@@ -10,13 +11,9 @@ import { parseJsonBody } from '../../../../lib/parse-json-body';
 // presente in bc_admin_users (stesso pattern di src/pages/api/admin/progetti/[id].ts,
 // Task 13).
 export const PATCH: APIRoute = async ({ params, request, cookies }) => {
-  const supabase = createSupabaseServerClient(cookies, request);
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    return new Response(JSON.stringify({ error: 'Non autenticato' }), { status: 401 });
-  }
+  const ctx = await requireAdmin(cookies, request);
+  if (ctx instanceof Response) return ctx;
+  const { supabase } = ctx;
 
   const body = await parseJsonBody(request);
   if (!body) {
@@ -48,18 +45,30 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
   return new Response(JSON.stringify({ ok: true }), { status: 200 });
 };
 
+// Eliminazione definitiva: NON recuperabile. Come per i lavori: prima si archivia
+// (recuperabile), poi dall'elenco Archiviati si elimina per sempre.
 export const DELETE: APIRoute = async ({ params, request, cookies }) => {
-  const supabase = createSupabaseServerClient(cookies, request);
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    return new Response(JSON.stringify({ error: 'Non autenticato' }), { status: 401 });
+  const ctx = await requireAdmin(cookies, request);
+  if (ctx instanceof Response) return ctx;
+  const { supabase } = ctx;
+
+  if (!z.guid().safeParse(params.id).success) return jsonResponse({ error: 'Membro non trovato' }, 404);
+
+  const { data: membro, error: errLettura } = await supabase
+    .from('bc_team_members')
+    .select('id, archiviato, foto_url')
+    .eq('id', params.id)
+    .maybeSingle();
+  if (errLettura) return jsonResponse({ error: errLettura.message }, 400);
+  if (!membro) return jsonResponse({ error: 'Membro non trovato' }, 404);
+  if (!membro.archiviato) {
+    return jsonResponse({ error: 'Si possono eliminare solo i membri archiviati: archivia prima il membro.' }, 409);
   }
 
-  const { error } = await supabase.from('bc_team_members').delete().eq('id', params.id);
-  if (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 400 });
-  }
-  return new Response(JSON.stringify({ ok: true }), { status: 200 });
+  const { data: eliminati, error } = await supabase.from('bc_team_members').delete().eq('id', params.id).select('id');
+  if (error) return jsonResponse({ error: error.message }, 400);
+  if (!eliminati || eliminati.length === 0) return jsonResponse({ error: 'Eliminazione non riuscita' }, 403);
+
+  const fileRimossi = await rimuoviFileStorage(membro.foto_url);
+  return jsonResponse({ ok: true, fileRimossi });
 };

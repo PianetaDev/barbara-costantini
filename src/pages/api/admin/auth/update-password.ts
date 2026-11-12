@@ -8,10 +8,16 @@ import { parseJsonBody } from '../../../../lib/parse-json-body';
 // exchangeCodeForSession, sullo stesso client server-side/cookie-based). Qui usiamo
 // di nuovo createSupabaseServerClient — mai un client browser — proprio per leggere
 // quella sessione dai cookie della richiesta corrente.
+// Lunghezza minima: conta più della complessità (una frase lunga batte "P@ssw0rd").
+const PASSWORD_MIN = 12;
+
 export const POST: APIRoute = async ({ request, cookies }) => {
   const body = await parseJsonBody<{ password?: string }>(request);
-  if (!body?.password) {
+  if (typeof body?.password !== 'string' || !body.password) {
     return new Response(JSON.stringify({ error: 'Password obbligatoria.' }), { status: 400 });
+  }
+  if (body.password.length < PASSWORD_MIN) {
+    return new Response(JSON.stringify({ error: `La password deve avere almeno ${PASSWORD_MIN} caratteri.` }), { status: 400 });
   }
   const { password } = body;
   const supabase = createSupabaseServerClient(cookies, request);
