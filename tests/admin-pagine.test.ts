@@ -67,7 +67,7 @@ describe('PATCH /api/admin/pagine/[page]', () => {
 
     expect(res.status).toBe(200);
     expect(mockFrom).toHaveBeenCalledWith('bc_page_content');
-    expect(mockUpsert).toHaveBeenCalledWith({ page: 'home', content: { titolo: 'Nuovo titolo' } });
+    expect(mockUpsert).toHaveBeenCalledWith({ page: 'home', bozza: { titolo: 'Nuovo titolo' } });
   });
 
   it('ritorna 400 se la pagina non è nella whitelist', async () => {
