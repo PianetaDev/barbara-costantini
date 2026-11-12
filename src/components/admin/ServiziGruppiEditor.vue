@@ -8,6 +8,7 @@ const props = defineProps<{ modelValue: Gruppo[]; name: string }>()
 const emit = defineEmits<{ 'update:modelValue': [Gruppo[]] }>()
 
 const gruppi = ref<Gruppo[]>(JSON.parse(JSON.stringify(props.modelValue.length ? props.modelValue : [])))
+const uploading = ref<Record<number, boolean>>({})
 
 function update() { emit('update:modelValue', gruppi.value) }
 
@@ -29,6 +30,27 @@ function addServizio(gi: number) {
 function removeServizio(gi: number, si: number) {
   gruppi.value[gi].servizi.splice(si, 1)
   update()
+}
+
+async function uploadImg(gi: number, event: Event) {
+  const file = (event.target as HTMLInputElement).files?.[0]
+  if (!file) return
+  uploading.value = { ...uploading.value, [gi]: true }
+  try {
+    const fd = new FormData()
+    fd.append('file', file)
+    fd.append('bucket', 'barbara-costantini-progetti')
+    const res = await fetch('/api/admin/upload-image', { method: 'POST', body: fd })
+    const json = await res.json()
+    if (res.ok) {
+      gruppi.value[gi].immagine = json.url
+      update()
+    } else {
+      alert('Errore upload: ' + json.error)
+    }
+  } finally {
+    uploading.value = { ...uploading.value, [gi]: false }
+  }
 }
 </script>
 
@@ -55,11 +77,20 @@ function removeServizio(gi: number, si: number) {
                class="border border-bc-black px-[12px] py-[6px] font-sans text-[14px] font-light w-full" />
       </label>
 
-      <label class="flex flex-col gap-[4px]">
-        <span class="font-sans text-[13px] text-bc-black/50">Immagine (path es. /images/bc-059.jpg)</span>
-        <input v-model="gruppo.immagine" @input="update"
-               class="border border-bc-black px-[12px] py-[6px] font-mono text-[12px] font-light w-full" />
-      </label>
+      <div class="flex flex-col gap-[4px]">
+        <span class="font-sans text-[13px] text-bc-black/50">Immagine</span>
+        <div class="flex gap-[8px] items-center">
+          <input v-model="gruppo.immagine" @input="update"
+                 class="border border-bc-black px-[12px] py-[6px] font-mono text-[12px] font-light flex-1 min-w-0" />
+          <label class="bc-btn cursor-pointer shrink-0 text-[12px] py-[6px] px-[10px]">
+            {{ uploading[gi] ? '…' : 'Carica' }}
+            <input type="file" accept="image/jpeg,image/png,image/webp" class="hidden"
+                   :disabled="uploading[gi]" @change="uploadImg(gi, $event)" />
+          </label>
+        </div>
+        <img v-if="gruppo.immagine && gruppo.immagine.startsWith('http')"
+             :src="gruppo.immagine" alt="" class="mt-[4px] w-[80px] h-[60px] object-cover border border-bc-black/20" />
+      </div>
 
       <!-- Voci del gruppo -->
       <div class="flex flex-col gap-[12px] pl-[20px] border-l-2 border-bc-black/10 mt-[8px]">

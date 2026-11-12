@@ -12,9 +12,10 @@ import { risolviImmagine, isRemote } from '../../utils/imagenes';
 // output: 'server' (astro.config.mjs) rende già questa pagina SSR di default;
 // l'export esplicito documenta che NON va mai prerenderizzata, dato che i dati
 // arrivano da Supabase ad ogni richiesta e non sono noti a build-time.
-// ISR: pre-render a build-time, servita da CDN Vercel, rivalidata ogni ora.
-// Nuovi progetti aggiunti dall'admin compaiono entro 1h senza redeploy.
-export const prerender = true;
+// SSR: pagina sempre fresca da Supabase. Garantisce che le modifiche admin
+// (ragione sociale nel footer, hero lavori, nuovi progetti) siano visibili
+// immediatamente senza attendere la scadenza ISR (era prerender:true, 1h).
+export const prerender = false;
 
 // Fix code review Task 17: senza try/catch, un errore Supabase (rete, downtime,
 // rate limit) qui produceva un 500 grezzo per qualunque visitatore pubblico.

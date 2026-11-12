@@ -37,8 +37,10 @@ try { serviziContent = await getPageContent('servizi'); } catch {}
 
 const heroTitolo = pageContent.hero_titolo || 'Barbara Costantini Restauro';
 const heroTesto = pageContent.hero_testo || '';
-const lavoriTesto = lavoriContent.hero_testo || '';
-const serviziTesto = (serviziContent as any).hero_testo || '';
+// Preferisce il campo lavori_intro/servizi_intro dalla riga "home" (editabile nella pagina
+// Admin → Home), con fallback al campo hero_testo nelle rispettive pagine lavori/servizi.
+const lavoriTesto = pageContent.lavori_intro || lavoriContent.hero_testo || '';
+const serviziTesto = pageContent.servizi_intro || (serviziContent as any).hero_testo || '';
 const serviziCta = (serviziContent as any).cta_testo || '';
 ---
 <BaseLayout title="Barbara Costantini Restauro" titleIsFull>
