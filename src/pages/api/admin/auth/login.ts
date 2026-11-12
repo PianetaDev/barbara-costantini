@@ -1,20 +1,18 @@
 // src/pages/api/admin/auth/login.ts
 import type { APIRoute } from 'astro';
 import { createSupabaseServerClient } from '../../../../lib/supabase';
+import { parseJsonBody } from '../../../../lib/parse-json-body';
 
-// Login con invio di modulo normale (niente fetch): il server imposta il cookie di
-// sessione e risponde con un redirect. Più affidabile dei cookie scritti in una risposta JSON.
-export const POST: APIRoute = async ({ request, cookies, redirect }) => {
-  const form = await request.formData();
-  const email = String(form.get('email') ?? '');
-  const password = String(form.get('password') ?? '');
-  if (!email || !password) {
-    return redirect('/admin/login?error=missing', 303);
+export const POST: APIRoute = async ({ request, cookies }) => {
+  const body = await parseJsonBody<{ email?: string; password?: string }>(request);
+  if (!body?.email || !body?.password) {
+    return new Response(JSON.stringify({ error: 'Email e password sono obbligatorie.' }), { status: 400 });
   }
+  const { email, password } = body;
   const supabase = createSupabaseServerClient(cookies, request);
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
-    return redirect('/admin/login?error=invalid', 303);
+    return new Response(JSON.stringify({ error: error.message }), { status: 401 });
   }
-  return redirect('/admin/progetti', 303);
+  return new Response(JSON.stringify({ ok: true }), { status: 200 });
 };
