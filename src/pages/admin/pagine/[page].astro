@@ -96,7 +96,7 @@ const serviziFlat: Record<string, string> = isServizi ? {
   cta_testo: String(content.cta_testo ?? ''),
 } : {};
 ---
-<AdminLayout title={paginaNonTrovata ? 'Pagina non trovata' : `Pagina: ${pageParam}`} previewSrc={paginaNonTrovata ? undefined : `/${pageParam}`}>
+<AdminLayout title={paginaNonTrovata ? 'Pagina non trovata' : `Pagina: ${pageParam}`} previewSrc={paginaNonTrovata ? undefined : (pageParam === 'home' ? '/' : `/${pageParam}`)}>
   <section class="max-w-[680px]">
     {paginaNonTrovata ? (
       <>
