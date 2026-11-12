@@ -50,3 +50,12 @@ export function sanitizeLegalHtml(html: string): string {
     },
   });
 }
+
+// Blocchi «Testo» del corpo pagina dei lavori: l'area di scrittura produce un po' di HTML
+// (grassetto, corsivo, a capo). Si tiene solo quello; tutto il resto viene tolto.
+export function sanitizeBlockText(html: string): string {
+  return sanitizeHtml(html, {
+    allowedTags: ['b', 'strong', 'i', 'em', 'br', 'p', 'div'],
+    allowedAttributes: {},
+  });
+}

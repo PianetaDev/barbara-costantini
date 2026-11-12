@@ -27,7 +27,7 @@ import { getProgetto, getProgetti, ERRORE_RIGA_NON_TROVATA } from '../../lib/sup
 import { leggiContenuto } from '../../lib/page-content';
 import type { Progetto } from '../../lib/supabase-public';
 import { risolviImmagine, isRemote } from '../../utils/imagenes';
-import { sanitizeIntroHtml } from '../../lib/sanitize-intro';
+import { sanitizeIntroHtml, sanitizeBlockText } from '../../lib/sanitize-intro';
 
 export const prerender = false;
 
@@ -226,7 +226,7 @@ const introHtml = (existingBlocks.length === 0 && progetto.intro)
       if (b.type === 'text') return (
         <div class="px-bc-page pb-[16px] bc-grid bc-2col bc-442">
           <div class="bc-spacer-l" />
-          <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5;">{b.content}</p>
+          <div class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:18px; line-height:1.5;" set:html={sanitizeBlockText(String(b.content ?? ''))} />
           <div class="bc-spacer-r" />
         </div>
       );

@@ -39,13 +39,19 @@
             <button type="button" @click="execCmd('italic')"
                     class="w-[28px] h-[28px] border border-bc-black font-sans italic text-[13px] hover:bg-bc-black hover:text-bc-canvas transition-colors">I</button>
           </div>
+          <!--
+            Niente v-html qui: riscriveva il contenuto a ogni tasto e il cursore saltava
+            all'inizio del testo (lettere nel posto sbagliato, cancellazione impossibile).
+            Il testo viene inserito una sola volta al montaggio (setEditorRef); da lì in
+            poi è il browser a gestire l'area, e noi leggiamo soltanto.
+          -->
           <div
-            :ref="el => setEditorRef(i, el)"
+            :ref="el => setEditorRef(block, el)"
             contenteditable="true"
             :data-placeholder="'Paragrafo...'"
             class="border border-bc-black px-[12px] py-[8px] font-sans text-[15px] font-light leading-relaxed min-h-[100px] focus:outline-none"
             @input="block.content = ($event.target as HTMLElement).innerHTML"
-            v-html="block.content"
+            @paste="incollaTestoSemplice"
           />
         </div>
 
@@ -143,10 +149,21 @@ const blocks = ref<Block[]>(
   (props.modelValue || []).map((b: any) => ({ ...b, _id: Math.random().toString(36).slice(2) }))
 );
 
-// Riferimenti agli editor contenteditable per bold/italic
-const editorRefs: Record<number, HTMLElement> = {};
-function setEditorRef(i: number, el: any) { if (el) editorRefs[i] = el; }
+// Aree di testo modificabili: il contenuto iniziale si scrive una volta sola, quando
+// l'elemento viene creato. Se Vue lo riscrivesse a ogni modifica il cursore salterebbe.
+const inizializzati = new WeakSet<HTMLElement>();
+function setEditorRef(block: Block, el: any) {
+  if (!el || inizializzati.has(el)) return;
+  inizializzati.add(el);
+  el.innerHTML = block.content ?? '';
+}
 function execCmd(cmd: string) { document.execCommand(cmd, false); }
+// Incollando da Word o dal web arrivano stili e tag di ogni tipo: si tiene solo il testo.
+function incollaTestoSemplice(e: ClipboardEvent) {
+  e.preventDefault();
+  const testo = e.clipboardData?.getData('text/plain') ?? '';
+  document.execCommand('insertText', false, testo);
+}
 
 function add(type: string) {
   const b: Block = { _id: Math.random().toString(36).slice(2), type };
