@@ -48,6 +48,9 @@ const heroTesto = pageContent.hero_testo || '';
 const lavoriTesto = pageContent.lavori_intro || lavoriContent.hero_testo || '';
 const serviziTesto = pageContent.servizi_intro || (serviziContent as any).hero_testo || '';
 const serviziCta = (serviziContent as any).cta_testo || '';
+// La home legge i testi dal database: non deve essere servita dalla cache del CDN,
+// altrimenti i visitatori vedono testi vecchi dopo un salvataggio.
+Astro.response.headers.set('Cache-Control', 'no-store');
 ---
 <BaseLayout title="Barbara Costantini Restauro" titleIsFull>
   <!-- Hero: testo sx + foto quadrata dx — min-h lascia vedere 64px della sezione sotto -->
