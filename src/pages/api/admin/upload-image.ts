@@ -1,12 +1,13 @@
 // src/pages/api/admin/upload-image.ts
 import type { APIRoute } from 'astro';
-import { createSupabaseServerClient } from '../../../lib/supabase';
+import { createSupabaseServerClient, createSupabaseAdminClient } from '../../../lib/supabase';
+import { checkIsAdmin } from '../../../lib/admin-roles';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_SIZE_BYTES = 10 * 1024 * 1024;
 
 // Whitelist esplicita dei bucket Storage che questo endpoint può scrivere. Il progetto
-// Supabase (`fmplfkzqexaposaamgwi`, vedi supabase/README.md) è condiviso con altre app
+// Supabase (`lqnwtmmhgmnxxtduvugh`, vedi supabase/README.md) è condiviso con altre app
 // (bucket verificati dal vivo: `media`, `atlas-documents`, `apotheke-products`,
 // `apotheke-media`, `segnale-screenshots`) — senza questa whitelist, un chiamante
 // autenticato su QUESTO sito potrebbe passare `bucket: 'apotheke-products'` (o
@@ -21,8 +22,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) {
-    return new Response(JSON.stringify({ error: 'Non autenticato' }), { status: 401 });
+  if (!user || !(await checkIsAdmin(supabase, user.id))) {
+    return new Response(JSON.stringify({ error: 'Non autorizzato' }), { status: 403 });
   }
 
   const formData = await request.formData();
@@ -35,17 +36,30 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   if (!file || !ALLOWED_TYPES.includes(file.type)) {
     return new Response(JSON.stringify({ error: 'Tipo file non valido' }), { status: 400 });
   }
+  // Il MIME arriva dal client: controllo anche la firma binaria del file.
+  const head = new Uint8Array(await file.slice(0, 12).arrayBuffer());
+  const isJpeg = head[0] === 0xff && head[1] === 0xd8 && head[2] === 0xff;
+  const isPng = head[0] === 0x89 && head[1] === 0x50 && head[2] === 0x4e && head[3] === 0x47;
+  const isWebp = head[0] === 0x52 && head[1] === 0x49 && head[8] === 0x57 && head[9] === 0x45;
+  if (!(isJpeg || isPng || isWebp)) {
+    return new Response(JSON.stringify({ error: 'File non è un\'immagine valida' }), { status: 400 });
+  }
   if (file.size > MAX_SIZE_BYTES) {
     return new Response(JSON.stringify({ error: 'File troppo grande (max 10MB)' }), { status: 400 });
   }
 
-  const fileName = `${crypto.randomUUID()}-${file.name}`;
-  const { data, error } = await supabase.storage.from(bucket).upload(fileName, file);
+  // Lo storage ha RLS attiva senza policy: il client dell'utente non può scrivere.
+  // Dopo il controllo di ruolo sopra (solo admin) si scrive con il client di servizio.
+  // Il nome file è sanificato: niente slash o caratteri speciali nel path.
+  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 120);
+  const fileName = `${crypto.randomUUID()}-${safeName}`;
+  const storage = createSupabaseAdminClient().storage;
+  const { data, error } = await storage.from(bucket).upload(fileName, file);
   if (error) {
     return new Response(JSON.stringify({ error: error.message }), { status: 400 });
   }
   const {
     data: { publicUrl },
-  } = supabase.storage.from(bucket).getPublicUrl(data.path);
+  } = storage.from(bucket).getPublicUrl(data.path);
   return new Response(JSON.stringify({ url: publicUrl }), { status: 200 });
 };
