@@ -80,7 +80,9 @@ const { data: pagina } = isPaginaValida
 // select pubblica è `using (true)`), ma un form vuoto per una pagina inesistente è
 // un'esperienza confusa per chi sta amministrando i contenuti.
 const paginaNonTrovata = !isPaginaValida;
-const content = pagina?.content ?? {} as Record<string, any>;
+// Mostra la bozza se esiste (modifiche non ancora pubblicate), altrimenti il contenuto pubblico.
+const content = (pagina?.bozza ?? pagina?.content) ?? {} as Record<string, any>;
+const haBozza = !!pagina?.bozza;
 const isServizi = pageParam === 'servizi';
 
 // Per la pagina servizi, estrai gli array JSONB per i Vue CRUD components
@@ -206,7 +208,10 @@ const serviziFlat: Record<string, string> = isServizi ? {
               );
             })
           )}
-          <button type="submit" class="bc-btn">Salva</button>
+          <button type="submit" class="bc-btn">Salva bozza</button>
+          {haBozza && <p class="font-sans text-[13px] text-bc-black/60">Modifiche salvate in bozza, non ancora pubblicate.</p>}
+          <button type="button" id="pubblica-pagina" class="bc-btn">Pubblica sul sito</button>
+          <span id="pubblica-stato" class="font-sans text-[13px]"></span>
         </form>
         <p id="page-success" class="text-bc-black mt-bc-sm hidden">Salvato.</p>
         <p id="page-error" class="text-red-600 mt-bc-sm hidden"></p>
@@ -214,6 +219,16 @@ const serviziFlat: Record<string, string> = isServizi ? {
     )}
   </section>
   <script define:vars={{ page: pageParam, isServizi }}>
+    document.getElementById('pubblica-pagina')?.addEventListener('click', async () => {
+      const stato = document.getElementById('pubblica-stato');
+      if (stato) stato.textContent = 'Pubblicazione...';
+      const res = await fetch('/api/admin/pubblica-pagina', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ page }),
+      });
+      if (res.ok) { location.reload(); } else { const j = await res.json().catch(() => ({})); if (stato) stato.textContent = 'Non pubblicato: ' + (j.error || res.status); }
+    });
     const form = document.getElementById('page-form');
     if (form) {
       const errorEl = document.getElementById('page-error');
