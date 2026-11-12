@@ -11,7 +11,8 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionLavori from '../components/SectionLavori.astro';
 import SectionServizi from '../components/SectionServizi.astro';
-import { getPageContent, getProgettiInEvidenza } from '../lib/supabase-public';
+import { getProgettiInEvidenza } from '../lib/supabase-public';
+import { leggiContenuto, inAnteprima } from '../lib/page-content';
 import { risolviImmagine } from '../utils/imagenes';
 import { createSupabaseServerClient } from '../lib/supabase';
 import { checkIsAdmin } from '../lib/admin-roles';
@@ -39,9 +40,9 @@ const progettiHome = progettiEvidenza.map((p) => ({
 let pageContent: Record<string, string> = {};
 let lavoriContent: Record<string, string> = {};
 let serviziContent: Record<string, string> = {};
-try { pageContent = await getPageContent('home'); } catch {}
-try { lavoriContent = await getPageContent('lavori'); } catch {}
-try { serviziContent = await getPageContent('servizi'); } catch {}
+try { pageContent = await leggiContenuto(Astro, 'home'); } catch {}
+try { lavoriContent = await leggiContenuto(Astro, 'lavori'); } catch {}
+try { serviziContent = await leggiContenuto(Astro, 'servizi'); } catch {}
 
 const heroTitolo = pageContent.hero_titolo || 'Barbara Costantini Restauro';
 const heroTesto = pageContent.hero_testo || '';
@@ -53,7 +54,9 @@ const serviziCta = (serviziContent as any).cta_testo || '';
 // Modifica sul posto: solo per un admin loggato (stesso controllo delle pagine admin).
 const supabaseSessione = createSupabaseServerClient(Astro.cookies, Astro.request);
 const { data: { user: utenteSessione } } = await supabaseSessione.auth.getUser();
-const isAdminSessione = !!utenteSessione && (await checkIsAdmin(supabaseSessione, utenteSessione.id));
+// Dentro l'anteprima del pannello la modifica sul posto è spenta: lì si scrive nel form
+// (bozza), mentre la modifica sul posto pubblica subito.
+const isAdminSessione = !(await inAnteprima(Astro)) && !!utenteSessione && (await checkIsAdmin(supabaseSessione, utenteSessione.id));
 // La home legge i testi dal database: non deve essere servita dalla cache del CDN,
 // altrimenti i visitatori vedono testi vecchi dopo un salvataggio.
 Astro.response.headers.set('Cache-Control', 'no-store');
@@ -86,20 +89,18 @@ Astro.response.headers.set('Cache-Control', 'no-store');
   {isAdminSessione && (
     <>
       <style>{`.bc-live{outline:1px dashed rgba(0,0,0,.35);outline-offset:6px;cursor:text;min-height:1em}.bc-live:focus{outline:2px solid #000}.bc-stato{position:fixed;right:16px;bottom:16px;background:#000;color:#fff;padding:6px 10px;font:12px/1 sans-serif;z-index:50}`}</style>
-      <script id="bc-home-content" type="application/json" set:html={JSON.stringify(pageContent)} />
       <div class="bc-stato" id="bc-stato" hidden></div>
       <script>
-        const contenutoHome = JSON.parse(document.getElementById('bc-home-content')!.textContent || '{}');
         const stato = document.getElementById('bc-stato') as HTMLElement;
         let timer: number | undefined;
         async function salva(campo: string, valore: string) {
           stato.hidden = false;
           stato.textContent = 'Salvataggio...';
-          contenutoHome[campo] = valore;
+          // Si invia solo il campo modificato: il server lo unisce agli altri e lo pubblica.
           const res = await fetch('/api/admin/pagine/home', {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: contenutoHome }),
+            body: JSON.stringify({ content: { [campo]: valore }, pubblica: true }),
           });
           stato.textContent = res.ok ? 'Salvato' : 'Non salvato (' + res.status + ')';
           setTimeout(() => { stato.hidden = true; }, 1500);

@@ -6,7 +6,8 @@
 // dall'array statico src/data/progetti.ts.
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getProgetti, getPageContent } from '../../lib/supabase-public';
+import { getProgetti } from '../../lib/supabase-public';
+import { leggiContenuto } from '../../lib/page-content';
 import { risolviImmagine, isRemote } from '../../utils/imagenes';
 
 // output: 'server' (astro.config.mjs) rende già questa pagina SSR di default;
@@ -37,7 +38,7 @@ try {
 // formato di visualizzazione ("PRJ01"...) dalla colonna `ordine` (0-based, stesso
 // ordine di inserimento del seed — vedi scripts/seed-bc-cms.mjs).
 let lavoriContent: Record<string, string> = {};
-try { lavoriContent = await getPageContent('lavori'); } catch {}
+try { lavoriContent = await leggiContenuto(Astro, 'lavori'); } catch {}
 const heroTitolo = lavoriContent.hero_titolo || 'I lavori';
 const heroTesto = lavoriContent.hero_testo || '';
 

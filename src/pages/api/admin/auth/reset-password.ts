@@ -5,7 +5,7 @@ import { parseJsonBody } from '../../../../lib/parse-json-body';
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   const body = await parseJsonBody<{ email?: string }>(request);
-  if (!body?.email) {
+  if (typeof body?.email !== 'string' || !body.email) {
     return new Response(JSON.stringify({ error: 'Email obbligatoria.' }), { status: 400 });
   }
   const { email } = body;
@@ -13,8 +13,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${new URL(request.url).origin}/admin/imposta-password`,
   });
-  if (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 400 });
-  }
+  // Risposta identica che l'email esista o no: non si rivela chi ha un account.
+  if (error) console.error('[reset-password]', error.message);
   return new Response(JSON.stringify({ ok: true }), { status: 200 });
 };

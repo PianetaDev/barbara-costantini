@@ -4,14 +4,14 @@
 // PIA-75: email/instagram/telefono/indirizzo provengono da bc_page_content (CMS).
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getPageContent } from '../lib/supabase-public';
+import { leggiContenuto } from '../lib/page-content';
 import { risolviImmagine } from '../utils/imagenes';
 
 export const prerender = false;
 
 let contattiContent: Record<string, string> = {};
 try {
-  contattiContent = await getPageContent('contatti');
+  contattiContent = await leggiContenuto(Astro, 'contatti');
 } catch {
   // fallback: defaults used below
 }

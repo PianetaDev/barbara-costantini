@@ -41,6 +41,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { isRemote } from '../../utils/imagenes';
+import { caricaImmagine } from '../../lib/client/upload-immagine';
 
 const props = defineProps<{
   name: string;
@@ -66,15 +67,11 @@ async function upload(e: Event) {
   if (!file) return;
   uploading.value = true;
   uploadError.value = '';
-  const fd = new FormData();
-  fd.append('file', file);
-  fd.append('bucket', 'barbara-costantini-progetti');
-  const res = await fetch('/api/admin/upload-image', { method: 'POST', body: fd });
-  const json = await res.json();
-  if (res.ok) {
-    images.value.push({ _id: Math.random().toString(36).slice(2), src: json.url, label: '', aspetto: 'h' });
-  } else {
-    uploadError.value = json.error ?? 'Errore upload';
+  try {
+    const url = await caricaImmagine(file, 'barbara-costantini-progetti');
+    images.value.push({ _id: Math.random().toString(36).slice(2), src: url, label: '', aspetto: 'h' });
+  } catch (err) {
+    uploadError.value = (err as Error).message;
   }
   uploading.value = false;
   (e.target as HTMLInputElement).value = '';

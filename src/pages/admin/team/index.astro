@@ -1,61 +1,59 @@
 ---
 import AdminLayout from '../../../layouts/AdminLayout.astro';
+import TabArchivio from '../../../components/admin/TabArchivio.astro';
 import { createSupabaseServerClient } from '../../../lib/supabase';
 
 const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
-const { data: team } = await supabase.from('bc_team_members').select('id, nome, ruolo').eq('archiviato', false).order('ordine');
-const { data: archiviati } = await supabase.from('bc_team_members').select('id, nome, ruolo').eq('archiviato', true).order('nome');
+const vista = Astro.url.searchParams.get('vista') === 'archiviati' ? 'archiviati' : 'attivi';
+const { data: tutti } = await supabase.from('bc_team_members').select('id, nome, ruolo, ordine, archiviato').order('ordine');
+const team = (tutti ?? []).filter((m) => !m.archiviato);
+const archiviati = (tutti ?? []).filter((m) => m.archiviato).sort((a, b) => a.nome.localeCompare(b.nome));
 ---
 <AdminLayout title="Team">
   <a href="/admin/team/nuovo" class="bc-btn inline-block mb-bc-md">+ Nuovo membro</a>
-  <ul class="flex flex-col divide-y divide-bc-black border-t border-bc-black">
-    {team?.map((m) => (
-      <li>
-        <a href={`/admin/team/${m.id}`} class="flex items-center justify-between py-[14px] font-sans text-[15px] font-light text-bc-black tracking-[0.02em] hover:underline">
-          <span>{m.nome}</span>
-          <span class="text-bc-black/50 text-[13px]">{m.ruolo}</span>
-        </a>
-      </li>
-    ))}
-  </ul>
+  <TabArchivio base="/admin/team" vista={vista} attivi={team.length} archiviati={archiviati.length} />
 
-  {archiviati && archiviati.length > 0 && (
-    <div class="mt-bc-2xl">
-      <p class="font-sans text-[14px] font-normal mb-bc-sm">Archiviati</p>
+  {vista === 'attivi' ? (
+    <>
       <ul class="flex flex-col divide-y divide-bc-black border-t border-bc-black">
-        {archiviati.map((m) => (
-          <li class="flex items-center justify-between py-[14px]">
-            <span class="font-sans text-[15px] font-light text-bc-black/60">{m.nome} — {m.ruolo}</span>
-            <span class="flex gap-bc-sm">
-              <button data-action="ripristina" data-id={m.id} class="bc-ghost text-[13px]">Ripristina</button>
-              <button data-action="elimina" data-id={m.id} class="bc-ghost text-[13px] text-red-600">Elimina definitivamente</button>
-            </span>
+        {team.map((m) => (
+          <li class="flex items-center gap-[16px]">
+            <a href={`/admin/team/${m.id}`} class="flex items-center justify-between flex-1 py-[14px] font-sans text-[15px] font-light text-bc-black tracking-[0.02em] hover:underline">
+              <span>{m.nome}</span>
+              <span class="text-bc-black/50 text-[13px]">{m.ruolo}</span>
+            </a>
+            <button type="button" data-azione="archivia" data-endpoint={`/api/admin/team/${m.id}`} data-nome={m.nome}
+              class="shrink-0 font-sans text-[13px] font-light underline underline-offset-2 hover:no-underline">Archivia</button>
           </li>
         ))}
       </ul>
-    </div>
+      {team.length === 0 && <p class="py-[14px] font-sans text-[14px] font-light">Nessun membro sul sito.</p>}
+    </>
+  ) : (
+    <>
+      <p class="font-sans text-[13px] font-light text-bc-black/60 mb-bc-sm">
+        I membri archiviati non compaiono sul sito. «Ripristina» li rimette online; «Elimina definitivamente» li cancella per sempre.
+      </p>
+      <ul class="flex flex-col divide-y divide-bc-black border-t border-bc-black">
+        {archiviati.map((m) => (
+          <li class="flex items-center gap-[16px] py-[14px]">
+            <span class="shrink-0 border border-bc-black/40 px-[8px] py-[2px] font-sans text-[11px] uppercase tracking-widest text-bc-black/60">Archiviato</span>
+            <a href={`/admin/team/${m.id}`} class="flex-1 font-sans text-[15px] font-light text-bc-black/70 hover:underline">
+              {m.nome}{m.ruolo ? ` — ${m.ruolo}` : ''}
+            </a>
+            <button type="button" data-azione="ripristina" data-endpoint={`/api/admin/team/${m.id}`} data-nome={m.nome}
+              class="shrink-0 font-sans text-[13px] font-light underline underline-offset-2 hover:no-underline">Ripristina</button>
+            <button type="button" data-azione="elimina" data-endpoint={`/api/admin/team/${m.id}`} data-nome={m.nome}
+              class="shrink-0 font-sans text-[13px] font-light text-red-600 underline underline-offset-2 hover:no-underline">Elimina definitivamente</button>
+          </li>
+        ))}
+      </ul>
+      {archiviati.length === 0 && <p class="py-[14px] font-sans text-[14px] font-light">Nessun membro archiviato.</p>}
+    </>
   )}
 
   <script>
-    document.querySelectorAll('[data-action="ripristina"]').forEach((btn) => {
-      btn.addEventListener('click', async () => {
-        const id = (btn as HTMLElement).dataset.id;
-        const res = await fetch(`/api/admin/team/${id}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ archiviato: false }),
-        });
-        if (res.ok) window.location.reload();
-      });
-    });
-
-    document.querySelectorAll('[data-action="elimina"]').forEach((btn) => {
-      btn.addEventListener('click', async () => {
-        const id = (btn as HTMLElement).dataset.id;
-        if (!confirm('Cancellazione irreversibile. Continuare?')) return;
-        const res = await fetch(`/api/admin/team/${id}`, { method: 'DELETE' });
-        if (res.ok) window.location.reload();
-      });
-    });
+    import { attivaAzioniArchivio } from '../../../lib/client/archivio';
+    attivaAzioniArchivio();
   </script>
 </AdminLayout>

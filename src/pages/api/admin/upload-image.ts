@@ -1,10 +1,13 @@
 // src/pages/api/admin/upload-image.ts
 import type { APIRoute } from 'astro';
-import { createSupabaseServerClient, createSupabaseAdminClient } from '../../../lib/supabase';
-import { checkIsAdmin } from '../../../lib/admin-roles';
+import { createSupabaseAdminClient } from '../../../lib/supabase';
+import { requireAdmin } from '../../../lib/admin-guard';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-const MAX_SIZE_BYTES = 10 * 1024 * 1024;
+// Vercel rifiuta le richieste oltre ~4,5MB prima ancora che arrivino qui: il pannello
+// ridimensiona le foto nel browser prima dell'invio (src/lib/client/upload-immagine.ts),
+// questo limite è la rete di sicurezza lato server.
+const MAX_SIZE_BYTES = 4 * 1024 * 1024;
 
 // Whitelist esplicita dei bucket Storage che questo endpoint può scrivere. Il progetto
 // Supabase (`lqnwtmmhgmnxxtduvugh`, vedi supabase/README.md) è condiviso con altre app
@@ -18,13 +21,9 @@ const MAX_SIZE_BYTES = 10 * 1024 * 1024;
 const ALLOWED_BUCKETS = ['barbara-costantini-team', 'barbara-costantini-progetti'];
 
 export const POST: APIRoute = async ({ request, cookies }) => {
-  const supabase = createSupabaseServerClient(cookies, request);
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user || !(await checkIsAdmin(supabase, user.id))) {
-    return new Response(JSON.stringify({ error: 'Non autorizzato' }), { status: 403 });
-  }
+  // Solo admin di questo sito: l'upload usa la service role (bypassa la RLS dello Storage).
+  const ctx = await requireAdmin(cookies, request);
+  if (ctx instanceof Response) return ctx;
 
   const formData = await request.formData();
   const file = formData.get('file') as File | null;
@@ -45,7 +44,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return new Response(JSON.stringify({ error: 'File non è un\'immagine valida' }), { status: 400 });
   }
   if (file.size > MAX_SIZE_BYTES) {
-    return new Response(JSON.stringify({ error: 'File troppo grande (max 10MB)' }), { status: 400 });
+    return new Response(JSON.stringify({ error: 'File troppo grande (max 4MB)' }), { status: 400 });
   }
 
   // Lo storage ha RLS attiva senza policy: il client dell'utente non può scrivere.
