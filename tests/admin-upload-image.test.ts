@@ -11,18 +11,29 @@
 // in cima al file.
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-const { mockGetUser, mockStorageFrom } = vi.hoisted(() => ({
+const { mockGetUser, mockStorageFrom, mockIsAdmin } = vi.hoisted(() => ({
   mockGetUser: vi.fn(),
   mockStorageFrom: vi.fn(),
+  mockIsAdmin: vi.fn(),
 }));
 vi.mock('../src/lib/supabase', () => ({
   createSupabaseServerClient: vi.fn(() => ({
     auth: { getUser: mockGetUser },
+  })),
+  // Dopo il controllo di ruolo la scrittura usa il client di servizio (lo storage non ha policy).
+  createSupabaseAdminClient: vi.fn(() => ({
     storage: { from: mockStorageFrom },
   })),
 }));
+vi.mock('../src/lib/admin-roles', () => ({
+  checkIsAdmin: mockIsAdmin,
+}));
 
 import { POST } from '../src/pages/api/admin/upload-image';
+
+// PNG minimo valido (firma binaria), perché l'endpoint controlla anche i byte del file.
+const PNG_BYTES = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0]);
+
 
 function buildRequest(fields: Record<string, FormDataEntryValue>) {
   const formData = new FormData();
@@ -39,6 +50,10 @@ describe('POST /api/admin/upload-image', () => {
   beforeEach(() => {
     mockGetUser.mockReset();
     mockStorageFrom.mockReset();
+    mockIsAdmin.mockReset();
+    // Di default l'utente di test è un admin; i test che lo richiedono lo cambiano.
+    mockIsAdmin.mockResolvedValue(true);
+    mockGetUser.mockResolvedValue({ data: { user: { id: 'admin-test' } } });
   });
 
   it('ritorna 401 se non autenticato', async () => {
@@ -105,7 +120,7 @@ describe('POST /api/admin/upload-image', () => {
     });
     mockStorageFrom.mockReturnValue({ upload: mockUpload, getPublicUrl: mockGetPublicUrl });
 
-    const file = new File(['contenuto'], 'foto.png', { type: 'image/png' });
+    const file = new File([PNG_BYTES], 'foto.png', { type: 'image/png' });
     const request = buildRequest({ file, bucket: 'barbara-costantini-team' });
 
     const res = await POST({ request, cookies: {} } as any);

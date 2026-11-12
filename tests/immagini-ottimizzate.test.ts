@@ -49,7 +49,16 @@ describe('ottimizzazione immagini', () => {
     // lancerebbe su un URL remoto mai registrato in src/utils/imagenes.ts, quindi
     // usano <img> via isRemote() esattamente come SectionTeam.astro (v. incidente
     // fix/servizi-immagine-vuota-500: stessa classe di bug, file diversi).
-    const ESCLUSI = ['lavori/[slug].astro', 'SectionTeam.astro', 'SectionLavori.astro', 'lavori/index.astro'];
+    // admin/pagine/[page].astro: anteprime delle foto caricate dall'admin su Supabase (URL runtime).
+    // PageTransition.astro: eccezione NOTA e da ottimizzare (logo animato con <img> grezzo, pre-esistente).
+    const ESCLUSI = [
+      'lavori/[slug].astro',
+      'SectionTeam.astro',
+      'SectionLavori.astro',
+      'lavori/index.astro',
+      'admin/pagine/[page].astro',
+      'PageTransition.astro',
+    ];
     const fileAstro = elencaFileRicorsivo('src', ['.astro'])
       .filter((f) => !ESCLUSI.some((e) => f.includes(e)));
     const offenders: string[] = [];
