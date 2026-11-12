@@ -5,7 +5,7 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
 <AdminLayout title="Admin" hideSidebar>
   <section class="w-full max-w-[400px]">
     <h1 class="font-sans text-[24px] font-normal text-bc-black tracking-[0.02em] mb-[32px]">Accedi</h1>
-    <form id="login-form" class="flex flex-col gap-bc-md">
+    <form id="login-form" method="POST" action="/api/admin/auth/login" class="flex flex-col gap-bc-md">
       <input type="email" name="email" placeholder="Email" required class="border border-bc-black px-bc-md py-bc-xs" />
       <input type="password" name="password" placeholder="Password" required class="border border-bc-black px-bc-md py-bc-xs" />
       <button type="submit" class="bc-btn">Accedi</button>
@@ -20,23 +20,12 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
     const infoEl = document.getElementById('login-info')!;
     const forgotBtn = document.getElementById('forgot-password') as HTMLButtonElement;
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      errorEl.classList.add('hidden');
-      const formData = new FormData(form);
-      const res = await fetch('/api/admin/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: formData.get('email'), password: formData.get('password') }),
-      });
-      if (res.ok) {
-        window.location.href = '/admin/progetti';
-      } else {
-        const { error } = await res.json();
-        errorEl.textContent = error;
-        errorEl.classList.remove('hidden');
-      }
-    });
+    // Mostra l'errore se il server rimanda indietro con ?error=...
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('error')) {
+      errorEl.textContent = params.get('error') === 'missing' ? 'Email e password sono obbligatorie.' : 'Email o password non corrette.';
+      errorEl.classList.remove('hidden');
+    }
 
     forgotBtn.addEventListener('click', async () => {
       errorEl.classList.add('hidden');
