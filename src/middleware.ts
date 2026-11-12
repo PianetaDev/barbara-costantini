@@ -13,8 +13,14 @@ import { createSupabaseServerClient } from './lib/supabase';
 const PUBLIC_ADMIN_PATHS = ['/admin/login', '/admin/imposta-password'];
 
 export const onRequest = defineMiddleware(async (context, next) => {
+  // Tutte le pagine leggono i testi dal database: nessuna cache CDN, altrimenti
+  // i visitatori vedono testi vecchi dopo ogni salvataggio.
   if (!context.url.pathname.startsWith('/admin')) {
-    return next();
+    const res = await next();
+    if ((res.headers.get('content-type') || '').includes('text/html')) {
+      res.headers.set('Cache-Control', 'no-store');
+    }
+    return res;
   }
   // Le pagine admin contengono i contenuti in bozza: non devono mai finire nella cache
   // pubblica del CDN (in produzione una pagina admin era servita a chi non era loggato).
