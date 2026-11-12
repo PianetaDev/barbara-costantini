@@ -109,7 +109,7 @@ const serviziFlat: Record<string, string> = isServizi ? {
       <>
         <h1 class="text-bc-h1">Pagina: {pageParam}</h1>
         <form id="page-form" class="flex flex-col gap-bc-md mt-bc-md">
-          {isServizi ? (
+          {isServizi && (
             <>
               {/* Campi flat: hero + cta */}
               {Object.entries(serviziFlat).map(([chiave, valore]) => (
@@ -149,10 +149,14 @@ const serviziFlat: Record<string, string> = isServizi ? {
                 <ServiziPartnerEditor client:load name="partner" modelValue={initialPartner} />
               </div>
             </>
-          ) : (
+          )}
+          {!isServizi && (
             // Itera sulle chiavi definite in labelsForPage (non su content),
             // così i campi nuovi compaiono anche se non ancora salvati in DB.
-            Object.keys(labelsForPage).map((chiave) => {
+            // NOTA: il <> wrapper evita che Astro metta l'ultimo elemento dell'array
+            // fuori dal <form> (bug di rendering con ternario + array non wrappato).
+            <>
+            {Object.keys(labelsForPage).map((chiave) => {
               const valore = String(content[chiave] ?? '');
               return (
                 <div class="flex flex-col gap-[4px]">
@@ -206,7 +210,8 @@ const serviziFlat: Record<string, string> = isServizi ? {
                   )}
                 </div>
               );
-            })
+            })}
+            </>
           )}
           <button type="submit" class="bc-btn">Salva</button>
         </form>
@@ -215,7 +220,7 @@ const serviziFlat: Record<string, string> = isServizi ? {
       </>
     )}
   </section>
-  <script define:vars={{ page: pageParam, isServizi }}>
+  <script define:vars={{ page: pageParam, isServizi, fieldKeys: Object.keys(labelsForPage) }}>
     const form = document.getElementById('page-form');
     if (form) {
       const errorEl = document.getElementById('page-error');
@@ -225,11 +230,21 @@ const serviziFlat: Record<string, string> = isServizi ? {
         e.preventDefault();
         errorEl.classList.add('hidden');
         successEl.classList.add('hidden');
-        const formData = new FormData(form);
-        const content = Object.fromEntries(formData.entries());
-        // Per la pagina servizi, i Vue components serializzano gruppi/partner come
-        // JSON string nei hidden inputs. Li parsiamo in oggetti prima di inviare.
-        if (isServizi) {
+        let content;
+        if (!isServizi) {
+          // Colleziona i valori per nome esplicito (immune da eventuali problemi di
+          // boundary del form nel rendering Astro — l'ultimo campo di un array in un
+          // ternario poteva finire fuori dal <form> e non apparire in FormData).
+          content = {};
+          fieldKeys.forEach((key) => {
+            const el = document.querySelector('[name="' + key + '"]');
+            if (el) content[key] = el.value ?? '';
+          });
+        } else {
+          // Per la pagina servizi usiamo FormData: i Vue components serializzano
+          // gruppi/partner come JSON string in hidden inputs aggiunti dinamicamente.
+          const formData = new FormData(form);
+          content = Object.fromEntries(formData.entries());
           try { content.gruppi = JSON.parse(content.gruppi); } catch { content.gruppi = []; }
           try { content.partner = JSON.parse(content.partner); } catch { content.partner = []; }
         }
