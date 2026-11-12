@@ -107,4 +107,18 @@ describe('PATCH /api/admin/progetti/[id]', () => {
     expect(res.status).toBe(200);
     expect(mockUpdate).toHaveBeenCalledWith({ correlati: ['slug-a', 'slug-b'] });
   });
+
+  it('ripulisce i blocchi «Testo»: tiene grassetto, corsivo e a capo, toglie il resto', async () => {
+    const request = buildRequest('11111111-1111-4111-8111-111111111111', {
+      blocks: [
+        { type: 'text', content: '<div>Riga <b>forte</b><br></div><script>alert(1)</script><span style="color:red" onclick="x()">x</span>' },
+        { type: 'h2', content: 'Titolo <b>così com\'è</b>' },
+      ],
+    });
+    const res = await PATCH({ params: { id: '11111111-1111-4111-8111-111111111111' }, request, cookies: {} } as any);
+    expect(res.status).toBe(200);
+    const blocks = mockUpdate.mock.calls[0][0].blocks;
+    expect(blocks[0].content).toBe('<div>Riga <b>forte</b><br /></div>x');
+    expect(blocks[1].content).toBe('Titolo <b>così com\'è</b>');
+  });
 });

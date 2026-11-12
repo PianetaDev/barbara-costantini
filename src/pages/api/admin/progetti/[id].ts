@@ -3,7 +3,7 @@ import type { APIRoute } from 'astro';
 import { z } from 'zod';
 import { progettoSchema, slugify } from '../../../../lib/validation/progetto';
 import { parseJsonBody } from '../../../../lib/parse-json-body';
-import { sanitizeIntroHtml } from '../../../../lib/sanitize-intro';
+import { sanitizeIntroHtml, sanitizeBlockText } from '../../../../lib/sanitize-intro';
 import { requireAdmin, jsonResponse } from '../../../../lib/admin-guard';
 import { rimuoviFileStorage } from '../../../../lib/storage-cleanup';
 
@@ -35,6 +35,13 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
   // il rendering pubblico lo ripulisce di nuovo.
   if (restoDati.intro !== undefined) {
     restoDati.intro = sanitizeIntroHtml(restoDati.intro);
+  }
+
+  // I blocchi «Testo» contengono l'HTML dell'area di scrittura: si ripulisce al salvataggio.
+  if (restoDati.blocks) {
+    restoDati.blocks = restoDati.blocks.map((b) =>
+      b?.type === 'text' && typeof b.content === 'string' ? { ...b, content: sanitizeBlockText(b.content) } : b,
+    );
   }
 
   const datiDaScrivere = immaginiContenuto !== undefined
