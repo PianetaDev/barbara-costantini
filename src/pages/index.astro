@@ -85,36 +85,36 @@ Astro.response.headers.set('Cache-Control', 'no-store');
   <SectionServizi imageSrc="/images/bc-002.jpg" imageAlt="I servizi" body={serviziTesto || undefined} ctaLabel={serviziCta || undefined} />
   {isAdminSessione && (
     <>
-      <style>{`.bc-live{outline:1px dashed rgba(0,0,0,.35);outline-offset:6px;cursor:text;min-height:1em}.bc-live:focus{outline:2px solid #000}.bc-stato{position:fixed;right:16px;bottom:16px;background:#000;color:#fff;padding:6px 10px;font:12px/1 sans-serif;z-index:50}`}</style>
+      <style>{`.bc-edit{cursor:text}.bc-edit:hover{outline:2px dashed #000;outline-offset:8px}.bc-editor{margin:16px 0;font-family:inherit}`}</style>
       <script id="bc-home-content" type="application/json" set:html={JSON.stringify(pageContent)} />
-      <div class="bc-stato" id="bc-stato" hidden></div>
       <script>
-        const contenutoHome = JSON.parse(document.getElementById('bc-home-content')!.textContent || '{}');
-        const stato = document.getElementById('bc-stato') as HTMLElement;
-        let timer: number | undefined;
-        async function salva(campo: string, valore: string) {
-          stato.hidden = false;
-          stato.textContent = 'Salvataggio...';
-          contenutoHome[campo] = valore;
-          const res = await fetch('/api/admin/pagine/home', {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: contenutoHome }),
-          });
-          stato.textContent = res.ok ? 'Salvato' : 'Non salvato (' + res.status + ')';
-          setTimeout(() => { stato.hidden = true; }, 1500);
-        }
         document.querySelectorAll<HTMLElement>('.bc-edit').forEach((box) => {
-          const campo = box.dataset.edit as string;
-          const testo = (box.dataset.testo || '').trim();
-          // Il paragrafo che contiene il testo introduttivo diventa modificabile in pagina.
-          const el = Array.from(box.querySelectorAll<HTMLElement>('p')).find((p) => p.textContent?.trim() === testo);
-          if (!el) return;
-          el.contentEditable = 'true';
-          el.classList.add('bc-live');
-          el.addEventListener('input', () => {
-            window.clearTimeout(timer);
-            timer = window.setTimeout(() => salva(campo, el.innerText.trim()), 1200);
+          box.addEventListener('click', (e) => {
+            const target = e.target as HTMLElement;
+            if (target.closest('a, button, textarea, .bc-editor')) return;
+            e.preventDefault();
+            if (box.querySelector('.bc-editor')) return;
+            const campo = box.dataset.edit as string;
+            const ed = document.createElement('div');
+            ed.className = 'bc-editor';
+            ed.innerHTML = '<textarea rows="4" style="width:100%;border:1px solid #000;padding:8px"></textarea><div style="margin-top:8px"><button type="button" class="bc-salva">Salva</button> <button type="button" class="bc-annulla">Annulla</button> <span class="bc-stato"></span></div>';
+            const ta = ed.querySelector('textarea') as HTMLTextAreaElement;
+            ta.value = box.dataset.testo || '';
+            box.prepend(ed);
+            (ed.querySelector('.bc-annulla') as HTMLButtonElement).onclick = () => ed.remove();
+            (ed.querySelector('.bc-salva') as HTMLButtonElement).onclick = async () => {
+              const stato = ed.querySelector('.bc-stato') as HTMLElement;
+              const contenuto = JSON.parse(document.getElementById('bc-home-content')!.textContent || '{}');
+              contenuto[campo] = ta.value;
+              stato.textContent = 'Salvataggio...';
+              const res = await fetch('/api/admin/pagine/home', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: contenuto }),
+              });
+              if (res.ok) location.reload();
+              else stato.textContent = 'Non salvato: ' + res.status;
+            };
           });
         });
       </script>
