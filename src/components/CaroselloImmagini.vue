@@ -81,7 +81,7 @@ function imgNext() { if (imgIndex.value < props.immagini.length - 1) imgIndex.va
             >
               <img v-if="img.src" :src="img.src" :alt="img.label" class="w-full h-full object-cover" />
             </div>
-            <p class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:14px; line-height:1.5;">({{ img.label }})</p>
+            <p v-if="img.label && img.label.trim()" class="font-sans font-light text-bc-black tracking-[0.02em]" style="font-size:14px; line-height:1.5;">({{ img.label }})</p>
           </button>
         </div>
       </div>

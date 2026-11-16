@@ -15,10 +15,16 @@ try {
 } catch {
   // fallback: defaults used below
 }
-const email = contattiContent.email || 'bb.costantini@gmail.com';
-const instagram = contattiContent.instagram || '@barbara_costantini';
-const telefono = contattiContent.telefono || '+39 349 6718022';
-const indirizzo = contattiContent.indirizzo || "Largo dell'Olgiata 15 - 00123 Roma";
+// Un campo svuotato nel pannello resta vuoto (la riga sparisce): il valore predefinito
+// vale solo se il campo non è mai stato salvato.
+const campo = (chiave: string, predefinito: string): string => {
+  const v = contattiContent[chiave];
+  return typeof v === 'string' ? v.trim() : predefinito;
+};
+const email = campo('email', 'bb.costantini@gmail.com');
+const instagram = campo('instagram', '@barbara_costantini');
+const telefono = campo('telefono', '+39 349 6718022');
+const indirizzo = campo('indirizzo', "Largo dell'Olgiata 15 - 00123 Roma");
 const instagramUrl = `https://instagram.com/${instagram.replace('@', '')}`;
 ---
 <BaseLayout title="Contatti">
@@ -32,12 +38,15 @@ const instagramUrl = `https://instagram.com/${instagram.replace('@', '')}`;
             Contatti
           </h1>
           <div class="flex flex-col gap-[16px]">
+            {email && (
             <a
               href={`mailto:${email}`}
               class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] leading-[1.5] hover:underline"
             >
               {email}
             </a>
+            )}
+            {instagram && (
             <a
               href={instagramUrl}
               target="_blank"
@@ -46,12 +55,17 @@ const instagramUrl = `https://instagram.com/${instagram.replace('@', '')}`;
             >
               {instagram}
             </a>
+            )}
+            {telefono && (
             <p class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] leading-[1.5]">
               {telefono}
             </p>
+            )}
+            {indirizzo && (
             <p class="font-sans text-bc-body1 font-light text-bc-black tracking-[0.02em] leading-[1.5]">
               {indirizzo}
             </p>
+            )}
           </div>
         </div>
       </div>
