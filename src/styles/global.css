@@ -161,3 +161,14 @@ html.bc-l main { position: relative; z-index: 10; }
     @apply block h-px w-full bg-bc-black;
   }
 }
+
+/* Testi lunghi (bio dello studio e del team), richiesta della cliente del 13/11:
+   giustificati, con sillabazione italiana per non aprire buchi tra le parole,
+   interlinea più ariosa e gli a capo scritti nel pannello rispettati. */
+.bc-testo-lungo {
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  line-height: 1.6;
+  white-space: pre-line;
+}
