@@ -1,7 +1,7 @@
 // src/lib/validation/page-content.ts
 import { z } from 'zod';
 
-export const PAGINE_GESTITE = ['home', 'studio', 'servizi', 'contatti', 'lavori', 'privacy-policy', 'cookie-policy', 'footer'] as const;
+export const PAGINE_GESTITE = ['home', 'studio', 'servizi', 'contatti', 'lavori', 'privacy-policy', 'cookie-policy', 'footer', 'seo'] as const;
 
 // Limite al peso del contenuto di una pagina: i testi del sito stanno in pochi KB; oltre
 // questa soglia è un errore o un abuso (il JSON finisce in ogni render della pagina).

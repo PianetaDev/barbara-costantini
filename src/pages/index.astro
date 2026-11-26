@@ -61,7 +61,7 @@ const isAdminSessione = !(await inAnteprima(Astro)) && !!utenteSessione && (awai
 // altrimenti i visitatori vedono testi vecchi dopo un salvataggio.
 Astro.response.headers.set('Cache-Control', 'no-store');
 ---
-<BaseLayout title="Barbara Costantini Restauro" titleIsFull>
+<BaseLayout title="Barbara Costantini Restauro" titleIsFull seo="home">
   <!-- Hero: testo sx + foto quadrata dx — min-h lascia vedere 64px della sezione sotto -->
   <section class="w-full px-[24px] tablet:px-bc-page overflow-hidden tablet:min-h-[calc(100vh-80px-64px)] tablet:flex tablet:flex-col tablet:justify-center">
     <div class="grid grid-cols-1 tablet:grid-cols-2 tablet:items-center max-w-bc-wrap mx-auto w-full">

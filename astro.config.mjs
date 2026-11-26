@@ -1,7 +1,6 @@
 import { defineConfig } from 'astro/config';
 import vue from '@astrojs/vue';
 import vercel from '@astrojs/vercel';
-import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
@@ -13,9 +12,10 @@ export default defineConfig({
   adapter: vercel(),
   integrations: [
     vue(),
-    sitemap(),
   ],
-  site: 'https://barbara-costantini-pianetastudios-projects.vercel.app',
+  // Indirizzo ufficiale. La sitemap non è più generata a build-time (elencava le pagine
+  // admin e non i lavori, che stanno nel database): la serve src/pages/sitemap.xml.ts.
+  site: 'https://www.barbaracostantini.it',
   image: {
     // Necessario per <Image src={membro.foto_url} ...> in src/pages/admin/team/[id].astro
     // (Task 14): astro:assets rifiuta di ottimizzare un'immagine remota il cui host non è

@@ -6,6 +6,10 @@ import Footer from '../components/Footer.astro';
 import CookieBanner from '../components/CookieBanner.vue';
 import PageTransition from '../components/PageTransition.astro';
 import { leggiContenuto, inAnteprima } from '../lib/page-content';
+import {
+  NOME_SITO, canonico, datiStrutturatiStudio, immagineSocial, jsonPerScript, tronca, valoreSeo,
+  type ChiaveSeo,
+} from '../lib/seo';
 
 interface Props {
   title: string;
@@ -13,12 +17,21 @@ interface Props {
   titleIsFull?: boolean;
   /** Se true, nasconde la Nav globale — usare quando la pagina ha una nav propria (es. dettaglio lavoro). */
   hideNav?: boolean;
+  /** Pagina principale: titolo e descrizione per Google arrivano dal pannello SEO. */
+  seo?: ChiaveSeo;
+  /** Immagine per le anteprime social (indirizzo https completo). */
+  image?: string | null;
+  /** true per le pagine che Google non deve elencare (es. pagina non trovata). */
+  noindex?: boolean;
 }
 const {
   title,
-  description = "Barbara Costantini Restauro — restauro conservativo di opere d'arte e beni culturali.",
+  description,
   titleIsFull = false,
   hideNav = false,
+  seo,
+  image = null,
+  noindex = false,
 } = Astro.props;
 
 const isHome = Astro.url.pathname === '/';
@@ -41,14 +54,54 @@ try {
 } catch {
   // fallback: Footer usa i valori hardcoded di default
 }
+
+// Testi per i motori di ricerca (Admin → Strumenti → SEO e ricerca). Se il database non
+// risponde si usano i valori predefiniti di src/lib/seo.ts.
+let seoContent: Record<string, unknown> = {};
+try {
+  seoContent = await leggiContenuto(Astro, 'seo');
+} catch {
+  // fallback: predefiniti
+}
+const titoloPagina = seo
+  ? valoreSeo(seoContent, `${seo}_titolo`)
+  : titleIsFull ? title : `${title} — ${NOME_SITO}`;
+const descrizionePagina = tronca(
+  description?.trim() || (seo ? valoreSeo(seoContent, `${seo}_descrizione`) : '') || valoreSeo(seoContent, 'sito_descrizione'),
+  300,
+);
+const urlCanonico = canonico(Astro.url.pathname);
+const immagineAnteprima = immagineSocial(image) ?? immagineSocial(seoContent.social_immagine);
+// I dati strutturati dello studio stanno solo in home: descrivono l'attività, non la pagina.
+let datiStudio: string | null = null;
+if (isHome && !anteprima) {
+  let contatti: Record<string, unknown> = {};
+  try {
+    contatti = await leggiContenuto(Astro, 'contatti');
+  } catch {
+    // senza contatti i dati strutturati restano validi, solo meno ricchi
+  }
+  datiStudio = jsonPerScript(datiStrutturatiStudio(seoContent, contatti));
+}
 ---
 <!doctype html>
 <html lang="it">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{titleIsFull ? title : `${title} — Barbara Costantini Restauro`}</title>
-    <meta name="description" content={description} />
+    <title>{titoloPagina}</title>
+    <meta name="description" content={descrizionePagina} />
+    {noindex && !anteprima && <meta name="robots" content="noindex" />}
+    {!noindex && !anteprima && <link rel="canonical" href={urlCanonico} />}
+    <meta property="og:site_name" content={NOME_SITO} />
+    <meta property="og:locale" content="it_IT" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={titoloPagina} />
+    <meta property="og:description" content={descrizionePagina} />
+    <meta property="og:url" content={urlCanonico} />
+    {immagineAnteprima && <meta property="og:image" content={immagineAnteprima} />}
+    <meta name="twitter:card" content={immagineAnteprima ? 'summary_large_image' : 'summary'} />
+    {datiStudio && <script type="application/ld+json" set:html={datiStudio} />}
     <link rel="icon" href="/logo.svg" />
     {!anteprima && <script is:inline>document.documentElement.classList.add('bc-l')</script>}
     {anteprima && (

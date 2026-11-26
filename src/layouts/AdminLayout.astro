@@ -44,6 +44,7 @@ const navGroups = [
     label: 'Strumenti',
     items: [
       { label: 'Segnalazioni', href: '/admin/segnalazioni' },
+      { label: 'SEO e ricerca', href: '/admin/pagine/seo' },
     ],
   },
 ];
@@ -54,6 +55,7 @@ const navGroups = [
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title} — Admin</title>
+    <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" href="/logo.svg" />
     {/* Widget segnalazioni "Segnale" nel pannello: prima compariva solo dentro l'anteprima
         (che è il sito pubblico in un riquadro); ora l'anteprima non lo carica più, quindi

@@ -28,6 +28,7 @@ import { leggiContenuto } from '../../lib/page-content';
 import type { Progetto } from '../../lib/supabase-public';
 import { risolviImmagine, isRemote } from '../../utils/imagenes';
 import { sanitizeIntroHtml, sanitizeBlockText } from '../../lib/sanitize-intro';
+import { testoSemplice, tronca } from '../../lib/seo';
 
 export const prerender = false;
 
@@ -168,8 +169,19 @@ const frontendBlocks: any[] = existingBlocks.length > 0
 const introHtml = (existingBlocks.length === 0 && progetto.intro)
   ? sanitizeIntroHtml(progetto.intro)
   : '';
+
+// Per Google e per le anteprime social: una frase presa dal testo del lavoro (o composta
+// da titolo e committente) e la prima fotografia caricata.
+// Si parte dal testo già ripulito (sanitize toglie script e simili con il loro contenuto).
+const primoTesto = testoSemplice(progetto.intro ? sanitizeIntroHtml(progetto.intro) : '')
+  || testoSemplice(sanitizeBlockText(String(frontendBlocks.find((b) => b?.type === 'text' && b.content)?.content ?? '')));
+const descrizioneLavoro = tronca(
+  primoTesto
+    || `${progetto.titolo}: intervento di conservazione e restauro${progetto.committente ? ` per ${progetto.committente}` : ''}${progetto.anno ? ` (${progetto.anno})` : ''}.`,
+);
+const immagineLavoro = progetto.immagini.find((img) => /^https:\/\//i.test(img?.src ?? ''))?.src ?? null;
 ---
-<BaseLayout title={progetto.titolo} hideNav>
+<BaseLayout title={progetto.titolo} description={descrizioneLavoro} image={immagineLavoro} hideNav>
   <div>
     <!-- Navigazione dettaglio: freccia sx + titolo centrato — issue #19 -->
     <nav class="w-full border-b border-bc-black px-[24px] tablet:px-bc-page">

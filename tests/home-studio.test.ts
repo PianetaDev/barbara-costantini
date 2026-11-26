@@ -70,7 +70,8 @@ describe('home e studio', () => {
     const container = await AstroContainer.create({ renderers });
     const html = await container.renderToString(Home);
     expect(html).toContain('Barbara Costantini Restauro');
-    expect(html).toMatch(/<title>Barbara Costantini Restauro<\/title>/);
+    // Dal pannello SEO: il titolo della home dice cosa fa lo studio e dove (predefinito in src/lib/seo.ts).
+    expect(html).toMatch(/<title>Barbara Costantini Restauro — Restauro di carta, libri, archivi e fotografie a Roma<\/title>/);
     // Il <title> originale (useHead di Nuxt) non ha il suffisso " — Barbara
     // Costantini Restauro" concatenato da BaseLayout per le altre pagine.
     expect(html).not.toMatch(/<title>Home/);
@@ -116,7 +117,7 @@ describe('home e studio', () => {
     const container = await AstroContainer.create({ renderers });
     const html = await container.renderToString(Studio);
     expect(html).toMatch(/<h1[^>]*>\s*Lo studio/);
-    expect(html).toMatch(/<title>Lo Studio — Barbara Costantini Restauro<\/title>/);
+    expect(html).toMatch(/<title>Lo studio — Barbara Costantini Restauro, Roma<\/title>/);
   });
 
   it('studio.astro non crasha se Supabase fallisce (blip di rete): si renderizza senza team invece di un 500', async () => {
