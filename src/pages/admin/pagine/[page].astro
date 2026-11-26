@@ -5,6 +5,7 @@ import { createSupabaseServerClient } from '../../../lib/supabase';
 import { pageContentSchema } from '../../../lib/validation/page-content';
 import ServiziGruppiEditor from '../../../components/admin/ServiziGruppiEditor.vue';
 import ServiziPartnerEditor from '../../../components/admin/ServiziPartnerEditor.vue';
+import { ETICHETTE_SEO, predefinitoSeo } from '../../../lib/seo';
 
 // Riusa l'array della whitelist Zod invece di duplicarlo qui a mano (DRY con
 // src/lib/validation/page-content.ts, unica fonte di verità sulle pagine ammesse).
@@ -55,15 +56,20 @@ const FIELD_LABELS: Record<string, Record<string, string>> = {
     cf: 'Codice Fiscale',
     anno_copyright: 'Anno copyright',
   },
+  // Testi per Google, anteprime social e assistenti AI (vedi src/lib/seo.ts).
+  seo: ETICHETTE_SEO,
 };
 const labelsForPage = FIELD_LABELS[pageParam ?? ''] ?? {};
 
 // Pagina pubblica mostrata nell'anteprima (il footer non ha una pagina sua: si vede in home).
-const PERCORSO_PUBBLICO: Record<string, string> = { home: '/', footer: '/' };
+const PERCORSO_PUBBLICO: Record<string, string> = { home: '/', footer: '/', seo: '/' };
+const isSeo = pageParam === 'seo';
+const TITOLI_PANNELLO: Record<string, string> = { seo: 'SEO e ricerca' };
+const titoloPannello = TITOLI_PANNELLO[pageParam ?? ''] ?? `Pagina: ${pageParam}`;
 
 // Campi che usano textarea invece di input (testi lunghi).
 function isTextarea(chiave: string): boolean {
-  return chiave.endsWith('_testo') || chiave.endsWith('_corpo') || chiave.endsWith('_intro') || chiave === 'html_body';
+  return chiave.endsWith('_testo') || chiave.endsWith('_corpo') || chiave.endsWith('_intro') || chiave.endsWith('_descrizione') || chiave === 'html_body';
 }
 
 // Campi che sono URL di immagini: mostrano un file-upload accanto all'input testo.
@@ -99,7 +105,7 @@ const serviziFlat: Record<string, string> = isServizi ? {
   cta_testo: String(content.cta_testo ?? ''),
 } : {};
 ---
-<AdminLayout title={paginaNonTrovata ? 'Pagina non trovata' : `Pagina: ${pageParam}`} previewSrc={paginaNonTrovata ? undefined : `${PERCORSO_PUBBLICO[pageParam ?? ''] ?? `/${pageParam}`}?anteprima=1`}>
+<AdminLayout title={paginaNonTrovata ? 'Pagina non trovata' : titoloPannello} previewSrc={paginaNonTrovata ? undefined : `${PERCORSO_PUBBLICO[pageParam ?? ''] ?? `/${pageParam}`}?anteprima=1`}>
   <section class="max-w-[680px]">
     {paginaNonTrovata ? (
       <>
@@ -110,10 +116,19 @@ const serviziFlat: Record<string, string> = isServizi ? {
       </>
     ) : (
       <>
-        <h1 class="text-bc-h1">Pagina: {pageParam}</h1>
-        <p class="mt-bc-sm font-sans text-[13px] font-light text-bc-black/60">
-          Mentre scrivi, l'anteprima a destra si aggiorna da sola. Il sito cambia solo quando premi «Salva e pubblica».
-        </p>
+        <h1 class="text-bc-h1">{titoloPannello}</h1>
+        {isSeo ? (
+          <p class="mt-bc-sm font-sans text-[13px] font-light text-bc-black/60">
+            Questi testi non si vedono nelle pagine: sono quelli che Google mostra nei risultati e che compaiono
+            quando si condivide un link. Scrivi le parole che userebbe chi ti cerca senza conoscere il tuo nome
+            (cosa restauri, per chi, in quale città). Un campo lasciato vuoto usa il testo suggerito in grigio.
+            Le modifiche valgono da quando premi «Salva e pubblica»; Google le recepisce nel giro di giorni o settimane.
+          </p>
+        ) : (
+          <p class="mt-bc-sm font-sans text-[13px] font-light text-bc-black/60">
+            Mentre scrivi, l'anteprima a destra si aggiorna da sola. Il sito cambia solo quando premi «Salva e pubblica».
+          </p>
+        )}
         <form id="page-form" class="flex flex-col gap-bc-md mt-bc-md" data-page={pageParam} data-servizi={isServizi ? '1' : undefined} data-bozza={haBozza ? '1' : undefined}>
           {isServizi ? (
             <>
@@ -168,6 +183,7 @@ const serviziFlat: Record<string, string> = isServizi ? {
                   {isTextarea(chiave) ? (
                     <textarea
                       name={chiave}
+                      placeholder={isSeo ? predefinitoSeo(chiave) : undefined}
                       rows={chiave === 'html_body' ? 20 : 4}
                       class={`border border-bc-black px-bc-md py-bc-xs w-full font-light resize-y${chiave === 'html_body' ? ' font-mono text-[12px]' : ' font-sans text-[14px]'}`}
                     >{valore}</textarea>
@@ -198,6 +214,7 @@ const serviziFlat: Record<string, string> = isServizi ? {
                     <input
                       name={chiave}
                       value={valore}
+                      placeholder={isSeo ? predefinitoSeo(chiave) : undefined}
                       class="border border-bc-black px-bc-md py-bc-xs w-full font-sans text-[14px] font-light"
                     />
                   )}

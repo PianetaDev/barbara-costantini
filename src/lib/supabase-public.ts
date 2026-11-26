@@ -133,7 +133,8 @@ export async function getPageContent(page: string): Promise<Record<string, strin
     .from('bc_page_content')
     .select('content')
     .eq('page', page)
-    .single();
+    // maybeSingle: una pagina senza riga (es. `seo` prima del primo salvataggio) non è un errore.
+    .maybeSingle();
   if (error) {
     console.error('[getPageContent]', page, error.message);
   }

@@ -10,7 +10,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 Astro.response.status = 404;
 ---
-<BaseLayout title="Progetto non trovato">
+<BaseLayout title="Progetto non trovato" noindex>
   <div class="px-bc-page py-[64px] flex flex-col items-center gap-bc-xl">
     <p class="font-sans text-bc-black" style="font-size:32px; font-weight:400;">Progetto non trovato</p>
     <a href="/lavori" class="bc-btn">Torna ai lavori</a>
